@@ -1,0 +1,20 @@
+[project]
+name = "tp1-digital-social-score"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "exauceh", email = "houeglaex@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "kagglehub>=1.0.3",
+    "python-dotenv>=1.2.4",
+]
+
+[project.scripts]
+tp1-digital-social-score = "tp1_digital_social_score:main"
+
+[build-system]
+requires = ["uv_build>=0.12.15,<0.13.0"]
+build-backend = "uv_build"
