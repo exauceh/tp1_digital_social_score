@@ -165,10 +165,8 @@ def main(argv: list[str] | None = None) -> int:
     entity_counts: dict[str, Counter[str]] = {}
     for name in DATASETS:
         out, sample, counts = process_dataset(name, nlp, args.limit, args.n_process)
-        target = PROCESSED_DATA_DIR / f"{name}_anonymized.csv.zip"
-        out.to_csv(
-            target, index=False, compression={"method": "zip", "archive_name": f"{name}.csv"}
-        )
+        target = PROCESSED_DATA_DIR / f"{name}_anonymized.csv"
+        out.to_csv(target, index=False)
         logger.info("Wrote %s (%d rows, replacements: %s)", target, len(out), dict(counts))
         samples.append(sample)
         row_counts[name] = len(out)

@@ -40,3 +40,26 @@ Exemple :
 | **Transferts hors de l'UE** | Source hébergée par Kaggle (États-Unis) ; les fichiers sont stockés localement dans l'UE. Aucun autre transfert. |
 | **Mesures de sécurité** | Identifiants supprimés avant l'entraînement ; dossiers de données ignorés par Git ; jeton API dans un fichier `.env` ignoré par Git ; les journaux contiennent uniquement des nombres, jamais le texte des commentaires. |
 | **Créé / mis à jour le** | 2026-11-09 |
+
+# Exercice 2
+
+## Nettoyage du texte
+
+Le nettoyage s'applique à `comment_text` après l'anonymisation (script `clean_data.py`) :
+
+| Étape | Effet | Pourquoi |
+|---|---|---|
+| Normalisation Unicode (NFKC) | `ＦＵＬＬ` devient `FULL` | Un même mot ne doit pas avoir plusieurs graphies. |
+| Placeholders en mots | `[PERSON]` devient `tag_person` | La suppression de la ponctuation ne détruit pas les marqueurs d'anonymisation. |
+| Apostrophes supprimées | `don't` devient `dont` | Une contraction reste un seul mot. |
+| Ponctuation et emojis supprimés | remplacés par une espace | Ils n'apportent pas de signal exploitable par un modèle de texte simple. |
+| Minuscules | `SO dumb` devient `so dumb` | `Idiot` et `idiot` deviennent le même mot. |
+| Espaces réduites | retours à la ligne et espaces multiples fusionnés | Texte sur une seule ligne, propre. |
+
+Exemple :
+
+> *Hello!!! You're SO dumb 😂👍... see [PERSON] at [URL]?*
+> → *hello youre so dumb see tag_person at tag_url*
+
+Résultat : `train_clean.csv` (159 571 lignes) et `test_clean.csv` (153 164 lignes, dont 43 commentaires
+devenus vides car ne contenant que des emojis ou des symboles). Les chiffres sont conservés.
