@@ -9,10 +9,15 @@ authors = [
 requires-python = ">=3.14"
 dependencies = [
     "en-core-web-sm",
+    "joblib>=1.6.0",
     "kagglehub>=1.0.3",
     "pandas>=3.1.1",
     "python-dotenv>=1.2.4",
+    "scikit-learn>=1.9.1",
     "spacy>=3.8.18",
+    "torch>=2.9.0",
+    "transformers>=5.22.2",
+    "xgboost>=3.4.1",
 ]
 
 [project.scripts]
@@ -23,10 +28,12 @@ requires = ["uv_build>=0.12.15,<0.13.0"]
 build-backend = "uv_build"
 
 [tool.uv.sources]
+torch = { index = "pytorch-cu128" }
 en-core-web-sm = { url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl" }
 
 [dependency-groups]
 dev = [
+    "ipykernel>=7.4.0",
     "mypy>=2.4.1",
     "pandas-stubs>=3.1.0.261029",
     "ruff>=0.17.4",
@@ -35,8 +42,19 @@ dev = [
 [tool.mypy]
 strict = true
 
+# scikit-learn and joblib ship no type stubs or py.typed marker; strict mode stays on everywhere else.
+[[tool.mypy.overrides]]
+module = ["sklearn.*", "joblib"]
+ignore_missing_imports = true
+
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
 
 [tool.ruff]
 line-length = 100
+
+# CUDA build of PyTorch (the default PyPI wheel for Windows is CPU only)
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
