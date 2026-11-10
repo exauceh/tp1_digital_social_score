@@ -9,15 +9,14 @@ authors = [
 requires-python = ">=3.14"
 dependencies = [
     "en-core-web-sm",
-    "joblib>=1.6.0",
     "kagglehub>=1.0.3",
+    "laya>=0.4.30",
     "pandas>=3.1.1",
     "python-dotenv>=1.2.4",
     "scikit-learn>=1.9.1",
     "spacy>=3.8.18",
     "torch>=2.9.0",
     "transformers>=5.22.2",
-    "xgboost>=3.4.1",
 ]
 
 [project.scripts]
@@ -42,9 +41,9 @@ dev = [
 [tool.mypy]
 strict = true
 
-# scikit-learn and joblib ship no type stubs or py.typed marker; strict mode stays on everywhere else.
+# scikit-learn and laya ship no type stubs or py.typed marker; strict mode stays on everywhere else.
 [[tool.mypy.overrides]]
-module = ["sklearn.*", "joblib"]
+module = ["sklearn.*", "laya", "laya.*"]
 ignore_missing_imports = true
 
 [tool.ruff.lint]
