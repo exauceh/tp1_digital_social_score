@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dss-api
+  labels:
+    app: dss-api
+spec:
+  # Two replicas on purpose: one can fail or be updated while the other keeps serving (redundancy).
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0   # a new pod must be ready before an old one is removed
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: dss-api
+  template:
+    metadata:
+      labels:
+        app: dss-api
+    spec:
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001      # the "appuser" created in the Dockerfile
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: api
+          # Replaced by the real image when the manifests are applied (see step_deployment.md).
+          image: IMAGE_PLACEHOLDER
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: TORCH_NUM_THREADS   # measured: more threads make this small LSTM slower
+              value: "2"
+            - name: LOG_LEVEL
+              value: "INFO"
+          resources:
+            # CPU request drives the autoscaler (hpa.yaml). Memory: about 750 MB measured on Windows
+            # with the CUDA build of PyTorch, so this is an upper estimate for the Linux CPU image:
+            # check with `kubectl top pods -n dss` and adjust.
+            requests:
+              cpu: "1"
+              memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 1536Mi
+          # The server only starts listening once spaCy, PyTorch and the model are loaded: the startup
+          # probe gives it up to 3 minutes, then the other probes take over.
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 5
+            failureThreshold: 36
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 20
+            timeoutSeconds: 2
+            failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]

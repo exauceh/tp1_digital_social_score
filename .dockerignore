@@ -1,0 +1,22 @@
+.git
+.gitignore
+.venv
+.env
+.env.*
+.claude
+**/__pycache__
+**/*.pyc
+.mypy_cache
+.pytest_cache
+.ruff_cache
+
+# Data and training material never go into the image
+raw_data
+processed_data
+courses
+tests
+**/*.ipynb
+
+# Only the LSTM artifacts are served
+models/*
+!models/lstm

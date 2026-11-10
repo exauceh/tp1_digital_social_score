@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dss-api
+  labels:
+    app: dss-api
+spec:
+  # ClusterIP: reachable only from inside the cluster (and through `kubectl port-forward`).
+  # The API has no authentication yet, so it must not get a public IP. Once JWT/API key and HTTPS
+  # are in place (step 4 of the TP), expose it through an Ingress or a Gateway instead.
+  type: ClusterIP
+  selector:
+    app: dss-api
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

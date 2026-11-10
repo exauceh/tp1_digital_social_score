@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: dss-api
+spec:
+  # During a node upgrade or a drain, Kubernetes keeps at least one pod running.
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: dss-api
