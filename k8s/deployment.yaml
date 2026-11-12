@@ -20,6 +20,12 @@ spec:
       labels:
         app: dss-api
     spec:
+      # The Google identity of the pod: it can read the API keys secret and nothing else.
+      serviceAccountName: dss-api
+      # No Kubernetes token in the pod: the API never calls the Kubernetes API, and Workload Identity
+      # reaches Google Cloud through the GKE metadata server. Remove this line if Secret Manager
+      # authentication fails at start-up and the logs point to missing credentials.
+      automountServiceAccountToken: false
       terminationGracePeriodSeconds: 30
       securityContext:
         runAsNonRoot: true
@@ -39,6 +45,12 @@ spec:
               value: "2"
             - name: LOG_LEVEL
               value: "INFO"
+            # Google Secret Manager secret holding the client_id:sha256 entries (never the keys
+            # themselves). The pod reads it at start-up with its Workload Identity; if the secret
+            # cannot be read, the pod does not start. During an update the old pods keep serving,
+            # so a wrong name or a missing permission cannot take the API down.
+            - name: API_KEYS_SECRET
+              value: projects/PROJECT_ID_PLACEHOLDER/secrets/dss-api-keys/versions/latest
           resources:
             # CPU request drives the autoscaler (hpa.yaml). Memory: about 750 MB measured on Windows
             # with the CUDA build of PyTorch, so this is an upper estimate for the Linux CPU image:

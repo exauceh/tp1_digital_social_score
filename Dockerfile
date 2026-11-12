@@ -31,4 +31,6 @@ ENV PATH="/app/.venv/bin:$PATH" \
 
 # Port 8080 is the one declared in k8s/deployment.yaml and k8s/service.yaml.
 EXPOSE 8080
-CMD ["uvicorn", "tp1_digital_social_score.api:app", "--host", "0.0.0.0", "--port", "8080"]
+# --no-access-log: the uvicorn access log writes the caller's IP address (personal data) for every
+# request. The API logs its own line per request, without any address (see api.py).
+CMD ["uvicorn", "tp1_digital_social_score.api:app", "--host", "0.0.0.0", "--port", "8080", "--no-access-log"]

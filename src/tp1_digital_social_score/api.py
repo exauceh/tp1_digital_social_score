@@ -2,16 +2,19 @@
 
 Routes:
 
-- ``GET  /health``: startup, readiness and liveness probe (Kubernetes).
+- ``GET  /health``: startup, readiness and liveness probe (Kubernetes); needs no key.
 - ``POST /score``: ``{"text": "..."}`` -> ``{"score": ..., "labels": {...}, "request_id": ...}``.
+  Needs a valid API key in the ``X-API-Key`` header, otherwise the answer is ``401``.
 
 RGPD: the received text is anonymised (regex + spaCy NER) before it reaches the model, it is
-never stored, and it is never written to the logs. Only a request id, the text length, the score
-and the latency are logged.
+never stored, and it is never written to the logs. Only a request id, the client id (a pseudonym
+tied to the API key), the text length, the score and the latency are logged: never the text, the
+key or the caller's IP address (the uvicorn access log, which contains it, is disabled).
 
-Configuration (environment variables): ``MODEL_DIR`` (artifacts directory, default
-``models/lstm``), ``LOG_LEVEL`` (default ``INFO``) and ``TORCH_NUM_THREADS`` (default 2: measured
-on CPU, using every core makes this small LSTM slower and its latency erratic).
+Configuration (environment variables): ``API_KEYS`` (required, see ``security.py``),
+``MODEL_DIR`` (artifacts directory, default ``models/lstm``), ``LOG_LEVEL`` (default ``INFO``) and
+``TORCH_NUM_THREADS`` (default 2: measured on CPU, using every core makes this small LSTM slower
+and its latency erratic).
 """
 
 import logging
@@ -28,11 +31,13 @@ from typing import Annotated
 
 import spacy
 import torch
-from fastapi import FastAPI, Request
+from fastapi import Depends, FastAPI, HTTPException, Request, Security
+from fastapi.security import APIKeyHeader
 from pydantic import BaseModel, Field, StringConstraints
 
 from tp1_digital_social_score.lstm_model import LstmPredictor
 from tp1_digital_social_score.scoring import LABELS, load_weights, toxicity_score
+from tp1_digital_social_score.security import API_KEY_HEADER, ApiKeyStore, load_api_keys
 from tp1_digital_social_score.text_pipeline import load_nlp, prepare_texts
 
 logger = logging.getLogger(__name__)
@@ -119,8 +124,32 @@ def get_service(request: Request) -> ScoringService:
     return service
 
 
-def create_app(model_dir: Path | None = None) -> FastAPI:
-    """Build the application; the models are loaded when the server starts."""
+# auto_error=False: a missing header is handled below, so that it gives the same 401 as a wrong key.
+api_key_header = APIKeyHeader(name=API_KEY_HEADER, auto_error=False)
+
+
+def authenticate(
+    request: Request, api_key: Annotated[str | None, Security(api_key_header)]
+) -> str:
+    """Return the client id of the API key sent in ``X-API-Key``, or answer 401."""
+    store: ApiKeyStore = request.app.state.api_keys
+    client_id = store.authenticate(api_key) if api_key else None
+    if client_id is None:
+        # Neither the key nor the caller's address is logged.
+        logger.warning("authentication failed request_id=%s", request_id_from(request))
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid or missing API key",
+            headers={"WWW-Authenticate": "ApiKey"},
+        )
+    return client_id
+
+
+def create_app(model_dir: Path | None = None, api_keys: ApiKeyStore | None = None) -> FastAPI:
+    """Build the application; the keys and the models are loaded when the server starts.
+
+    ``api_keys`` is meant for tests; in production the keys come from ``API_KEYS``.
+    """
     logging.basicConfig(
         level=os.environ.get("LOG_LEVEL", "INFO"),
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
@@ -128,6 +157,8 @@ def create_app(model_dir: Path | None = None) -> FastAPI:
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+        # Keys first: without them the API must not start (fail closed), and it fails fast.
+        app.state.api_keys = api_keys or load_api_keys()
         directory = model_dir or default_model_dir()
         logger.info(
             "Starting the scoring service with artifacts from %s (torch threads: %d)",
@@ -150,13 +181,16 @@ def create_app(model_dir: Path | None = None) -> FastAPI:
         return HealthResponse(status="ok")
 
     @app.post("/score", response_model=ScoreResponse)
-    def score(body: ScoreRequest, request: Request) -> ScoreResponse:
+    def score(
+        body: ScoreRequest, request: Request, client_id: Annotated[str, Depends(authenticate)]
+    ) -> ScoreResponse:
         started = time.perf_counter()
         request_id = request_id_from(request)
         prediction = get_service(request).score([body.text])[0]
         logger.info(
-            "score request_id=%s chars=%d score=%.2f latency_ms=%.1f",
+            "score request_id=%s client=%s chars=%d score=%.2f latency_ms=%.1f",
             request_id,
+            client_id,
             len(body.text),
             prediction.score,
             1000 * (time.perf_counter() - started),
