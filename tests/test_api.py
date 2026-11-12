@@ -1,7 +1,10 @@
 """HTTP behaviour of the scoring API: authentication, validation and the RGPD guarantees."""
 
 import logging
+import threading
+import time
 from collections.abc import Iterator, Sequence
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import numpy as np
@@ -224,3 +227,138 @@ def test_the_model_only_sees_anonymised_text(
     for leaked in ("jane", "example", "10.0.0.7"):
         assert leaked not in seen[0]
     assert "tag_email" in seen[0]
+
+
+# --- Prometheus metrics (course n°3) -----------------------------------------------------------
+
+
+def series_value(exposition: str, series: str) -> float | None:
+    """Value of one series of the Prometheus text format, or None when it is absent."""
+    for line in exposition.splitlines():
+        if line.startswith(series + " "):
+            return float(line.rsplit(" ", 1)[1])
+    return None
+
+
+def test_metrics_are_exposed_without_a_key(client: TestClient) -> None:
+    response = client.get("/metrics", headers={API_KEY_HEADER: ""})
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/plain")
+    assert "# TYPE api_requests_total counter" in response.text
+    assert "# TYPE api_latency_seconds histogram" in response.text
+
+
+def test_expected_series_exist_at_zero_before_any_request(artifacts_dir: Path) -> None:
+    """Prometheus ignores the first sample of a new series, so these must exist from the start."""
+    with make_client(artifacts_dir) as fresh:
+        exposition = fresh.get("/metrics").text
+    for status in ("200", "401", "422", "500"):
+        series = f'api_requests_total{{method="POST",route="/score",status="{status}"}}'
+        assert series_value(exposition, series) == 0
+    assert series_value(exposition, 'api_latency_seconds_count{route="/score"}') == 0
+
+
+def test_requests_are_counted_by_route_and_status(artifacts_dir: Path) -> None:
+    with make_client(artifacts_dir) as fresh:
+        for _ in range(3):
+            assert fresh.post("/score", json={"text": "hello"}).status_code == 200
+        assert fresh.post("/score", json={"text": ""}).status_code == 422
+        refused = fresh.post("/score", json={"text": "hi"}, headers={API_KEY_HEADER: "wrong"})
+        assert refused.status_code == 401
+        exposition = fresh.get("/metrics").text
+
+    ok = 'api_requests_total{method="POST",route="/score",status="200"}'
+    assert series_value(exposition, ok) == 3
+    assert series_value(exposition, ok.replace("200", "422")) == 1
+    assert series_value(exposition, ok.replace("200", "401")) == 1
+    assert series_value(exposition, "api_auth_failures_total") == 1
+    # The latency histogram sees all five requests; inference and score only the 3 scored ones.
+    assert series_value(exposition, 'api_latency_seconds_count{route="/score"}') == 5
+    assert series_value(exposition, "inference_latency_seconds_count") == 3
+    assert series_value(exposition, "toxicity_score_count") == 3
+    assert series_value(exposition, "api_requests_in_progress") == 0
+
+
+def test_probes_and_scraping_are_not_counted(artifacts_dir: Path) -> None:
+    with make_client(artifacts_dir) as fresh:
+        for _ in range(5):
+            fresh.get("/health")
+            fresh.get("/metrics")
+        exposition = fresh.get("/metrics").text
+    assert 'route="/health"' not in exposition
+    assert 'route="/metrics"' not in exposition
+
+
+def test_unknown_paths_share_one_label_value(artifacts_dir: Path) -> None:
+    """A scanner trying thousands of paths must not create thousands of series."""
+    with make_client(artifacts_dir) as fresh:
+        for path in ("/a", "/b/c", "/admin", "/.env"):
+            assert fresh.get(path).status_code == 404
+        exposition = fresh.get("/metrics").text
+    unmatched = 'api_requests_total{method="GET",route="unmatched",status="404"}'
+    assert series_value(exposition, unmatched) == 4
+    for path in ("/a", "/b/c", "/admin", "/.env"):
+        assert path not in exposition
+
+
+def test_metrics_never_contain_personal_data(artifacts_dir: Path) -> None:
+    text = "Contact Zebulon Quixote at zebulon@example.com from 192.168.1.1 you idiot"
+    with make_client(artifacts_dir) as fresh:
+        assert fresh.post("/score", json={"text": text}).status_code == 200
+        exposition = fresh.get("/metrics").text
+    for secret in ("Zebulon", "Quixote", "zebulon@example.com", "192.168.1.1", "idiot"):
+        assert secret not in exposition
+    for identifier in (CLIENT_ID, OTHER_CLIENT_ID, API_KEY, OTHER_KEY):
+        assert identifier not in exposition
+
+
+def test_each_application_has_its_own_registry(artifacts_dir: Path) -> None:
+    with make_client(artifacts_dir) as first, make_client(artifacts_dir) as second:
+        assert first.post("/score", json={"text": "hello"}).status_code == 200
+        counted = 'api_requests_total{method="POST",route="/score",status="200"}'
+        assert series_value(first.get("/metrics").text, counted) == 1
+        assert series_value(second.get("/metrics").text, counted) == 0
+
+
+# --- probes must stay responsive under load (found by the load test) -----------------------------
+
+
+def test_health_and_metrics_answer_while_every_worker_thread_is_busy(
+    artifacts_dir: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """When every thread of the pool waits for the model, the probes must not wait with them.
+
+    The Kubernetes probes call /health with a 2 s timeout. When /health ran in the same thread
+    pool as /score, a saturated pod failed its probes, left the Service and was then killed by the
+    liveness probe, which removed even more capacity at the worst moment (seen during the ramp and
+    spike load tests: pods restarted, no pod ready).
+    """
+    release = threading.Event()
+    in_flight = 60  # more than the 40 threads of the pool
+    with make_client(artifacts_dir) as busy:
+        predictor = service_of(busy).predictor
+        original_predict = predictor.predict
+
+        def blocked_predict(texts: Sequence[str]) -> FloatArray:
+            release.wait(timeout=30)
+            return original_predict(texts)
+
+        monkeypatch.setattr(predictor, "predict", blocked_predict)
+        registry = busy.app.state.metrics.registry  # type: ignore[attr-defined]
+        with ThreadPoolExecutor(max_workers=in_flight + 2) as pool:
+            scoring = [
+                pool.submit(busy.post, "/score", json={"text": "hello"}) for _ in range(in_flight)
+            ]
+            deadline = time.monotonic() + 15
+            while time.monotonic() < deadline:
+                if (registry.get_sample_value("api_requests_in_progress") or 0) >= in_flight:
+                    break
+                time.sleep(0.05)
+            try:
+                health = pool.submit(busy.get, "/health").result(timeout=3)
+                scraped = pool.submit(busy.get, "/metrics").result(timeout=3)
+            finally:
+                release.set()
+            assert all(future.result(timeout=60).status_code == 200 for future in scoring)
+    assert health.status_code == 200
+    assert scraped.status_code == 200

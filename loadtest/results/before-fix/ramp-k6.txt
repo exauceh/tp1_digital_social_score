@@ -1,0 +1,1877 @@
+
+          /\      |GÇ+GÇ+| /GÇ+GÇ+/   /GÇ+GÇ+/   
+     /\  /  \     |  |/  /   /  /    
+    /  \/    \    |     (   /   GÇ+GÇ+\  
+   /          \   |  |\  \ |  (GÇ+)  | 
+  / __________ \  |__| \__\ \_____/ .io
+
+     execution: local
+        script: /scripts/k6-score.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 600 max VUs, 4m30s max duration (incl. graceful stop):
+              * ramp: Up to 150.00 iterations/s for 4m0s over 4 stages (maxVUs: 50-600, gracefulStop: 30s)
+
+
+running (0m00.9s), 004/050 VUs, 0 complete and 0 interrupted iterations
+ramp   [   0% ] 004/050 VUs  0m00.9s/4m0s  005.29 iters/s
+
+running (0m01.9s), 010/050 VUs, 0 complete and 0 interrupted iterations
+ramp   [   1% ] 010/050 VUs  0m01.9s/4m0s  005.66 iters/s
+
+running (0m02.9s), 016/050 VUs, 0 complete and 0 interrupted iterations
+ramp   [   1% ] 016/050 VUs  0m02.9s/4m0s  006.00 iters/s
+
+running (0m03.9s), 013/050 VUs, 9 complete and 0 interrupted iterations
+ramp   [   2% ] 013/050 VUs  0m03.9s/4m0s  006.32 iters/s
+
+running (0m04.9s), 000/050 VUs, 28 complete and 0 interrupted iterations
+ramp   [   2% ] 000/050 VUs  0m04.9s/4m0s  006.63 iters/s
+
+running (0m05.9s), 000/050 VUs, 35 complete and 0 interrupted iterations
+ramp   [   2% ] 000/050 VUs  0m05.9s/4m0s  006.98 iters/s
+
+running (0m06.9s), 000/050 VUs, 42 complete and 0 interrupted iterations
+ramp   [   3% ] 000/050 VUs  0m06.9s/4m0s  007.30 iters/s
+
+running (0m07.9s), 000/050 VUs, 50 complete and 0 interrupted iterations
+ramp   [   3% ] 000/050 VUs  0m07.9s/4m0s  007.66 iters/s
+
+running (0m08.9s), 000/050 VUs, 57 complete and 0 interrupted iterations
+ramp   [   4% ] 000/050 VUs  0m08.9s/4m0s  007.96 iters/s
+
+running (0m09.9s), 001/050 VUs, 65 complete and 0 interrupted iterations
+ramp   [   4% ] 001/050 VUs  0m09.9s/4m0s  008.33 iters/s
+
+running (0m10.9s), 000/050 VUs, 74 complete and 0 interrupted iterations
+ramp   [   5% ] 000/050 VUs  0m10.9s/4m0s  008.64 iters/s
+
+running (0m11.9s), 000/050 VUs, 83 complete and 0 interrupted iterations
+ramp   [   5% ] 000/050 VUs  0m11.9s/4m0s  008.98 iters/s
+
+running (0m12.9s), 000/050 VUs, 92 complete and 0 interrupted iterations
+ramp   [   5% ] 000/050 VUs  0m12.9s/4m0s  009.31 iters/s
+
+running (0m13.9s), 001/050 VUs, 101 complete and 0 interrupted iterations
+ramp   [   6% ] 001/050 VUs  0m13.9s/4m0s  009.66 iters/s
+
+running (0m14.9s), 000/050 VUs, 111 complete and 0 interrupted iterations
+ramp   [   6% ] 000/050 VUs  0m14.9s/4m0s  009.97 iters/s
+
+running (0m15.9s), 001/050 VUs, 121 complete and 0 interrupted iterations
+ramp   [   7% ] 001/050 VUs  0m15.9s/4m0s  010.33 iters/s
+
+running (0m16.9s), 000/050 VUs, 132 complete and 0 interrupted iterations
+ramp   [   7% ] 000/050 VUs  0m16.9s/4m0s  010.65 iters/s
+
+running (0m17.9s), 000/050 VUs, 143 complete and 0 interrupted iterations
+ramp   [   7% ] 000/050 VUs  0m17.9s/4m0s  010.98 iters/s
+
+running (0m18.9s), 000/050 VUs, 154 complete and 0 interrupted iterations
+ramp   [   8% ] 000/050 VUs  0m18.9s/4m0s  011.31 iters/s
+
+running (0m19.9s), 000/050 VUs, 165 complete and 0 interrupted iterations
+ramp   [   8% ] 000/050 VUs  0m19.9s/4m0s  011.63 iters/s
+
+running (0m20.9s), 000/050 VUs, 177 complete and 0 interrupted iterations
+ramp   [   9% ] 000/050 VUs  0m20.9s/4m0s  011.97 iters/s
+
+running (0m21.9s), 000/050 VUs, 189 complete and 0 interrupted iterations
+ramp   [   9% ] 000/050 VUs  0m21.9s/4m0s  012.30 iters/s
+
+running (0m22.9s), 001/050 VUs, 201 complete and 0 interrupted iterations
+ramp   [  10% ] 001/050 VUs  0m22.9s/4m0s  012.65 iters/s
+
+running (0m23.9s), 001/050 VUs, 214 complete and 0 interrupted iterations
+ramp   [  10% ] 001/050 VUs  0m23.9s/4m0s  012.99 iters/s
+
+running (0m24.9s), 001/050 VUs, 227 complete and 0 interrupted iterations
+ramp   [  10% ] 001/050 VUs  0m24.9s/4m0s  013.32 iters/s
+
+running (0m25.9s), 000/050 VUs, 241 complete and 0 interrupted iterations
+ramp   [  11% ] 000/050 VUs  0m25.9s/4m0s  013.64 iters/s
+
+running (0m26.9s), 000/050 VUs, 255 complete and 0 interrupted iterations
+ramp   [  11% ] 000/050 VUs  0m26.9s/4m0s  013.98 iters/s
+
+running (0m27.9s), 000/050 VUs, 269 complete and 0 interrupted iterations
+ramp   [  12% ] 000/050 VUs  0m27.9s/4m0s  014.31 iters/s
+
+running (0m28.9s), 001/050 VUs, 283 complete and 0 interrupted iterations
+ramp   [  12% ] 001/050 VUs  0m28.9s/4m0s  014.65 iters/s
+
+running (0m29.9s), 001/050 VUs, 298 complete and 0 interrupted iterations
+ramp   [  12% ] 001/050 VUs  0m29.9s/4m0s  014.99 iters/s
+
+running (0m30.9s), 001/050 VUs, 313 complete and 0 interrupted iterations
+ramp   [  13% ] 001/050 VUs  0m30.9s/4m0s  015.32 iters/s
+
+running (0m31.9s), 000/050 VUs, 329 complete and 0 interrupted iterations
+ramp   [  13% ] 000/050 VUs  0m31.9s/4m0s  015.64 iters/s
+
+running (0m32.9s), 000/050 VUs, 345 complete and 0 interrupted iterations
+ramp   [  14% ] 000/050 VUs  0m32.9s/4m0s  015.98 iters/s
+
+running (0m33.9s), 000/050 VUs, 361 complete and 0 interrupted iterations
+ramp   [  14% ] 000/050 VUs  0m33.9s/4m0s  016.31 iters/s
+
+running (0m34.9s), 001/050 VUs, 377 complete and 0 interrupted iterations
+ramp   [  15% ] 001/050 VUs  0m34.9s/4m0s  016.65 iters/s
+
+running (0m35.9s), 000/050 VUs, 394 complete and 0 interrupted iterations
+ramp   [  15% ] 000/050 VUs  0m35.9s/4m0s  016.97 iters/s
+
+running (0m36.9s), 001/050 VUs, 411 complete and 0 interrupted iterations
+ramp   [  15% ] 001/050 VUs  0m36.9s/4m0s  017.32 iters/s
+
+running (0m37.9s), 000/050 VUs, 429 complete and 0 interrupted iterations
+ramp   [  16% ] 000/050 VUs  0m37.9s/4m0s  017.64 iters/s
+
+running (0m38.9s), 000/050 VUs, 447 complete and 0 interrupted iterations
+ramp   [  16% ] 000/050 VUs  0m38.9s/4m0s  017.98 iters/s
+
+running (0m39.9s), 001/050 VUs, 464 complete and 0 interrupted iterations
+ramp   [  17% ] 001/050 VUs  0m39.9s/4m0s  018.31 iters/s
+
+running (0m40.9s), 000/050 VUs, 483 complete and 0 interrupted iterations
+ramp   [  17% ] 000/050 VUs  0m40.9s/4m0s  018.64 iters/s
+
+running (0m41.9s), 000/050 VUs, 502 complete and 0 interrupted iterations
+ramp   [  17% ] 000/050 VUs  0m41.9s/4m0s  018.97 iters/s
+
+running (0m42.9s), 000/050 VUs, 521 complete and 0 interrupted iterations
+ramp   [  18% ] 000/050 VUs  0m42.9s/4m0s  019.30 iters/s
+
+running (0m43.9s), 000/050 VUs, 541 complete and 0 interrupted iterations
+ramp   [  18% ] 000/050 VUs  0m43.9s/4m0s  019.65 iters/s
+
+running (0m44.9s), 001/050 VUs, 560 complete and 0 interrupted iterations
+ramp   [  19% ] 001/050 VUs  0m44.9s/4m0s  019.98 iters/s
+
+running (0m45.9s), 001/050 VUs, 580 complete and 0 interrupted iterations
+ramp   [  19% ] 001/050 VUs  0m45.9s/4m0s  020.31 iters/s
+
+running (0m46.9s), 000/050 VUs, 601 complete and 0 interrupted iterations
+ramp   [  20% ] 000/050 VUs  0m46.9s/4m0s  020.64 iters/s
+
+running (0m47.9s), 000/050 VUs, 622 complete and 0 interrupted iterations
+ramp   [  20% ] 000/050 VUs  0m47.9s/4m0s  020.98 iters/s
+
+running (0m48.9s), 000/050 VUs, 643 complete and 0 interrupted iterations
+ramp   [  20% ] 000/050 VUs  0m48.9s/4m0s  021.31 iters/s
+
+running (0m49.9s), 001/050 VUs, 664 complete and 0 interrupted iterations
+ramp   [  21% ] 001/050 VUs  0m49.9s/4m0s  021.65 iters/s
+
+running (0m50.9s), 001/050 VUs, 686 complete and 0 interrupted iterations
+ramp   [  21% ] 001/050 VUs  0m50.9s/4m0s  021.98 iters/s
+
+running (0m51.9s), 001/050 VUs, 708 complete and 0 interrupted iterations
+ramp   [  22% ] 001/050 VUs  0m51.9s/4m0s  022.32 iters/s
+
+running (0m52.9s), 000/050 VUs, 731 complete and 0 interrupted iterations
+ramp   [  22% ] 000/050 VUs  0m52.9s/4m0s  022.64 iters/s
+
+running (0m53.9s), 001/050 VUs, 753 complete and 0 interrupted iterations
+ramp   [  22% ] 001/050 VUs  0m53.9s/4m0s  022.98 iters/s
+
+running (0m54.9s), 000/050 VUs, 777 complete and 0 interrupted iterations
+ramp   [  23% ] 000/050 VUs  0m54.9s/4m0s  023.31 iters/s
+
+running (0m55.9s), 001/050 VUs, 800 complete and 0 interrupted iterations
+ramp   [  23% ] 001/050 VUs  0m55.9s/4m0s  023.65 iters/s
+
+running (0m56.9s), 000/050 VUs, 824 complete and 0 interrupted iterations
+ramp   [  24% ] 000/050 VUs  0m56.9s/4m0s  023.97 iters/s
+
+running (0m57.9s), 001/050 VUs, 848 complete and 0 interrupted iterations
+ramp   [  24% ] 001/050 VUs  0m57.9s/4m0s  024.32 iters/s
+
+running (0m58.9s), 000/050 VUs, 873 complete and 0 interrupted iterations
+ramp   [  25% ] 000/050 VUs  0m58.9s/4m0s  024.64 iters/s
+
+running (0m59.9s), 001/050 VUs, 897 complete and 0 interrupted iterations
+ramp   [  25% ] 001/050 VUs  0m59.9s/4m0s  024.98 iters/s
+
+running (1m00.9s), 003/050 VUs, 920 complete and 0 interrupted iterations
+ramp   [  25% ] 003/050 VUs  1m00.9s/4m0s  025.39 iters/s
+
+running (1m01.9s), 002/050 VUs, 947 complete and 0 interrupted iterations
+ramp   [  26% ] 002/050 VUs  1m01.9s/4m0s  025.81 iters/s
+
+running (1m02.9s), 001/050 VUs, 974 complete and 0 interrupted iterations
+ramp   [  26% ] 001/050 VUs  1m02.9s/4m0s  026.23 iters/s
+
+running (1m03.9s), 000/050 VUs, 1001 complete and 0 interrupted iterations
+ramp   [  27% ] 000/050 VUs  1m03.9s/4m0s  026.64 iters/s
+
+running (1m04.9s), 001/050 VUs, 1027 complete and 0 interrupted iterations
+ramp   [  27% ] 001/050 VUs  1m04.9s/4m0s  027.06 iters/s
+
+running (1m05.9s), 001/050 VUs, 1054 complete and 0 interrupted iterations
+ramp   [  27% ] 001/050 VUs  1m05.9s/4m0s  027.47 iters/s
+
+running (1m06.9s), 001/050 VUs, 1082 complete and 0 interrupted iterations
+ramp   [  28% ] 001/050 VUs  1m06.9s/4m0s  027.89 iters/s
+
+running (1m07.9s), 001/050 VUs, 1110 complete and 0 interrupted iterations
+ramp   [  28% ] 001/050 VUs  1m07.9s/4m0s  028.31 iters/s
+
+running (1m08.9s), 000/050 VUs, 1139 complete and 0 interrupted iterations
+ramp   [  29% ] 000/050 VUs  1m08.9s/4m0s  028.72 iters/s
+
+running (1m09.9s), 001/050 VUs, 1167 complete and 0 interrupted iterations
+ramp   [  29% ] 001/050 VUs  1m09.9s/4m0s  029.13 iters/s
+
+running (1m10.9s), 001/050 VUs, 1197 complete and 0 interrupted iterations
+ramp   [  30% ] 001/050 VUs  1m10.9s/4m0s  029.56 iters/s
+
+running (1m11.9s), 001/050 VUs, 1227 complete and 0 interrupted iterations
+ramp   [  30% ] 001/050 VUs  1m11.9s/4m0s  029.98 iters/s
+
+running (1m12.9s), 001/050 VUs, 1257 complete and 0 interrupted iterations
+ramp   [  30% ] 001/050 VUs  1m12.9s/4m0s  030.39 iters/s
+
+running (1m13.9s), 000/050 VUs, 1288 complete and 0 interrupted iterations
+ramp   [  31% ] 000/050 VUs  1m13.9s/4m0s  030.80 iters/s
+
+running (1m14.9s), 000/050 VUs, 1319 complete and 0 interrupted iterations
+ramp   [  31% ] 000/050 VUs  1m14.9s/4m0s  031.22 iters/s
+
+running (1m15.9s), 001/050 VUs, 1350 complete and 0 interrupted iterations
+ramp   [  32% ] 001/050 VUs  1m15.9s/4m0s  031.64 iters/s
+
+running (1m16.9s), 001/050 VUs, 1382 complete and 0 interrupted iterations
+ramp   [  32% ] 001/050 VUs  1m16.9s/4m0s  032.06 iters/s
+
+running (1m17.9s), 001/050 VUs, 1414 complete and 0 interrupted iterations
+ramp   [  32% ] 001/050 VUs  1m17.9s/4m0s  032.47 iters/s
+
+running (1m18.9s), 001/050 VUs, 1447 complete and 0 interrupted iterations
+ramp   [  33% ] 001/050 VUs  1m18.9s/4m0s  032.90 iters/s
+
+running (1m19.9s), 001/050 VUs, 1480 complete and 0 interrupted iterations
+ramp   [  33% ] 001/050 VUs  1m19.9s/4m0s  033.31 iters/s
+
+running (1m20.9s), 001/050 VUs, 1513 complete and 0 interrupted iterations
+ramp   [  34% ] 001/050 VUs  1m20.9s/4m0s  033.72 iters/s
+
+running (1m21.9s), 001/050 VUs, 1547 complete and 0 interrupted iterations
+ramp   [  34% ] 001/050 VUs  1m21.9s/4m0s  034.14 iters/s
+
+running (1m22.9s), 001/050 VUs, 1582 complete and 0 interrupted iterations
+ramp   [  35% ] 001/050 VUs  1m22.9s/4m0s  034.56 iters/s
+
+running (1m23.9s), 001/050 VUs, 1616 complete and 0 interrupted iterations
+ramp   [  35% ] 001/050 VUs  1m23.9s/4m0s  034.97 iters/s
+
+running (1m24.9s), 004/050 VUs, 1648 complete and 0 interrupted iterations
+ramp   [  35% ] 004/050 VUs  1m24.9s/4m0s  035.38 iters/s
+
+running (1m25.9s), 001/050 VUs, 1687 complete and 0 interrupted iterations
+ramp   [  36% ] 001/050 VUs  1m25.9s/4m0s  035.81 iters/s
+
+running (1m26.9s), 008/050 VUs, 1716 complete and 0 interrupted iterations
+ramp   [  36% ] 008/050 VUs  1m26.9s/4m0s  036.22 iters/s
+
+running (1m27.9s), 000/050 VUs, 1760 complete and 0 interrupted iterations
+ramp   [  37% ] 000/050 VUs  1m27.9s/4m0s  036.65 iters/s
+
+running (1m28.9s), 001/050 VUs, 1796 complete and 0 interrupted iterations
+ramp   [  37% ] 001/050 VUs  1m28.9s/4m0s  037.05 iters/s
+
+running (1m29.9s), 002/050 VUs, 1833 complete and 0 interrupted iterations
+ramp   [  37% ] 002/050 VUs  1m29.9s/4m0s  037.48 iters/s
+
+running (1m30.9s), 001/050 VUs, 1871 complete and 0 interrupted iterations
+ramp   [  38% ] 001/050 VUs  1m30.9s/4m0s  037.89 iters/s
+
+running (1m31.9s), 001/050 VUs, 1909 complete and 0 interrupted iterations
+ramp   [  38% ] 001/050 VUs  1m31.9s/4m0s  038.30 iters/s
+
+running (1m32.9s), 002/050 VUs, 1947 complete and 0 interrupted iterations
+ramp   [  39% ] 002/050 VUs  1m32.9s/4m0s  038.72 iters/s
+
+running (1m33.9s), 002/050 VUs, 1986 complete and 0 interrupted iterations
+ramp   [  39% ] 002/050 VUs  1m33.9s/4m0s  039.14 iters/s
+
+running (1m34.9s), 001/050 VUs, 2026 complete and 0 interrupted iterations
+ramp   [  40% ] 001/050 VUs  1m34.9s/4m0s  039.55 iters/s
+
+running (1m35.9s), 001/050 VUs, 2066 complete and 0 interrupted iterations
+ramp   [  40% ] 001/050 VUs  1m35.9s/4m0s  039.97 iters/s
+
+running (1m36.9s), 000/050 VUs, 2107 complete and 0 interrupted iterations
+ramp   [  40% ] 000/050 VUs  1m36.9s/4m0s  040.39 iters/s
+
+running (1m37.9s), 004/050 VUs, 2144 complete and 0 interrupted iterations
+ramp   [  41% ] 004/050 VUs  1m37.9s/4m0s  040.81 iters/s
+
+running (1m38.9s), 001/050 VUs, 2188 complete and 0 interrupted iterations
+ramp   [  41% ] 001/050 VUs  1m38.9s/4m0s  041.23 iters/s
+
+running (1m39.9s), 001/050 VUs, 2229 complete and 0 interrupted iterations
+ramp   [  42% ] 001/050 VUs  1m39.9s/4m0s  041.64 iters/s
+
+running (1m40.9s), 001/050 VUs, 2271 complete and 0 interrupted iterations
+ramp   [  42% ] 001/050 VUs  1m40.9s/4m0s  042.06 iters/s
+
+running (1m41.9s), 000/050 VUs, 2314 complete and 0 interrupted iterations
+ramp   [  42% ] 000/050 VUs  1m41.9s/4m0s  042.47 iters/s
+
+running (1m42.9s), 002/050 VUs, 2355 complete and 0 interrupted iterations
+ramp   [  43% ] 002/050 VUs  1m42.9s/4m0s  042.89 iters/s
+
+running (1m43.9s), 001/050 VUs, 2399 complete and 0 interrupted iterations
+ramp   [  43% ] 001/050 VUs  1m43.9s/4m0s  043.31 iters/s
+
+running (1m44.9s), 002/050 VUs, 2442 complete and 0 interrupted iterations
+ramp   [  44% ] 002/050 VUs  1m44.9s/4m0s  043.73 iters/s
+
+running (1m45.9s), 001/050 VUs, 2486 complete and 0 interrupted iterations
+ramp   [  44% ] 001/050 VUs  1m45.9s/4m0s  044.14 iters/s
+
+running (1m46.9s), 002/050 VUs, 2530 complete and 0 interrupted iterations
+ramp   [  45% ] 002/050 VUs  1m46.9s/4m0s  044.56 iters/s
+
+running (1m47.9s), 002/050 VUs, 2575 complete and 0 interrupted iterations
+ramp   [  45% ] 002/050 VUs  1m47.9s/4m0s  044.98 iters/s
+
+running (1m48.9s), 001/050 VUs, 2621 complete and 0 interrupted iterations
+ramp   [  45% ] 001/050 VUs  1m48.9s/4m0s  045.39 iters/s
+
+running (1m49.9s), 001/050 VUs, 2666 complete and 0 interrupted iterations
+ramp   [  46% ] 001/050 VUs  1m49.9s/4m0s  045.80 iters/s
+
+running (1m50.9s), 001/050 VUs, 2712 complete and 0 interrupted iterations
+ramp   [  46% ] 001/050 VUs  1m50.9s/4m0s  046.22 iters/s
+
+running (1m51.9s), 001/050 VUs, 2759 complete and 0 interrupted iterations
+ramp   [  47% ] 001/050 VUs  1m51.9s/4m0s  046.64 iters/s
+
+running (1m52.9s), 002/050 VUs, 2805 complete and 0 interrupted iterations
+ramp   [  47% ] 002/050 VUs  1m52.9s/4m0s  047.06 iters/s
+
+running (1m53.9s), 002/050 VUs, 2852 complete and 0 interrupted iterations
+ramp   [  47% ] 002/050 VUs  1m53.9s/4m0s  047.47 iters/s
+
+running (1m54.9s), 002/050 VUs, 2900 complete and 0 interrupted iterations
+ramp   [  48% ] 002/050 VUs  1m54.9s/4m0s  047.89 iters/s
+
+running (1m55.9s), 001/050 VUs, 2949 complete and 0 interrupted iterations
+ramp   [  48% ] 001/050 VUs  1m55.9s/4m0s  048.31 iters/s
+
+running (1m56.9s), 002/050 VUs, 2996 complete and 0 interrupted iterations
+ramp   [  49% ] 002/050 VUs  1m56.9s/4m0s  048.72 iters/s
+
+running (1m57.9s), 009/050 VUs, 3038 complete and 0 interrupted iterations
+ramp   [  49% ] 009/050 VUs  1m57.9s/4m0s  049.14 iters/s
+
+running (1m58.9s), 001/050 VUs, 3096 complete and 0 interrupted iterations
+ramp   [  50% ] 001/050 VUs  1m58.9s/4m0s  049.56 iters/s
+
+running (1m59.9s), 001/050 VUs, 3145 complete and 0 interrupted iterations
+ramp   [  50% ] 001/050 VUs  1m59.9s/4m0s  049.97 iters/s
+
+running (2m00.9s), 001/050 VUs, 3196 complete and 0 interrupted iterations
+ramp   [  50% ] 001/050 VUs  2m00.9s/4m0s  050.79 iters/s
+
+running (2m01.9s), 002/050 VUs, 3246 complete and 0 interrupted iterations
+ramp   [  51% ] 002/050 VUs  2m01.9s/4m0s  051.62 iters/s
+
+running (2m02.9s), 003/050 VUs, 3297 complete and 0 interrupted iterations
+ramp   [  51% ] 003/050 VUs  2m02.9s/4m0s  052.45 iters/s
+
+running (2m03.9s), 002/050 VUs, 3351 complete and 0 interrupted iterations
+ramp   [  52% ] 002/050 VUs  2m03.9s/4m0s  053.28 iters/s
+
+running (2m04.9s), 003/050 VUs, 3403 complete and 0 interrupted iterations
+ramp   [  52% ] 003/050 VUs  2m04.9s/4m0s  054.11 iters/s
+
+running (2m05.9s), 001/050 VUs, 3460 complete and 0 interrupted iterations
+ramp   [  52% ] 001/050 VUs  2m05.9s/4m0s  054.95 iters/s
+
+running (2m06.9s), 002/050 VUs, 3514 complete and 0 interrupted iterations
+ramp   [  53% ] 002/050 VUs  2m06.9s/4m0s  055.77 iters/s
+
+running (2m07.9s), 006/050 VUs, 3567 complete and 0 interrupted iterations
+ramp   [  53% ] 006/050 VUs  2m07.9s/4m0s  056.62 iters/s
+
+running (2m08.9s), 003/050 VUs, 3627 complete and 0 interrupted iterations
+ramp   [  54% ] 003/050 VUs  2m08.9s/4m0s  057.45 iters/s
+
+running (2m09.9s), 010/050 VUs, 3677 complete and 0 interrupted iterations
+ramp   [  54% ] 010/050 VUs  2m09.9s/4m0s  058.29 iters/s
+
+running (2m10.9s), 012/050 VUs, 3734 complete and 0 interrupted iterations
+ramp   [  55% ] 012/050 VUs  2m10.9s/4m0s  059.11 iters/s
+
+running (2m11.9s), 005/050 VUs, 3801 complete and 0 interrupted iterations
+ramp   [  55% ] 005/050 VUs  2m11.9s/4m0s  059.95 iters/s
+
+running (2m12.9s), 010/050 VUs, 3856 complete and 0 interrupted iterations
+ramp   [  55% ] 010/050 VUs  2m12.9s/4m0s  060.78 iters/s
+
+running (2m13.9s), 008/050 VUs, 3919 complete and 0 interrupted iterations
+ramp   [  56% ] 008/050 VUs  2m13.9s/4m0s  061.61 iters/s
+
+running (2m14.9s), 015/050 VUs, 3974 complete and 0 interrupted iterations
+ramp   [  56% ] 015/050 VUs  2m14.9s/4m0s  062.44 iters/s
+
+running (2m15.9s), 017/050 VUs, 4035 complete and 0 interrupted iterations
+ramp   [  57% ] 017/050 VUs  2m15.9s/4m0s  063.28 iters/s
+
+running (2m16.9s), 010/050 VUs, 4106 complete and 0 interrupted iterations
+ramp   [  57% ] 010/050 VUs  2m16.9s/4m0s  064.12 iters/s
+
+running (2m17.9s), 013/050 VUs, 4167 complete and 0 interrupted iterations
+ramp   [  57% ] 013/050 VUs  2m17.9s/4m0s  064.94 iters/s
+
+running (2m18.9s), 008/050 VUs, 4238 complete and 0 interrupted iterations
+ramp   [  58% ] 008/050 VUs  2m18.9s/4m0s  065.78 iters/s
+
+running (2m19.9s), 011/050 VUs, 4301 complete and 0 interrupted iterations
+ramp   [  58% ] 011/050 VUs  2m19.9s/4m0s  066.61 iters/s
+
+running (2m20.9s), 007/050 VUs, 4372 complete and 0 interrupted iterations
+ramp   [  59% ] 007/050 VUs  2m20.9s/4m0s  067.45 iters/s
+
+running (2m21.9s), 005/050 VUs, 4442 complete and 0 interrupted iterations
+ramp   [  59% ] 005/050 VUs  2m21.9s/4m0s  068.28 iters/s
+
+running (2m22.9s), 012/050 VUs, 4503 complete and 0 interrupted iterations
+ramp   [  60% ] 012/050 VUs  2m22.9s/4m0s  069.12 iters/s
+
+running (2m23.9s), 010/050 VUs, 4575 complete and 0 interrupted iterations
+ramp   [  60% ] 010/050 VUs  2m23.9s/4m0s  069.95 iters/s
+
+running (2m24.9s), 019/050 VUs, 4636 complete and 0 interrupted iterations
+ramp   [  60% ] 019/050 VUs  2m24.9s/4m0s  070.78 iters/s
+
+running (2m25.9s), 021/050 VUs, 4706 complete and 0 interrupted iterations
+ramp   [  61% ] 021/050 VUs  2m25.9s/4m0s  071.62 iters/s
+
+running (2m26.9s), 020/050 VUs, 4779 complete and 0 interrupted iterations
+ramp   [  61% ] 020/050 VUs  2m26.9s/4m0s  072.45 iters/s
+
+running (2m27.9s), 023/050 VUs, 4848 complete and 0 interrupted iterations
+ramp   [  62% ] 023/050 VUs  2m27.9s/4m0s  073.27 iters/s
+
+running (2m28.9s), 016/050 VUs, 4929 complete and 0 interrupted iterations
+ramp   [  62% ] 016/050 VUs  2m28.9s/4m0s  074.11 iters/s
+
+running (2m29.9s), 013/050 VUs, 5007 complete and 0 interrupted iterations
+ramp   [  62% ] 013/050 VUs  2m29.9s/4m0s  074.95 iters/s
+
+running (2m30.9s), 005/050 VUs, 5090 complete and 0 interrupted iterations
+ramp   [  63% ] 005/050 VUs  2m30.9s/4m0s  075.78 iters/s
+
+running (2m31.9s), 008/050 VUs, 5163 complete and 0 interrupted iterations
+ramp   [  63% ] 008/050 VUs  2m31.9s/4m0s  076.61 iters/s
+
+running (2m32.9s), 013/050 VUs, 5235 complete and 0 interrupted iterations
+ramp   [  64% ] 013/050 VUs  2m32.9s/4m0s  077.44 iters/s
+
+running (2m33.9s), 016/050 VUs, 5310 complete and 0 interrupted iterations
+ramp   [  64% ] 016/050 VUs  2m33.9s/4m0s  078.28 iters/s
+
+running (2m34.9s), 016/050 VUs, 5389 complete and 0 interrupted iterations
+ramp   [  65% ] 016/050 VUs  2m34.9s/4m0s  079.11 iters/s
+
+running (2m35.9s), 012/050 VUs, 5472 complete and 0 interrupted iterations
+ramp   [  65% ] 012/050 VUs  2m35.9s/4m0s  079.94 iters/s
+
+running (2m36.9s), 018/050 VUs, 5547 complete and 0 interrupted iterations
+ramp   [  65% ] 018/050 VUs  2m36.9s/4m0s  080.78 iters/s
+
+running (2m37.9s), 027/050 VUs, 5619 complete and 0 interrupted iterations
+ramp   [  66% ] 027/050 VUs  2m37.9s/4m0s  081.61 iters/s
+
+running (2m38.9s), 049/050 VUs, 5679 complete and 0 interrupted iterations
+ramp   [  66% ] 049/050 VUs  2m38.9s/4m0s  082.45 iters/s
+
+running (2m39.9s), 056/056 VUs, 5749 complete and 0 interrupted iterations
+ramp   [  67% ] 056/056 VUs  2m39.9s/4m0s  083.28 iters/s
+
+running (2m40.9s), 063/064 VUs, 5817 complete and 0 interrupted iterations
+ramp   [  67% ] 063/064 VUs  2m40.9s/4m0s  084.11 iters/s
+
+running (2m41.9s), 072/074 VUs, 5883 complete and 0 interrupted iterations
+ramp   [  67% ] 072/074 VUs  2m41.9s/4m0s  084.95 iters/s
+
+running (2m42.9s), 081/084 VUs, 5949 complete and 0 interrupted iterations
+ramp   [  68% ] 081/084 VUs  2m42.9s/4m0s  085.79 iters/s
+
+running (2m43.9s), 092/093 VUs, 6016 complete and 0 interrupted iterations
+ramp   [  68% ] 092/093 VUs  2m43.9s/4m0s  086.62 iters/s
+
+running (2m44.9s), 099/102 VUs, 6087 complete and 0 interrupted iterations
+ramp   [  69% ] 099/102 VUs  2m44.9s/4m0s  087.45 iters/s
+
+running (2m45.9s), 113/115 VUs, 6148 complete and 0 interrupted iterations
+ramp   [  69% ] 113/115 VUs  2m45.9s/4m0s  088.28 iters/s
+
+running (2m46.9s), 122/122 VUs, 6220 complete and 0 interrupted iterations
+ramp   [  70% ] 122/122 VUs  2m46.9s/4m0s  089.11 iters/s
+
+running (2m47.9s), 130/132 VUs, 6292 complete and 0 interrupted iterations
+ramp   [  70% ] 130/132 VUs  2m47.9s/4m0s  089.95 iters/s
+
+running (2m48.9s), 137/139 VUs, 6368 complete and 0 interrupted iterations
+ramp   [  70% ] 137/139 VUs  2m48.9s/4m0s  090.78 iters/s
+
+running (2m49.9s), 145/149 VUs, 6441 complete and 0 interrupted iterations
+ramp   [  71% ] 145/149 VUs  2m49.9s/4m0s  091.61 iters/s
+
+running (2m50.9s), 150/163 VUs, 6513 complete and 0 interrupted iterations
+ramp   [  71% ] 150/163 VUs  2m50.9s/4m0s  092.44 iters/s
+
+running (2m51.9s), 166/170 VUs, 6583 complete and 0 interrupted iterations
+ramp   [  72% ] 166/170 VUs  2m51.9s/4m0s  093.28 iters/s
+
+running (2m52.9s), 182/183 VUs, 6648 complete and 0 interrupted iterations
+ramp   [  72% ] 182/183 VUs  2m52.9s/4m0s  094.11 iters/s
+
+running (2m53.9s), 173/191 VUs, 6743 complete and 0 interrupted iterations
+ramp   [  72% ] 173/191 VUs  2m53.9s/4m0s  094.94 iters/s
+
+running (2m54.9s), 201/202 VUs, 6800 complete and 0 interrupted iterations
+ramp   [  73% ] 201/202 VUs  2m54.9s/4m0s  095.78 iters/s
+
+running (2m55.9s), 212/212 VUs, 6875 complete and 0 interrupted iterations
+ramp   [  73% ] 212/212 VUs  2m55.9s/4m0s  096.61 iters/s
+
+running (2m56.9s), 239/239 VUs, 6918 complete and 0 interrupted iterations
+ramp   [  74% ] 239/239 VUs  2m56.9s/4m0s  097.45 iters/s
+
+running (2m57.9s), 256/256 VUs, 6981 complete and 0 interrupted iterations
+ramp   [  74% ] 256/256 VUs  2m57.9s/4m0s  098.28 iters/s
+
+running (2m58.9s), 276/276 VUs, 7039 complete and 0 interrupted iterations
+ramp   [  75% ] 276/276 VUs  2m58.9s/4m0s  099.12 iters/s
+
+running (2m59.9s), 293/294 VUs, 7104 complete and 0 interrupted iterations
+ramp   [  75% ] 293/294 VUs  2m59.9s/4m0s  099.95 iters/s
+
+running (3m00.9s), 303/311 VUs, 7176 complete and 0 interrupted iterations
+ramp   [  75% ] 303/311 VUs  3m00.9s/4m0s  100.78 iters/s
+
+running (3m01.9s), 327/327 VUs, 7238 complete and 0 interrupted iterations
+ramp   [  76% ] 327/327 VUs  3m01.9s/4m0s  101.62 iters/s
+
+running (3m02.9s), 336/346 VUs, 7312 complete and 0 interrupted iterations
+ramp   [  76% ] 336/346 VUs  3m02.9s/4m0s  102.45 iters/s
+
+running (3m03.9s), 357/357 VUs, 7382 complete and 0 interrupted iterations
+ramp   [  77% ] 357/357 VUs  3m03.9s/4m0s  103.28 iters/s
+
+running (3m04.9s), 361/375 VUs, 7464 complete and 0 interrupted iterations
+ramp   [  77% ] 361/375 VUs  3m04.9s/4m0s  104.11 iters/s
+
+running (3m05.9s), 387/388 VUs, 7529 complete and 0 interrupted iterations
+ramp   [  77% ] 387/388 VUs  3m05.9s/4m0s  104.95 iters/s
+
+running (3m06.9s), 401/403 VUs, 7605 complete and 0 interrupted iterations
+ramp   [  78% ] 401/403 VUs  3m06.9s/4m0s  105.78 iters/s
+
+running (3m07.9s), 422/422 VUs, 7671 complete and 0 interrupted iterations
+ramp   [  78% ] 422/422 VUs  3m07.9s/4m0s  106.61 iters/s
+
+running (3m08.9s), 436/440 VUs, 7746 complete and 0 interrupted iterations
+ramp   [  79% ] 436/440 VUs  3m08.9s/4m0s  107.44 iters/s
+
+running (3m09.9s), 447/451 VUs, 7832 complete and 0 interrupted iterations
+ramp   [  79% ] 447/451 VUs  3m09.9s/4m0s  108.28 iters/s
+
+running (3m10.9s), 479/479 VUs, 7881 complete and 0 interrupted iterations
+ramp   [  80% ] 479/479 VUs  3m10.9s/4m0s  109.11 iters/s
+
+running (3m11.9s), 482/493 VUs, 7972 complete and 0 interrupted iterations
+ramp   [  80% ] 482/493 VUs  3m11.9s/4m0s  109.95 iters/s
+
+running (3m12.9s), 511/512 VUs, 8034 complete and 0 interrupted iterations
+ramp   [  80% ] 511/512 VUs  3m12.9s/4m0s  110.78 iters/s
+
+running (3m13.9s), 514/530 VUs, 8124 complete and 0 interrupted iterations
+ramp   [  81% ] 514/530 VUs  3m13.9s/4m0s  111.61 iters/s
+
+running (3m14.9s), 546/547 VUs, 8187 complete and 0 interrupted iterations
+ramp   [  81% ] 546/547 VUs  3m14.9s/4m0s  112.45 iters/s
+
+running (3m15.9s), 573/574 VUs, 8246 complete and 0 interrupted iterations
+ramp   [  82% ] 573/574 VUs  3m15.9s/4m0s  113.28 iters/s
+
+running (3m16.9s), 588/595 VUs, 8324 complete and 0 interrupted iterations
+ramp   [  82% ] 588/595 VUs  3m16.9s/4m0s  114.12 iters/s
+time="2026-11-12T13:07:36Z" level=warning msg="Insufficient VUs, reached 600 active VUs and cannot initialize more" executor=ramping-arrival-rate scenario=ramp
+
+running (3m17.9s), 595/600 VUs, 8389 complete and 0 interrupted iterations
+ramp   [  82% ] 595/600 VUs  3m17.9s/4m0s  114.95 iters/s
+
+running (3m18.9s), 597/600 VUs, 8472 complete and 0 interrupted iterations
+ramp   [  83% ] 597/600 VUs  3m18.9s/4m0s  115.78 iters/s
+
+running (3m19.9s), 595/600 VUs, 8536 complete and 0 interrupted iterations
+ramp   [  83% ] 595/600 VUs  3m19.9s/4m0s  116.62 iters/s
+
+running (3m20.9s), 600/600 VUs, 8591 complete and 0 interrupted iterations
+ramp   [  84% ] 600/600 VUs  3m20.9s/4m0s  117.45 iters/s
+
+running (3m21.9s), 591/600 VUs, 8677 complete and 0 interrupted iterations
+ramp   [  84% ] 591/600 VUs  3m21.9s/4m0s  118.28 iters/s
+
+running (3m22.9s), 599/600 VUs, 8777 complete and 0 interrupted iterations
+ramp   [  85% ] 599/600 VUs  3m22.9s/4m0s  119.11 iters/s
+
+running (3m23.9s), 599/600 VUs, 8857 complete and 0 interrupted iterations
+ramp   [  85% ] 599/600 VUs  3m23.9s/4m0s  119.95 iters/s
+
+running (3m24.9s), 597/600 VUs, 8932 complete and 0 interrupted iterations
+ramp   [  85% ] 597/600 VUs  3m24.9s/4m0s  120.78 iters/s
+
+running (3m25.9s), 595/600 VUs, 9007 complete and 0 interrupted iterations
+ramp   [  86% ] 595/600 VUs  3m25.9s/4m0s  121.61 iters/s
+
+running (3m26.9s), 597/600 VUs, 9069 complete and 0 interrupted iterations
+ramp   [  86% ] 597/600 VUs  3m26.9s/4m0s  122.45 iters/s
+
+running (3m27.9s), 597/600 VUs, 9130 complete and 0 interrupted iterations
+ramp   [  87% ] 597/600 VUs  3m27.9s/4m0s  123.28 iters/s
+
+running (3m28.9s), 600/600 VUs, 9207 complete and 0 interrupted iterations
+ramp   [  87% ] 600/600 VUs  3m28.9s/4m0s  124.11 iters/s
+
+running (3m29.9s), 600/600 VUs, 9308 complete and 0 interrupted iterations
+ramp   [  87% ] 600/600 VUs  3m29.9s/4m0s  124.94 iters/s
+
+running (3m30.9s), 596/600 VUs, 9403 complete and 0 interrupted iterations
+ramp   [  88% ] 596/600 VUs  3m30.9s/4m0s  125.78 iters/s
+
+running (3m31.9s), 595/600 VUs, 9497 complete and 0 interrupted iterations
+ramp   [  88% ] 595/600 VUs  3m31.9s/4m0s  126.61 iters/s
+
+running (3m32.9s), 599/600 VUs, 9565 complete and 0 interrupted iterations
+ramp   [  89% ] 599/600 VUs  3m32.9s/4m0s  127.45 iters/s
+
+running (3m33.9s), 600/600 VUs, 9613 complete and 0 interrupted iterations
+ramp   [  89% ] 600/600 VUs  3m33.9s/4m0s  128.28 iters/s
+
+running (3m34.9s), 600/600 VUs, 9684 complete and 0 interrupted iterations
+ramp   [  90% ] 600/600 VUs  3m34.9s/4m0s  129.12 iters/s
+
+running (3m35.9s), 596/600 VUs, 9798 complete and 0 interrupted iterations
+ramp   [  90% ] 596/600 VUs  3m35.9s/4m0s  129.95 iters/s
+
+running (3m36.9s), 600/600 VUs, 9872 complete and 0 interrupted iterations
+ramp   [  90% ] 600/600 VUs  3m36.9s/4m0s  130.78 iters/s
+
+running (3m37.9s), 600/600 VUs, 9958 complete and 0 interrupted iterations
+ramp   [  91% ] 600/600 VUs  3m37.9s/4m0s  131.61 iters/s
+
+running (3m38.9s), 598/600 VUs, 10052 complete and 0 interrupted iterations
+ramp   [  91% ] 598/600 VUs  3m38.9s/4m0s  132.45 iters/s
+
+running (3m39.9s), 595/600 VUs, 10114 complete and 0 interrupted iterations
+ramp   [  92% ] 595/600 VUs  3m39.9s/4m0s  133.28 iters/s
+
+running (3m40.9s), 600/600 VUs, 10185 complete and 0 interrupted iterations
+ramp   [  92% ] 600/600 VUs  3m40.9s/4m0s  134.12 iters/s
+
+running (3m41.9s), 593/600 VUs, 10272 complete and 0 interrupted iterations
+ramp   [  92% ] 593/600 VUs  3m41.9s/4m0s  134.95 iters/s
+
+running (3m42.9s), 594/600 VUs, 10367 complete and 0 interrupted iterations
+ramp   [  93% ] 594/600 VUs  3m42.9s/4m0s  135.78 iters/s
+
+running (3m43.9s), 598/600 VUs, 10443 complete and 0 interrupted iterations
+ramp   [  93% ] 598/600 VUs  3m43.9s/4m0s  136.62 iters/s
+
+running (3m44.9s), 600/600 VUs, 10527 complete and 0 interrupted iterations
+ramp   [  94% ] 600/600 VUs  3m44.9s/4m0s  137.45 iters/s
+
+running (3m45.9s), 600/600 VUs, 10602 complete and 0 interrupted iterations
+ramp   [  94% ] 600/600 VUs  3m45.9s/4m0s  138.28 iters/s
+
+running (3m46.9s), 600/600 VUs, 10665 complete and 0 interrupted iterations
+ramp   [  95% ] 600/600 VUs  3m46.9s/4m0s  139.11 iters/s
+
+running (3m47.9s), 600/600 VUs, 10730 complete and 0 interrupted iterations
+ramp   [  95% ] 600/600 VUs  3m47.9s/4m0s  139.95 iters/s
+
+running (3m48.9s), 588/600 VUs, 10834 complete and 0 interrupted iterations
+ramp   [  95% ] 588/600 VUs  3m48.9s/4m0s  140.78 iters/s
+
+running (3m49.9s), 600/600 VUs, 10916 complete and 0 interrupted iterations
+ramp   [  96% ] 600/600 VUs  3m49.9s/4m0s  141.61 iters/s
+
+running (3m50.9s), 597/600 VUs, 10987 complete and 0 interrupted iterations
+ramp   [  96% ] 597/600 VUs  3m50.9s/4m0s  142.45 iters/s
+
+running (3m51.9s), 600/600 VUs, 11073 complete and 0 interrupted iterations
+ramp   [  97% ] 600/600 VUs  3m51.9s/4m0s  143.28 iters/s
+
+running (3m52.9s), 596/600 VUs, 11150 complete and 0 interrupted iterations
+ramp   [  97% ] 596/600 VUs  3m52.9s/4m0s  144.12 iters/s
+
+running (3m53.9s), 600/600 VUs, 11211 complete and 0 interrupted iterations
+ramp   [  97% ] 600/600 VUs  3m53.9s/4m0s  144.95 iters/s
+time="2026-11-12T13:08:13Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:13Z" level=warning msg="FAILED at 2026-11-12T13:08:13.579Z status=0 error=1212" source=console
+time="2026-11-12T13:08:13Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:13Z" level=warning msg="FAILED at 2026-11-12T13:08:13.589Z status=0 error=1212" source=console
+time="2026-11-12T13:08:13Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:13Z" level=warning msg="FAILED at 2026-11-12T13:08:13.600Z status=0 error=1212" source=console
+time="2026-11-12T13:08:13Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:13Z" level=warning msg="FAILED at 2026-11-12T13:08:13.627Z status=0 error=1212" source=console
+time="2026-11-12T13:08:13Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:13Z" level=warning msg="FAILED at 2026-11-12T13:08:13.634Z status=0 error=1212" source=console
+time="2026-11-12T13:08:13Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:13Z" level=warning msg="FAILED at 2026-11-12T13:08:13.642Z status=0 error=1212" source=console
+
+running (3m54.9s), 600/600 VUs, 11299 complete and 0 interrupted iterations
+ramp   [  98% ] 600/600 VUs  3m54.9s/4m0s  145.78 iters/s
+time="2026-11-12T13:08:14Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:14Z" level=warning msg="FAILED at 2026-11-12T13:08:14.580Z status=0 error=1212" source=console
+
+running (3m55.9s), 600/600 VUs, 11403 complete and 0 interrupted iterations
+ramp   [  98% ] 600/600 VUs  3m55.9s/4m0s  146.61 iters/s
+time="2026-11-12T13:08:15Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:15Z" level=warning msg="FAILED at 2026-11-12T13:08:15.583Z status=0 error=1212" source=console
+time="2026-11-12T13:08:15Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": EOF"
+time="2026-11-12T13:08:15Z" level=warning msg="FAILED at 2026-11-12T13:08:15.685Z status=0 error=1000" source=console
+
+running (3m56.9s), 596/600 VUs, 11488 complete and 0 interrupted iterations
+ramp   [  99% ] 596/600 VUs  3m56.9s/4m0s  147.45 iters/s
+time="2026-11-12T13:08:16Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:16Z" level=warning msg="FAILED at 2026-11-12T13:08:16.592Z status=0 error=1212" source=console
+
+running (3m57.9s), 600/600 VUs, 11555 complete and 0 interrupted iterations
+ramp   [  99% ] 600/600 VUs  3m57.9s/4m0s  148.28 iters/s
+time="2026-11-12T13:08:17Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:17Z" level=warning msg="FAILED at 2026-11-12T13:08:17.599Z status=0 error=1212" source=console
+
+running (3m58.9s), 541/600 VUs, 11722 complete and 0 interrupted iterations
+ramp   [ 100% ] 541/600 VUs  3m58.9s/4m0s  149.12 iters/s
+time="2026-11-12T13:08:18Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:18Z" level=warning msg="FAILED at 2026-11-12T13:08:18.604Z status=0 error=1212" source=console
+
+running (3m59.9s), 534/600 VUs, 11878 complete and 0 interrupted iterations
+ramp   [ 100% ] 534/600 VUs  3m59.9s/4m0s  149.95 iters/s
+time="2026-11-12T13:08:19Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:19Z" level=warning msg="FAILED at 2026-11-12T13:08:19.728Z status=0 error=1212" source=console
+
+running (4m00.9s), 530/600 VUs, 11891 complete and 0 interrupted iterations
+ramp Gåô [ 100% ] 540/600 VUs  4m0s  150.00 iters/s
+time="2026-11-12T13:08:20Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:20Z" level=warning msg="FAILED at 2026-11-12T13:08:20.816Z status=0 error=1212" source=console
+
+running (4m01.9s), 529/600 VUs, 11892 complete and 0 interrupted iterations
+ramp Gåô [ 100% ] 540/600 VUs  4m0s  150.00 iters/s
+time="2026-11-12T13:08:21Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:21Z" level=warning msg="FAILED at 2026-11-12T13:08:21.903Z status=0 error=1212" source=console
+
+running (4m02.9s), 528/600 VUs, 11893 complete and 0 interrupted iterations
+ramp Gåô [ 100% ] 540/600 VUs  4m0s  150.00 iters/s
+time="2026-11-12T13:08:22Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:22Z" level=warning msg="FAILED at 2026-11-12T13:08:22.863Z status=0 error=1212" source=console
+
+running (4m03.9s), 527/600 VUs, 11894 complete and 0 interrupted iterations
+ramp Gåô [ 100% ] 540/600 VUs  4m0s  150.00 iters/s
+time="2026-11-12T13:08:23Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:23Z" level=warning msg="FAILED at 2026-11-12T13:08:23.647Z status=0 error=1050" source=console
+time="2026-11-12T13:08:23Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:23Z" level=warning msg="FAILED at 2026-11-12T13:08:23.656Z status=0 error=1050" source=console
+time="2026-11-12T13:08:23Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:23Z" level=warning msg="FAILED at 2026-11-12T13:08:23.745Z status=0 error=1050" source=console
+time="2026-11-12T13:08:23Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:23Z" level=warning msg="FAILED at 2026-11-12T13:08:23.758Z status=0 error=1050" source=console
+time="2026-11-12T13:08:23Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:23Z" level=warning msg="FAILED at 2026-11-12T13:08:23.764Z status=0 error=1050" source=console
+time="2026-11-12T13:08:23Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:23Z" level=warning msg="FAILED at 2026-11-12T13:08:23.771Z status=0 error=1050" source=console
+time="2026-11-12T13:08:23Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:23Z" level=warning msg="FAILED at 2026-11-12T13:08:23.779Z status=0 error=1050" source=console
+time="2026-11-12T13:08:23Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:23Z" level=warning msg="FAILED at 2026-11-12T13:08:23.807Z status=0 error=1050" source=console
+time="2026-11-12T13:08:23Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:23Z" level=warning msg="FAILED at 2026-11-12T13:08:23.820Z status=0 error=1050" source=console
+time="2026-11-12T13:08:23Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:23Z" level=warning msg="FAILED at 2026-11-12T13:08:23.826Z status=0 error=1050" source=console
+time="2026-11-12T13:08:23Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:23Z" level=warning msg="FAILED at 2026-11-12T13:08:23.840Z status=0 error=1211" source=console
+time="2026-11-12T13:08:23Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:23Z" level=warning msg="FAILED at 2026-11-12T13:08:23.847Z status=0 error=1050" source=console
+time="2026-11-12T13:08:23Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:23Z" level=warning msg="FAILED at 2026-11-12T13:08:23.853Z status=0 error=1050" source=console
+time="2026-11-12T13:08:23Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:23Z" level=warning msg="FAILED at 2026-11-12T13:08:23.861Z status=0 error=1050" source=console
+time="2026-11-12T13:08:23Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:23Z" level=warning msg="FAILED at 2026-11-12T13:08:23.978Z status=0 error=1050" source=console
+time="2026-11-12T13:08:23Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:23Z" level=warning msg="FAILED at 2026-11-12T13:08:23.985Z status=0 error=1050" source=console
+time="2026-11-12T13:08:23Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:23Z" level=warning msg="FAILED at 2026-11-12T13:08:23.991Z status=0 error=1050" source=console
+time="2026-11-12T13:08:23Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:23Z" level=warning msg="FAILED at 2026-11-12T13:08:23.998Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.005Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.013Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.017Z status=0 error=1212" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.054Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.060Z status=0 error=1050" source=console
+
+running (4m04.9s), 504/600 VUs, 11917 complete and 0 interrupted iterations
+ramp Gåô [ 100% ] 540/600 VUs  4m0s  150.00 iters/s
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.231Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.238Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.245Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.252Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.259Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.266Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.335Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.341Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.348Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.354Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.362Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.368Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.376Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.382Z status=0 error=1211" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.389Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.395Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.403Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.409Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.416Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.423Z status=0 error=1211" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.430Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.438Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.444Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.451Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.458Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.463Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.471Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.479Z status=0 error=1211" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.484Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.491Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.499Z status=0 error=1211" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.512Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.520Z status=0 error=1211" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.527Z status=0 error=1211" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.534Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.540Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.546Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.554Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.560Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.567Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.575Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.587Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.595Z status=0 error=1211" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.602Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.608Z status=0 error=1211" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.615Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.621Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.629Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.635Z status=0 error=1211" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.642Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.648Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.656Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.663Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.671Z status=0 error=1211" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.676Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.684Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.691Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.697Z status=0 error=1211" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.704Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.711Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.767Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.774Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.783Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.797Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.801Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.806Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.836Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.837Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.847Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.862Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.855Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.860Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.872Z status=0 error=1211" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.878Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.881Z status=0 error=1211" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.894Z status=0 error=1211" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.896Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.903Z status=0 error=1211" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.911Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.916Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.923Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.929Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.936Z status=0 error=1211" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.943Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.951Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.958Z status=0 error=1211" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.964Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.971Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.978Z status=0 error=1211" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.984Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:24Z" level=warning msg="FAILED at 2026-11-12T13:08:24.991Z status=0 error=1050" source=console
+time="2026-11-12T13:08:24Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.000Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.005Z status=0 error=1211" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.012Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.019Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.039Z status=0 error=1212" source=console
+
+running (4m05.9s), 408/600 VUs, 12013 complete and 0 interrupted iterations
+ramp Gåô [ 100% ] 540/600 VUs  4m0s  150.00 iters/s
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.104Z status=0 error=1212" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.147Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.155Z status=0 error=1211" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.163Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.169Z status=0 error=1212" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.169Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.176Z status=0 error=1211" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.181Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.189Z status=0 error=1211" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.196Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.202Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.209Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.216Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.290Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.298Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.304Z status=0 error=1211" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.312Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.440Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.447Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.454Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.460Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.468Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.474Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.482Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.488Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.494Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.502Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.508Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.515Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.522Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.530Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.536Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.543Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.550Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.556Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.563Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.590Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.598Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.604Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.611Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.618Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.625Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.631Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.638Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.679Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.694Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.700Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.708Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.713Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.720Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.729Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.733Z status=0 error=1211" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.740Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.748Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.776Z status=0 error=1211" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.781Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.787Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.876Z status=0 error=1211" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.882Z status=0 error=1211" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.889Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.897Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.917Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.923Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.931Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.940Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.944Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.950Z status=0 error=1211" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.958Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.964Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.971Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.993Z status=0 error=1050" source=console
+time="2026-11-12T13:08:25Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:25Z" level=warning msg="FAILED at 2026-11-12T13:08:25.998Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.012Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.019Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.026Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.031Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.073Z status=0 error=1211" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.080Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.086Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.093Z status=0 error=1211" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+
+running (4m06.9s), 328/600 VUs, 12093 complete and 0 interrupted iterations
+ramp Gåô [ 100% ] 540/600 VUs  4m0s  150.00 iters/s
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.100Z status=0 error=1211" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.106Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.114Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.120Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.128Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.134Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.141Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.147Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.168Z status=0 error=1211" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.174Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.182Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.187Z status=0 error=1211" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.201Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.208Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.216Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.224Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.228Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.235Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.242Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.251Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.256Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.269Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial tcp 34.118.229.68:80: connect: connection refused"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.319Z status=0 error=1212" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.324Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.344Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.351Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.357Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.363Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.371Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.377Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.384Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.503Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.513Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.520Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.567Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.567Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.574Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.601Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.615Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.628Z status=0 error=1211" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.634Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.646Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.649Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.655Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.661Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.676Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.682Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.682Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.698Z status=0 error=1211" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.704Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.705Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.710Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.717Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.724Z status=0 error=1211" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.731Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.737Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.743Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.751Z status=0 error=1211" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.775Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.779Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.785Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.793Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.797Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.806Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.824Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.834Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.838Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.845Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.850Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.859Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.864Z status=0 error=1211" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.873Z status=0 error=1050" source=console
+time="2026-11-12T13:08:26Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:26Z" level=warning msg="FAILED at 2026-11-12T13:08:26.880Z status=0 error=1211" source=console
+
+running (4m07.9s), 255/600 VUs, 12166 complete and 0 interrupted iterations
+ramp Gåô [ 100% ] 540/600 VUs  4m0s  150.00 iters/s
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.142Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.154Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.168Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.175Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.181Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.195Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.196Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.206Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.211Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.220Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.224Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.229Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.236Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.242Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.251Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.256Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.263Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.269Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.276Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.329Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.343Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.350Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.357Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.364Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.371Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.418Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.437Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.443Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.451Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.458Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.465Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.471Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.478Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.485Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.491Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.498Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.506Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.512Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.517Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.525Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.532Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.565Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.571Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.579Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.586Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.592Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.606Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.612Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.619Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.627Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.633Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.639Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.647Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.654Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.660Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.667Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.672Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.680Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.686Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.700Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.706Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.761Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.767Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.774Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.821Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.828Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.840Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.847Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.853Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.861Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.869Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.874Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.883Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.889Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.895Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.902Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.908Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.922Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.931Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.934Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.941Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.949Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.956Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.962Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.969Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.976Z status=0 error=1050" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.988Z status=0 error=1211" source=console
+time="2026-11-12T13:08:27Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:27Z" level=warning msg="FAILED at 2026-11-12T13:08:27.995Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.003Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.009Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.016Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.022Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.029Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.036Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.042Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.050Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.057Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.062Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.069Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.075Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.082Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.090Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.097Z status=0 error=1211" source=console
+
+running (4m08.9s), 152/600 VUs, 12269 complete and 0 interrupted iterations
+ramp Gåô [ 100% ] 540/600 VUs  4m0s  150.00 iters/s
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.103Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.109Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.117Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.123Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.129Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.136Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.143Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.151Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.156Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.164Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.170Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.177Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.183Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.190Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.197Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.202Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.210Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.216Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.231Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.230Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.241Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.247Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.259Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.259Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.265Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.273Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.282Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.285Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.292Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.302Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.312Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.313Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.318Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.325Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.333Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.337Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.343Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.352Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.357Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.365Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.373Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.377Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.384Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.391Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.397Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.405Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.411Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.418Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.424Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.431Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.437Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.445Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.452Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.457Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.465Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.471Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.478Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.485Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.492Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.499Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.505Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.512Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.518Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.524Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.532Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.537Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.545Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.551Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.558Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.566Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.571Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.578Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.585Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.594Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.598Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.611Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.618Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.626Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.632Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.637Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.646Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.652Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.658Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.665Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.672Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.680Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.685Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.692Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.698Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.705Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.711Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.725Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.745Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.751Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.758Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.766Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.772Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.778Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.786Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.791Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.799Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.806Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.812Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.820Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.826Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.832Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.840Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.845Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.860Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.866Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.872Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.878Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.886Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.892Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.898Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.906Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.911Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.925Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.934Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.939Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.947Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.952Z status=0 error=1211" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.959Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.966Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.972Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.980Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.986Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.993Z status=0 error=1050" source=console
+time="2026-11-12T13:08:28Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:28Z" level=warning msg="FAILED at 2026-11-12T13:08:28.999Z status=0 error=1050" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.006Z status=0 error=1211" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.012Z status=0 error=1050" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.019Z status=0 error=1211" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.026Z status=0 error=1050" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.031Z status=0 error=1050" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.039Z status=0 error=1050" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.047Z status=0 error=1050" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.054Z status=0 error=1211" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.060Z status=0 error=1050" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.066Z status=0 error=1050" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.073Z status=0 error=1050" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.080Z status=0 error=1050" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.087Z status=0 error=1211" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.093Z status=0 error=1211" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.100Z status=0 error=1050" source=console
+
+running (4m09.9s), 008/600 VUs, 12413 complete and 0 interrupted iterations
+ramp Gåô [ 100% ] 540/600 VUs  4m0s  150.00 iters/s
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.106Z status=0 error=1211" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.116Z status=0 error=1211" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.127Z status=0 error=1050" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.133Z status=0 error=1050" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.139Z status=0 error=1211" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.148Z status=0 error=1211" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": dial: i/o timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.152Z status=0 error=1211" source=console
+time="2026-11-12T13:08:29Z" level=warning msg="Request Failed" error="Post \"http://dss-api.dss.svc.cluster.local/score\": request timeout"
+time="2026-11-12T13:08:29Z" level=warning msg="FAILED at 2026-11-12T13:08:29.161Z status=0 error=1050" source=console
+
+     G£ù status is 200
+      Gå¦  95% GÇö G£ô 11878 / G£ù 543
+
+     checks.........................: 95.62% G£ô 11878     G£ù 543  
+     data_received..................: 3.6 MB 15 kB/s
+     data_sent......................: 6.3 MB 25 kB/s
+     dropped_iterations.............: 2728   10.911814/s
+     http_req_blocked...............: avg=73.49-¦s  min=0s      med=7.88-¦s   max=27.7ms  p(90)=17.35-¦s  p(95)=429.94-¦s p(99)=1.21ms  
+     http_req_connecting............: avg=44.36-¦s  min=0s      med=0s       max=13.32ms p(90)=0s       p(95)=294.19-¦s p(99)=855.31-¦s
+     http_req_duration..............: avg=2.84s    min=0s      med=552.92ms max=8.65s   p(90)=7.61s    p(95)=7.76s    p(99)=8.05s   
+       { expected_response:true }...: avg=2.97s    min=13.3ms  med=1.06s    max=8.65s   p(90)=7.62s    p(95)=7.77s    p(99)=8.05s   
+     http_req_failed................: 4.37%  G£ô 543       G£ù 11878
+     http_req_receiving.............: avg=590.04-¦s min=0s      med=358-¦s    max=13.32ms p(90)=1.3ms    p(95)=1.85ms   p(99)=3.36ms  
+     http_req_sending...............: avg=87.27-¦s  min=0s      med=48.2-¦s   max=10.45ms p(90)=110.27-¦s p(95)=197.31-¦s p(99)=989.14-¦s
+     http_req_tls_handshaking.......: avg=0s       min=0s      med=0s       max=0s      p(90)=0s       p(95)=0s       p(99)=0s      
+     http_req_waiting...............: avg=2.84s    min=0s      med=552.2ms  max=8.65s   p(90)=7.61s    p(95)=7.76s    p(99)=8.04s   
+     http_reqs......................: 12421  49.683154/s
+     iteration_duration.............: avg=3.27s    min=553.8-¦s med=1.49s    max=10.01s  p(90)=7.73s    p(95)=8.08s    p(99)=10s     
+     iterations.....................: 12421  49.683154/s
+     vus............................: 8      min=0       max=600
+     vus_max........................: 600    min=50      max=600
+
+
+running (4m10.0s), 000/600 VUs, 12421 complete and 0 interrupted iterations
+ramp G£ô [ 100% ] 000/600 VUs  4m0s  150.00 iters/s

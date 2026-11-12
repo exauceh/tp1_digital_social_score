@@ -1,0 +1,16 @@
+apiVersion: monitoring.googleapis.com/v1
+kind: PodMonitoring
+metadata:
+  name: dss-api
+  labels:
+    app: dss-api
+spec:
+  # Google Managed Service for Prometheus (enabled on the cluster) scrapes /metrics of every pod
+  # of the API. The metrics are aggregated numbers: no text, no key, no client id.
+  selector:
+    matchLabels:
+      app: dss-api
+  endpoints:
+    - port: http          # named port of the container (see deployment.yaml)
+      path: /metrics
+      interval: 15s

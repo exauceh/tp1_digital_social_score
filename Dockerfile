@@ -3,7 +3,10 @@ FROM python:3.14-slim
 
 COPY --from=ghcr.io/astral-sh/uv:0.12.15 /uv /usr/local/bin/uv
 
+# UV_NO_CACHE: without it the downloaded wheels stay in /root/.cache/uv inside the layer (1.3 GB on
+# top of the 1.4 GB environment), which slows down every image pull when a node is added.
 ENV UV_COMPILE_BYTECODE=1 \
+    UV_NO_CACHE=1 \
     UV_LINK_MODE=copy \
     UV_PYTHON_DOWNLOADS=never \
     PYTHONUNBUFFERED=1

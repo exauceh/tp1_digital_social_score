@@ -219,7 +219,8 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# Raw datasetsmodels/
+# Raw datasets
+models/
 
 # API keys and Kubernetes secrets (never commit them)
 api_keys*.txt

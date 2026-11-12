@@ -11,3 +11,5 @@ resources:
   - service.yaml
   - hpa.yaml
   - pdb.yaml
+  - podmonitoring.yaml
+  - alert-rules.yaml

@@ -1,13 +1,14 @@
-# Déploiement sur Kubernetes (GKE Autopilot) : clés API dans Secret Manager, accès par IAM
+# Déploiement sur Kubernetes (GKE Standard) : clés API dans Secret Manager, accès par IAM
 
 # 0. Variables à adapter
 $PROJECT_ID = "tp1-digital-score"
 $REGION     = "europe-west1"
 $REPO       = "dss-api"
-$CLUSTER     = "dss-cluster-2" # NOUVEAU cluster : noeuds avec un compte de service dédié et restreint
-$OLD_CLUSTER = "dss-cluster"   # premier cluster : noeuds avec le compte Compute par défaut (rôle editor)
+$CLUSTER     = "dss-std"       # cluster GKE Standard : disques pd-standard, compte de service dédié pour les noeuds
+$OLD_CLUSTER = "dss-cluster-2" # cluster Autopilot bloqué par le quota de disques SSD (pods en Pending) : à supprimer
+$MACHINE_TYPE = "e2-standard-2" # 2 vCPU complets, 8 Go. e2-medium coûte moins cher mais partage son coeur (ralentit sous charge)
 $SECRET     = "dss-api-keys"   # nom du secret dans Secret Manager
-$VERSION    = "v2"             # v1 = sans authentification ; v2 = clé API lue dans Secret Manager
+$VERSION    = "v4"             # image déjà poussée dans le dépôt (v1 = sans authentification ; v4 = clé API lue dans Secret Manager)
 $IMAGE      = "$REGION-docker.pkg.dev/$PROJECT_ID/$REPO/dss-lstm:$VERSION"
 
 # Assemble les manifests de k8s/ et remplace les deux marqueurs (image, projet) avant l'envoi à Kubernetes
@@ -45,19 +46,40 @@ curl.exe -s -X POST http://localhost:8080/score -H "Content-Type: application/js
 # 5. Pousser l'image
 docker push $IMAGE
 
-# 6. Nouveau cluster, avec un compte de service dédié pour les noeuds. Le premier cluster utilise le compte
-#    Compute par défaut, qui a le rôle "editor" sur tout le projet ; ce compte ne peut pas être changé sur un
-#    cluster existant, d'où la création d'un nouveau cluster. Le compte dédié n'a que les droits de journaliser,
-#    d'envoyer des métriques et de lire les images du dépôt.
+# 6. Cluster GKE Standard.
+#    Pourquoi pas Autopilot : chaque noeud Autopilot a un disque de 100 Go qui compte dans le quota SSD de la région
+#    (250 Go sur ce projet), donc 2 noeuds au maximum. Les 2 noeuds créés (e2-highcpu-2, 2 Go) étaient pleins de
+#    composants système et un 3e noeud, plus grand, dépassait le quota : pods en Pending, "GCE quota exceeded".
+#    Ici les noeuds utilisent des disques "pd-standard", comptés à part (quota de 2 048 Go, aucun utilisé).
+#
+#    6a. Supprimer le cluster Autopilot bloqué (il ne sert plus à rien et coûte) et nettoyer kubectl
+gcloud container clusters delete $OLD_CLUSTER --region=$REGION
+kubectl config delete-context "gke_${PROJECT_ID}_${REGION}_${OLD_CLUSTER}"
+#
+#    6b. Compte de service dédié aux noeuds (au lieu du compte Compute par défaut, qui a le rôle "editor" sur tout
+#        le projet) : il n'a que les droits de journaliser, d'envoyer des métriques et de lire les images du dépôt.
 $NODE_SA = "dss-nodes@$PROJECT_ID.iam.gserviceaccount.com"
-#    Les trois commandes suivantes sont DÉJÀ FAITES sur votre projet (compte et droits vérifiés) : inutile de les relancer.
+#        Les trois commandes suivantes sont DÉJÀ FAITES sur votre projet (compte et droits vérifiés) : inutile de les relancer.
 gcloud iam service-accounts create dss-nodes --display-name="Noeuds GKE du projet Digital Social Score"
 gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$NODE_SA" --role=roles/container.defaultNodeServiceAccount
 gcloud artifacts repositories add-iam-policy-binding $REPO --location=$REGION --member="serviceAccount:$NODE_SA" --role=roles/artifactregistry.reader
-#    À faire : créer le cluster avec ce compte (Autopilot, région UE)
-gcloud container clusters create-auto $CLUSTER --region=$REGION --release-channel=regular --service-account=$NODE_SA
-gcloud container clusters get-credentials $CLUSTER --region=$REGION      # kubectl pointe maintenant vers le NOUVEAU cluster
-kubectl config current-context                                            # doit se terminer par _dss-cluster-2
+#
+#    6c. Créer le cluster : région UE, 2 zones (b et c), 1 noeud par zone au départ, jusqu'à 3 par zone
+#        (6 noeuds, soit le maximum de l'autoscaler de pods qui vise 6 pods d'1 CPU).
+#        --scopes=cloud-platform : l'accès réel est limité par les rôles IAM du compte, pas par les "scopes".
+#        --workload-pool : active Workload Identity, utilisé pour lire Secret Manager (étape 8).
+gcloud container clusters create $CLUSTER `
+  --region=$REGION --node-locations="$REGION-b,$REGION-c" `
+  --release-channel=regular `
+  --machine-type=$MACHINE_TYPE --num-nodes=1 `
+  --enable-autoscaling --min-nodes=1 --max-nodes=3 `
+  --disk-type=pd-standard --disk-size=50 `
+  --service-account=$NODE_SA --scopes=cloud-platform `
+  --workload-pool="$PROJECT_ID.svc.id.goog" --workload-metadata=GKE_METADATA `
+  --enable-ip-alias --enable-shielded-nodes
+gcloud container clusters get-credentials $CLUSTER --region=$REGION      # kubectl pointe maintenant vers ce cluster
+kubectl config current-context                                            # doit se terminer par _dss-std
+kubectl get nodes -o wide                                                 # 2 noeuds, tous "Ready"
 kubectl cluster-info
 
 # 7. Secret Manager : stocker les clés API (les hashs, pas les clés)
@@ -66,10 +88,10 @@ gcloud secrets create $SECRET --replication-policy=user-managed --locations=$REG
 $API_KEYS | gcloud secrets versions add $SECRET --data-file=-
 
 # 8. IAM : l'application ne peut lire QUE ce secret
-#    Workload Identity (toujours actif sur Autopilot) : le compte de service Kubernetes dss-api du namespace
+#    Workload Identity (activé à la création du cluster avec --workload-pool) : le compte de service Kubernetes dss-api du namespace
 #    dss est identifié par Google Cloud sans fichier de clé. On lui donne le rôle de lecture sur ce seul
 #    secret, pas sur le projet. Cette identité est la même sur tous les clusters du projet : la liaison ne
-#    dépend pas du cluster, et le nouveau cluster en profite sans autre réglage.
+#    dépend pas du cluster. Elle est DÉJÀ FAITE sur votre projet (vérifiée) : inutile de la refaire.
 $PROJECT_NUMBER = gcloud projects describe $PROJECT_ID --format="value(projectNumber)"
 $APP_IDENTITY   = "principal://iam.googleapis.com/projects/$PROJECT_NUMBER/locations/global/workloadIdentityPools/$PROJECT_ID.svc.id.goog/subject/ns/dss/sa/dss-api"
 gcloud secrets add-iam-policy-binding $SECRET --member=$APP_IDENTITY --role=roles/secretmanager.secretAccessor
@@ -98,11 +120,6 @@ kubectl logs -l app=dss-api -n dss --tail=20      # "API keys loaded ... from Se
 kubectl top pods -n dss                           # mémoire et CPU réels : ajuster k8s/deployment.yaml
 kubectl get hpa -n dss                            # autoscaling (2 à 6 pods, cible 60 % de CPU)
 
-# 10b. Quand le nouveau cluster fonctionne (étape 10 réussie), supprimer l'ancien et nettoyer kubectl.
-#      Il ne sert plus à rien : l'API n'était joignable que depuis le cluster, et il tourne en v1, sans authentification.
-gcloud container clusters delete $OLD_CLUSTER --region=$REGION
-kubectl config delete-context "gke_${PROJECT_ID}_${REGION}_${OLD_CLUSTER}"
-
 # 11. IAM : autres droits à contrôler (principe du moindre privilège)
 #     a) Noeuds du cluster : compte dédié, créé à l'étape 6.
 #     b) Personnes et machines qui déploient : ne leur donnez pas "owner" ni "editor", mais le nécessaire seulement.
@@ -114,8 +131,8 @@ kubectl config delete-context "gke_${PROJECT_ID}_${REGION}_${OLD_CLUSTER}"
 gcloud projects get-iam-policy $PROJECT_ID --flatten="bindings[].members" --format="table(bindings.role,bindings.members)"
 gcloud iam service-accounts get-iam-policy $NODE_SA
 
-# 12. Mettre à jour le code (v3) et revenir en arrière si besoin
-$VERSION = "v3"
+# 12. Mettre à jour le code (v5) et revenir en arrière si besoin
+$VERSION = "v5"
 $IMAGE   = "$REGION-docker.pkg.dev/$PROJECT_ID/$REPO/dss-lstm:$VERSION"
 docker build -t $IMAGE .
 docker push $IMAGE
@@ -142,3 +159,29 @@ gcloud container clusters delete $CLUSTER --region=$REGION
 gcloud secrets delete $SECRET                    # supprime le secret et toutes ses versions
 gcloud artifacts repositories delete $REPO --location=$REGION
 gcloud iam service-accounts delete $NODE_SA      # compte des noeuds, devenu inutile
+
+# 15. Supervision (cours n°3) : métriques Prometheus et alertes
+#     L'API expose /metrics ; Managed Service for Prometheus (activé sur le cluster) les collecte grâce à k8s/podmonitoring.yaml,
+#     et les alertes SLO sont dans k8s/alert-rules.yaml (appliquées avec le reste par Render-Manifests).
+kubectl get podmonitoring,rules -n dss                      # ConfigurationCreateSuccess=True attendu
+kubectl get podmonitoring dss-api -n dss -o jsonpath="{.status.conditions[*].type}={.status.conditions[*].status}"
+#     Interroger Prometheus managé avec votre identité gcloud (lecture seule) :
+$token = gcloud auth print-access-token
+$q = 'sum(rate(api_requests_total[1m]))'
+Invoke-RestMethod -Method Post -Uri "https://monitoring.googleapis.com/v1/projects/$PROJECT_ID/location/global/prometheus/api/v1/query" `
+  -Headers @{ Authorization = "Bearer $token" } -Body @{ query = $q } | ConvertTo-Json -Depth 6
+#     Requêtes utiles : histogram_quantile(0.95, sum by (le) (rate(api_latency_seconds_bucket{route="/score"}[5m])))
+#                       sum by (status) (rate(api_requests_total[5m]))        kube_horizontalpodautoscaler_status_current_replicas
+
+# 16. Tests de charge (cours n°3, TP étape 5) avec k6, exécutés DANS le cluster
+#     (kubectl port-forward est un seul tunnel : il ne convient pas à un test de charge).
+#     La clé API d'un client est lue dans la variable d'environnement, jamais passée en argument.
+$env:DSS_API_KEY = "<clé d'un client>"
+.\loadtest\run-loadtest.ps1 -Scenario ramp                  # montée progressive 5 -> 150 requêtes/s en 4 min
+.\loadtest\run-loadtest.ps1 -Scenario sustained             # 60 requêtes/s pendant 3 min
+.\loadtest\run-loadtest.ps1 -Scenario spike                 # pic à 250 requêtes/s (stress, autoscaling)
+.\loadtest\run-loadtest.ps1 -Scenario failover -Disrupt pod # 40 requêtes/s, un pod supprimé après 90 s
+.\loadtest\run-loadtest.ps1 -Scenario failover -Disrupt node # idem avec un noeud vidé (kubectl drain)
+#     Résultats dans loadtest\results\ : <scénario>-k6.txt (débit, latence moyenne/P95/P99, taux d'erreur),
+#     <scénario>-timeline.txt (pods, noeuds, CPU du HPA toutes les 15 s), <scénario>-events.txt (heure de la panne).
+.\loadtest\run-loadtest.ps1 -Cleanup                        # supprime le namespace loadtest et la clé qu'il contient

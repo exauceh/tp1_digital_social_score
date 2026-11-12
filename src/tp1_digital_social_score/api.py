@@ -3,6 +3,8 @@
 Routes:
 
 - ``GET  /health``: startup, readiness and liveness probe (Kubernetes); needs no key.
+- ``GET  /metrics``: Prometheus metrics (see ``metrics.py``); needs no key because it is only
+  reachable inside the cluster and exposes aggregated numbers, never a text.
 - ``POST /score``: ``{"text": "..."}`` -> ``{"score": ..., "labels": {...}, "request_id": ...}``.
   Needs a valid API key in the ``X-API-Key`` header, otherwise the answer is ``401``.
 
@@ -23,7 +25,7 @@ import re
 import threading
 import time
 import uuid
-from collections.abc import AsyncIterator, Sequence
+from collections.abc import AsyncIterator, Awaitable, Callable, Sequence
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from pathlib import Path
@@ -31,11 +33,17 @@ from typing import Annotated
 
 import spacy
 import torch
-from fastapi import Depends, FastAPI, HTTPException, Request, Security
+from fastapi import Depends, FastAPI, HTTPException, Request, Response, Security
 from fastapi.security import APIKeyHeader
 from pydantic import BaseModel, Field, StringConstraints
 
 from tp1_digital_social_score.lstm_model import LstmPredictor
+from tp1_digital_social_score.metrics import (
+    CONTENT_TYPE_LATEST,
+    IGNORED_ROUTES,
+    UNMATCHED_ROUTE,
+    ApiMetrics,
+)
 from tp1_digital_social_score.scoring import LABELS, load_weights, toxicity_score
 from tp1_digital_social_score.security import API_KEY_HEADER, ApiKeyStore, load_api_keys
 from tp1_digital_social_score.text_pipeline import load_nlp, prepare_texts
@@ -78,14 +86,19 @@ class ScoringService:
     predictor: LstmPredictor
     weights: dict[str, float]
     lock: threading.Lock
+    metrics: ApiMetrics
 
     def score(self, texts: Sequence[str]) -> list[Prediction]:
         """Anonymise, clean and score raw texts."""
         # spaCy pipelines are not guaranteed thread-safe: one request at a time uses the models.
         with self.lock:
+            # Timed once the lock is held: the metric is the work itself, without the queueing.
+            started = time.perf_counter()
             prepared = prepare_texts(texts, self.nlp)
             probabilities = self.predictor.predict(prepared)
+            self.metrics.inference_latency.observe(time.perf_counter() - started)
         scores = toxicity_score(probabilities, self.weights)
+        self.metrics.observe_scores([float(score) for score in scores])
         return [
             Prediction(
                 score=round(float(score), 2),
@@ -135,6 +148,8 @@ def authenticate(
     store: ApiKeyStore = request.app.state.api_keys
     client_id = store.authenticate(api_key) if api_key else None
     if client_id is None:
+        metrics: ApiMetrics = request.app.state.metrics
+        metrics.auth_failures.inc()
         # Neither the key nor the caller's address is logged.
         logger.warning("authentication failed request_id=%s", request_id_from(request))
         raise HTTPException(
@@ -155,6 +170,8 @@ def create_app(model_dir: Path | None = None, api_keys: ApiKeyStore | None = Non
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )
 
+    metrics = ApiMetrics()  # one registry per application, so tests can build many apps
+
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         # Keys first: without them the API must not start (fail closed), and it fails fast.
@@ -170,14 +187,44 @@ def create_app(model_dir: Path | None = None, api_keys: ApiKeyStore | None = Non
             predictor=LstmPredictor(directory),
             weights=load_weights(directory),
             lock=threading.Lock(),
+            metrics=metrics,
         )
         logger.info("Scoring service ready")
         yield
 
     app = FastAPI(title="Digital Social Score API", version="0.1.0", lifespan=lifespan)
+    app.state.metrics = metrics
+
+    @app.middleware("http")
+    async def record_metrics(
+        request: Request, call_next: Callable[[Request], Awaitable[Response]]
+    ) -> Response:
+        """Count and time every request, by route template (never by raw path)."""
+        if request.url.path in IGNORED_ROUTES:
+            return await call_next(request)
+        started = time.perf_counter()
+        status = 500  # what the caller gets if the handler raises
+        metrics.in_progress.inc()
+        try:
+            response = await call_next(request)
+            status = response.status_code
+            return response
+        finally:
+            metrics.in_progress.dec()
+            route = request.scope.get("route")
+            template = getattr(route, "path", UNMATCHED_ROUTE)
+            metrics.observe_request(request.method, template, status, time.perf_counter() - started)
+
+    # /metrics and /health are `async def` on purpose. A plain `def` route runs in the thread pool
+    # (40 threads) that /score also uses; under load all of them wait for the model, so a probe
+    # would queue behind them, miss its 2 s timeout and get the pod removed from the Service, then
+    # killed by the liveness probe. Both handlers are instant, so the event loop can run them.
+    @app.get("/metrics", include_in_schema=False)
+    async def prometheus_metrics() -> Response:
+        return Response(content=metrics.render(), media_type=CONTENT_TYPE_LATEST)
 
     @app.get("/health", response_model=HealthResponse)
-    def health() -> HealthResponse:
+    async def health() -> HealthResponse:
         return HealthResponse(status="ok")
 
     @app.post("/score", response_model=ScoreResponse)

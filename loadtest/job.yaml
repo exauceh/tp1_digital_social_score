@@ -1,0 +1,55 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: k6-SCENARIO_PLACEHOLDER
+  namespace: loadtest
+  labels:
+    app: k6
+spec:
+  backoffLimit: 0           # a load test is never retried: a second run would hide the first result
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels:
+        app: k6
+    spec:
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 12345    # the user of the k6 image
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: k6
+          image: grafana/k6:0.49.0
+          args: ["run", "/scripts/k6-score.js"]
+          env:
+            - name: SCENARIO
+              value: SCENARIO_PLACEHOLDER
+            - name: SUSTAINED_RATE
+              value: "60"
+            - name: FAILOVER_RATE
+              value: "40"
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: loadtest-key
+                  key: API_KEY
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 768Mi
+          volumeMounts:
+            - name: script
+              mountPath: /scripts
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+      volumes:
+        - name: script
+          configMap:
+            name: k6-script
