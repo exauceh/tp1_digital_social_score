@@ -24,7 +24,8 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$scenarios = "ramp", "sustained", "spike", "failover"
+# badkeys and malformed are not in this table: their result is the list of checks of the k6 summary.
+$scenarios = "ramp", "sustained", "spike", "failover", "flood"
 
 function ConvertTo-Milliseconds([string]$text) {
     if ($text -match '^([\d.]+)ms$') { return [double]$Matches[1] }

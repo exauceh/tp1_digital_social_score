@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: monitoring
+
+resources:
+  - namespace.yaml
+  - frontend.yaml
+  - grafana.yaml
+
+# The dashboard is a JSON file, turned into the ConfigMap "grafana-dashboards" (name without hash,
+# so that grafana.yaml can mount it by name).
+configMapGenerator:
+  - name: grafana-dashboards
+    files:
+      - dss-api.json=dashboards/dss-api.json
+
+generatorOptions:
+  disableNameSuffixHash: true

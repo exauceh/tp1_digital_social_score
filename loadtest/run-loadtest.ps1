@@ -23,7 +23,7 @@
     .\loadtest\run-loadtest.ps1 -Cleanup
 #>
 param(
-    [ValidateSet("ramp", "sustained", "spike", "failover")]
+    [ValidateSet("ramp", "sustained", "spike", "failover", "badkeys", "malformed", "flood")]
     [string]$Scenario = "ramp",
 
     # failover only: what is removed 90 seconds after the start
@@ -107,7 +107,7 @@ function Get-Snapshot {
 Write-Step "Scenario '$Scenario' started (job $jobName)"
 $started = Get-Date
 # Nominal duration of each scenario (see k6-score.js) plus a margin: past that, something is stuck.
-$nominalSeconds = @{ ramp = 240; sustained = 180; spike = 230; failover = 240 }
+$nominalSeconds = @{ ramp = 240; sustained = 180; spike = 230; failover = 240; badkeys = 90; malformed = 60; flood = 90 }
 $maxSeconds = $nominalSeconds[$Scenario] + 300
 $disrupted = $false
 while ($true) {

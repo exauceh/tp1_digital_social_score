@@ -185,3 +185,35 @@ $env:DSS_API_KEY = "<clé d'un client>"
 #     Résultats dans loadtest\results\ : <scénario>-k6.txt (débit, latence moyenne/P95/P99, taux d'erreur),
 #     <scénario>-timeline.txt (pods, noeuds, CPU du HPA toutes les 15 s), <scénario>-events.txt (heure de la panne).
 .\loadtest\run-loadtest.ps1 -Cleanup                        # supprime le namespace loadtest et la clé qu'il contient
+
+
+# 17. Grafana (TP étape 6) : tableau de bord branché sur Managed Prometheus
+#     Deux pods dans le namespace "monitoring" : gmp-frontend (lit Managed Prometheus, lecture seule) et Grafana.
+#     Rien n'est exposé sur Internet : on y accède par kubectl port-forward.
+#     a) Droit de lecture pour gmp-frontend, par Workload Identity (pas de clé) : lecture des métriques uniquement.
+gcloud projects add-iam-policy-binding $PROJECT_ID `
+  --member="principal://iam.googleapis.com/projects/$PROJECT_NUMBER/locations/global/workloadIdentityPools/$PROJECT_ID.svc.id.goog/subject/ns/monitoring/sa/gmp-frontend" `
+  --role=roles/monitoring.viewer --condition=None
+#     b) Namespace, puis mot de passe administrateur de Grafana (tapé ici, jamais écrit dans un fichier du dépôt)
+kubectl apply -f monitoring/grafana/namespace.yaml
+$grafanaPassword = Read-Host "Mot de passe admin Grafana"
+kubectl create secret generic grafana-admin -n monitoring "--from-literal=password=$grafanaPassword" --dry-run=client -o yaml | kubectl apply -f -
+Remove-Variable grafanaPassword
+#     c) Déploiement (le nom du projet est injecté comme pour l'API)
+kubectl kustomize monitoring/grafana | ForEach-Object { $_ -replace 'PROJECT_ID_PLACEHOLDER', $PROJECT_ID } | kubectl apply -f -
+kubectl rollout status deployment/gmp-frontend deployment/grafana -n monitoring
+#     d) Ouvrir Grafana : http://localhost:3000 (utilisateur "admin"), dossier "Digital Social Score" > "Digital Social Score - API"
+kubectl port-forward svc/grafana 3000:3000 -n monitoring
+#     Si les panneaux sont vides : kubectl logs deploy/gmp-frontend -n monitoring --tail=20  (PermissionDenied = étape a)
+
+# 18. Simulations d'attaque (TP étape 6), depuis le cluster, sur notre propre API
+#     Gardez le tableau de bord ouvert pendant les tests, et faites une capture à chaque fois.
+$env:DSS_API_KEY = "<clé d'un client>"
+.\loadtest\run-loadtest.ps1 -Scenario badkeys    # 100 req/s sans clé ou avec une fausse clé, 90 s : attendu 401 partout, alerte AuthenticationFailuresHigh
+.\loadtest\run-loadtest.ps1 -Scenario malformed  # entrées invalides ou hostiles, 60 s : attendu 422, jamais de 5xx
+.\loadtest\run-loadtest.ps1 -Scenario flood      # un client à 150 req/s pendant 90 s : mesure l'effet sur le service (pas de limite par client)
+#     Alertes déclenchées pendant la période (lecture seule) :
+$token = gcloud auth print-access-token
+Invoke-RestMethod -Method Post -Uri "https://monitoring.googleapis.com/v1/projects/$PROJECT_ID/location/global/prometheus/api/v1/query" `
+  -Headers @{ Authorization = "Bearer $token" } -Body @{ query = 'sum(rate(api_auth_failures_total[1m]))' } | ConvertTo-Json -Depth 6
+#     Nettoyage à la fin : .\loadtest\run-loadtest.ps1 -Cleanup ; kubectl delete namespace monitoring

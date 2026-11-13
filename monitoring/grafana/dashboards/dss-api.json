@@ -1,0 +1,599 @@
+{
+  "uid": "dss-api",
+  "title": "Digital Social Score - API",
+  "tags": [
+    "dss"
+  ],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "10s",
+  "time": {
+    "from": "now-30m",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "Requests per second by status (/score)",
+      "description": "200 = served, 401 = refused key, 422 = invalid input, 500 = server error.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "gmp"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "gmp"
+          },
+          "expr": "sum by (status) (rate(api_requests_total{route=\"/score\"}[$__rate_interval]))",
+          "legendFormat": "{{status}}",
+          "interval": "15s"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "stacking": {
+              "mode": "none"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Latency of /score (server side)",
+      "description": "The red line is the 300 ms objective. It includes the wait before the model (the queue).",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "gmp"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "gmp"
+          },
+          "expr": "histogram_quantile(0.5, sum by (le) (rate(api_latency_seconds_bucket{route=\"/score\"}[$__rate_interval])))",
+          "legendFormat": "P50",
+          "interval": "15s"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "gmp"
+          },
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(api_latency_seconds_bucket{route=\"/score\"}[$__rate_interval])))",
+          "legendFormat": "P95",
+          "interval": "15s"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "gmp"
+          },
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(api_latency_seconds_bucket{route=\"/score\"}[$__rate_interval])))",
+          "legendFormat": "P99",
+          "interval": "15s"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "stacking": {
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "line"
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 0.3
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Available pods",
+      "description": "Autoscaling (2 to 6 pods) and the effect of a failover.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "gmp"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 8,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "gmp"
+          },
+          "expr": "kube_deployment_status_replicas_available{namespace=\"dss\", deployment=\"dss-api\"}",
+          "legendFormat": "available",
+          "interval": "15s"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "stacking": {
+              "mode": "none"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "CPU of the API pods (cores)",
+      "description": "A pod saturates around 1 core (global lock + GIL).",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "gmp"
+      },
+      "gridPos": {
+        "x": 8,
+        "y": 8,
+        "w": 8,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "gmp"
+          },
+          "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"dss\", container=\"api\"}[1m]))",
+          "legendFormat": "total",
+          "interval": "15s"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "gmp"
+          },
+          "expr": "avg(rate(container_cpu_usage_seconds_total{namespace=\"dss\", container=\"api\"}[1m]))",
+          "legendFormat": "per pod",
+          "interval": "15s"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "stacking": {
+              "mode": "none"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "type": "timeseries",
+      "title": "Memory per pod",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "gmp"
+      },
+      "gridPos": {
+        "x": 16,
+        "y": 8,
+        "w": 8,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "gmp"
+          },
+          "expr": "avg(container_memory_working_set_bytes{namespace=\"dss\", container=\"api\"})",
+          "legendFormat": "average",
+          "interval": "15s"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "gmp"
+          },
+          "expr": "max(container_memory_working_set_bytes{namespace=\"dss\", container=\"api\"})",
+          "legendFormat": "max",
+          "interval": "15s"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "stacking": {
+              "mode": "none"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "type": "timeseries",
+      "title": "Authentication failures per second",
+      "description": "Brute-force attempts show up here; alert AuthenticationFailuresHigh.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "gmp"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 8,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "gmp"
+          },
+          "expr": "sum(rate(api_auth_failures_total{}[$__rate_interval]))",
+          "legendFormat": "401 (missing or wrong key)",
+          "interval": "15s"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "stacking": {
+              "mode": "none"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "Requests in progress",
+      "description": "Requests waiting for or using the model: this is the queue.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "gmp"
+      },
+      "gridPos": {
+        "x": 8,
+        "y": 16,
+        "w": 8,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "gmp"
+          },
+          "expr": "sum(api_requests_in_progress)",
+          "legendFormat": "in progress",
+          "interval": "15s"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "stacking": {
+              "mode": "none"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      }
+    },
+    {
+      "id": 8,
+      "type": "timeseries",
+      "title": "Inference time (P95)",
+      "description": "The model work alone, without the wait.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "gmp"
+      },
+      "gridPos": {
+        "x": 16,
+        "y": 16,
+        "w": 8,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "gmp"
+          },
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(inference_latency_seconds_bucket{}[$__rate_interval])))",
+          "legendFormat": "P95 inference",
+          "interval": "15s"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "stacking": {
+              "mode": "none"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "type": "stat",
+      "title": "Share of requests under 300 ms",
+      "description": "Recording rule of k8s/alert-rules.yaml.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "gmp"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 24,
+        "w": 6,
+        "h": 6
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "gmp"
+          },
+          "expr": "slo:latency_under_300ms_ratio",
+          "legendFormat": "ratio",
+          "interval": "15s"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.9
+              },
+              {
+                "color": "green",
+                "value": 0.95
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      }
+    },
+    {
+      "id": 10,
+      "type": "timeseries",
+      "title": "Toxicity score of scored texts (median and P95)",
+      "description": "Score from 0 to 100; a sudden shift can reveal a change in the traffic. Never the texts.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "gmp"
+      },
+      "gridPos": {
+        "x": 6,
+        "y": 24,
+        "w": 18,
+        "h": 6
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "gmp"
+          },
+          "expr": "histogram_quantile(0.5, sum by (le) (rate(toxicity_score_bucket{}[$__rate_interval])))",
+          "legendFormat": "P50",
+          "interval": "15s"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "gmp"
+          },
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(toxicity_score_bucket{}[$__rate_interval])))",
+          "legendFormat": "P95",
+          "interval": "15s"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "stacking": {
+              "mode": "none"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      }
+    }
+  ],
+  "templating": {
+    "list": []
+  },
+  "annotations": {
+    "list": []
+  }
+}

@@ -1,0 +1,68 @@
+# Prometheus-compatible query endpoint in front of Google Managed Service for Prometheus, so that
+# Grafana can read the metrics collected from the cluster. It runs with the Kubernetes service account
+# "gmp-frontend", which is given the read-only role roles/monitoring.viewer through Workload
+# Identity (no key file): see step 17 of step_deployment.md. It only reads; it exposes nothing outside
+# the cluster (ClusterIP).
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: gmp-frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gmp-frontend
+  labels:
+    app: gmp-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gmp-frontend
+  template:
+    metadata:
+      labels:
+        app: gmp-frontend
+    spec:
+      serviceAccountName: gmp-frontend
+      automountServiceAccountToken: true   # needed by the Workload Identity credentials
+      containers:
+        - name: frontend
+          image: gke.gcr.io/prometheus-engine/frontend:v0.15.3-gke.0
+          args:
+            - "--web.listen-address=:9090"
+            - "--query.project-id=PROJECT_ID_PLACEHOLDER"
+          ports:
+            - containerPort: 9090
+              name: web
+          readinessProbe:
+            httpGet: { path: /-/ready, port: web }
+          livenessProbe:
+            httpGet: { path: /-/healthy, port: web }
+          resources:
+            requests: { cpu: 50m, memory: 64Mi }
+            limits: { cpu: 500m, memory: 256Mi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gmp-frontend
+spec:
+  selector:
+    app: gmp-frontend
+  ports:
+    - name: web
+      port: 9090
+      targetPort: web

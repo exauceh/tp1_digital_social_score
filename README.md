@@ -491,3 +491,103 @@ $env:DSS_API_KEY = "<clé d'un client>"
 | Exposition de l'API | **Load balancer** (Ingress/Gateway ou LB interne) devant le Service, avec contrôles de santé et limitation de débit par client | Répartition entre zones et protection contre les excès d'un client |
 | Perte d'un nœud ou d'une zone | **Redondance** : `topologySpreadConstraints` entre zones et nœuds, au moins 3 pods, PDB conservé | Une panne ne retire qu'une partie de la capacité |
 | 1 Gi demandé pour 0,4 à 0,5 Go utilisé | Réduire la demande mémoire à environ 640 Mi (limite 1 Gi) | Moins de nœuds, moins de coût |
+
+# Exercice 6
+
+## Supervision : Prometheus et Grafana
+
+Les métriques de l'API (`/metrics`) sont collectées par Managed Service for Prometheus. Grafana les affiche grâce à un
+relais, `gmp-frontend`, qui interroge Managed Prometheus avec un compte en lecture seule (`roles/monitoring.viewer`,
+Workload Identity, sans fichier de clé). Les deux pods sont dans le namespace `monitoring` et ne sont accessibles que par
+`kubectl port-forward` : rien n'est exposé sur Internet. Le mot de passe administrateur est dans un Secret Kubernetes
+créé à la main, absent du dépôt.
+
+```
+API (/metrics) → Managed Prometheus → gmp-frontend → Grafana → port-forward
+```
+
+Le tableau de bord « Digital Social Score - API » (`monitoring/grafana/dashboards/dss-api.json`) a 10 panneaux : débit
+par statut, latence P50/P95/P99 avec la ligne de l'objectif de 300 ms, pods disponibles, CPU, mémoire, échecs
+d'authentification, requêtes en cours (la file d'attente), temps d'inférence, part des requêtes sous 300 ms, et score de
+toxicité médian et P95. Les six alertes de l'Exercice 5 restent actives.
+
+Captures prises pendant les simulations d'attaque : `docs/captures/grafana-attaques-1.png` et
+`docs/captures/grafana-attaques-2.png`.
+
+![Tableau de bord pendant les attaques (1)](docs/captures/grafana-attaques-1.png)
+
+![Tableau de bord pendant les attaques (2)](docs/captures/grafana-attaques-2.png)
+
+Sur la première capture, le panneau « Requests per second by status » montrait une ligne « 500 » à 100 req/s. C'est un
+artefact de ce panneau, qui était empilé : la série « 500 », à 0, se dessinait au sommet de la pile, à la hauteur du
+total. Prometheus confirme 0 réponse 500 sur la période. Le panneau n'est plus empilé.
+
+## Simulations d'attaque
+
+Trois attaques ont été lancées avec k6 depuis le cluster, contre notre propre API (scripts dans `loadtest/k6-score.js`).
+
+| Attaque | Scénario | Ce qui est envoyé | Attendu |
+|---|---|---|---|
+| Clé absente ou fausse en masse | `badkeys` | 100 req/s pendant 90 s, une moitié sans clé, l'autre avec une fausse clé | 401, jamais de 5xx, alerte d'authentification |
+| Entrées invalides ou hostiles | `malformed` | 10 req/s pendant 60 s : texte vide, blanc, de 5 001 caractères, champ manquant, mauvais type, JSON invalide, corps de 1 Mo, texte avec balises et SQL, `X-Request-ID` hostile | 422 (ou 200 pour le texte avec balises), jamais de 5xx |
+| Dépassement par un client valide | `flood` | 150 req/s pendant 90 s avec une clé valide | Effet sur le service mesuré (pas de limite par client) |
+
+## Grille de tests sécurité / stress / failover
+
+| Test | Attendu | Observé | Verdict |
+|---|---|---|---|
+| Clé absente ou fausse, 9 001 requêtes | 401 partout, jamais de 5xx | 18 002 vérifications k6 réussies, 0 échec ; 9 001 réponses 401 côté serveur ; latence P95 6,5 ms ; CPU du HPA 19 %, 2 pods stables | Réussi |
+| Alerte sur les échecs d'authentification | `AuthenticationFailuresHigh` se déclenche | État `firing` observé dans Prometheus | Réussi |
+| Entrées invalides ou hostiles, 600 requêtes | 422 pour chaque entrée invalide, jamais de 5xx | 1 151 vérifications réussies, 0 échec ; 482 réponses 422 et 118 réponses 200 (entrées valides) ; 0 réponse 500 | Réussi |
+| `X-Request-ID` hostile | Remplacé, jamais réécrit dans les logs | Remplacé par un identifiant généré | Réussi |
+| Logs pendant les attaques | Aucune clé, aucun texte, aucune IP | 11 417 lignes relues : 0 clé, 0 texte (ni balises ni SQL), 0 adresse IP (seule `0.0.0.0`, l'adresse d'écoute du serveur), 0 erreur, 0 trace d'exception | Réussi |
+| Montée progressive (`ramp`), voir Exercice 5 | Latence stable, pas d'erreur | Saturation vers 75 req/s avec 2 pods ; 0 % d'erreur après correction de `/health` | Partiel : la latence monte à plusieurs secondes |
+| Pic à 250 req/s (`spike`), voir Exercice 5 | Le service reste disponible | 220 req/s servis avec 6 pods, 0 % d'erreur après correction, P95 4,8 s | Partiel : très lent pendant le pic |
+| Dépassement par un client valide (`flood`) | Mesure de l'effet | **Test invalide** : le pod k6 a été tué par manque de mémoire (voir plus bas), sans résumé k6 | Non conclu |
+| Panne d'un pod (`failover -Disrupt pod`) | Service continu | Non réalisé | Non fait |
+| Panne d'un nœud (`failover -Disrupt node`) | Service continu | Non réalisé | Non fait |
+
+## Analyse des logs et des comportements anormaux
+
+**Attaque par clés invalides.** Un flot de 100 req/s de requêtes refusées est très peu coûteux : latence moyenne de
+4,5 ms, CPU du HPA à 19 %, aucun pod ajouté. Le refus a lieu avant le modèle, qui n'est jamais sollicité. Les 9 001
+refus sont comptés à l'identique par la métrique `api_auth_failures_total` et par les 9 001 lignes `WARNING`
+« authentication failed », qui ne contiennent que l'identifiant de requête. Le débit testé reste modeste : un volume
+beaucoup plus élevé n'a pas été essayé.
+
+**Entrées invalides.** Aucune ne provoque d'erreur serveur. Le texte avec balises et SQL est traité comme n'importe
+quel texte : il est anonymisé et scoré, puis n'apparaît pas dans les logs. Le temps maximal observé par k6 est de
+3,3 s, dont la cause n'a pas été analysée (le corps de 1 Mo est une hypothèse, non vérifiée).
+
+**Dépassement par un client valide.** Le test n'a pas pu être terminé : le pod k6 a été tué par manque de mémoire
+après environ 2 minutes (limite de 768 Mi, `OOMKilled`). C'est une limite du générateur de charge, pas de l'API. Ce que
+l'API a subi pendant ce temps est mesuré côté serveur :
+
+- jusqu'à 425 requêtes en cours en même temps (la file d'attente) ;
+- latence P95 de 9,5 s ;
+- environ 2 300 requêtes servies, 0 réponse 500 ;
+- le HPA a ajouté des pods, mais ils n'étaient pas prêts avant la fin du test ;
+- les alertes `LatencyP95Above500ms` et `LatencySLOViolated` sont passées à l'état `pending` sans arriver à
+  `firing`, la perturbation ayant été plus courte que leur durée d'attente.
+
+Un seul client valide peut donc dégrader le service pour tous les autres : il n'existe pas de limite de débit par
+client. La limite de mémoire du pod k6 a été portée à 1,5 Gi ; le test est à relancer.
+
+**Alertes.** `AuthenticationFailuresHigh` s'est bien déclenchée. Aucun canal de notification n'est configuré : une alerte
+passe à `firing` dans Prometheus, mais personne n'est prévenu.
+
+## Continuité du service
+
+- **Attaque par clés ou entrées invalides** : continuité totale. Le service a continué de répondre, sans erreur 5xx et
+  sans pod redémarré ni ajouté.
+- **Saturation** : le service reste en vie (aucune erreur 5xx, aucun redémarrage), mais devient très lent : la
+  continuité est dégradée en latence, pas en disponibilité.
+- **Panne de pod ou de nœud** : non testée, voir l'Exercice 5 pour les commandes.
+
+## Limites et points non faits
+
+- `flood` à relancer (mémoire du pod k6 corrigée) ; le failover (pod et nœud) n'a pas été mesuré.
+- Pas de limite de débit par client ni de réponse `429` : à ajouter (voir les améliorations de l'Exercice 5).
+- Pas de canal de notification pour les alertes.
+- Les attaques simulées sont modestes et ne remplacent pas un test d'intrusion.
+- Une seule exécution par test.

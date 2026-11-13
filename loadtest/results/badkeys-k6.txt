@@ -1,0 +1,311 @@
+
+          /\      |GÇ+GÇ+| /GÇ+GÇ+/   /GÇ+GÇ+/   
+     /\  /  \     |  |/  /   /  /    
+    /  \/    \    |     (   /   GÇ+GÇ+\  
+   /          \   |  |\  \ |  (GÇ+)  | 
+  / __________ \  |__| \__\ \_____/ .io
+
+     execution: local
+        script: /scripts/k6-score.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 300 max VUs, 2m0s max duration (incl. graceful stop):
+              * badkeys: 100.00 iterations/s for 1m30s (maxVUs: 50-300, exec: badKeys, gracefulStop: 30s)
+
+
+Init      [  52% ] 26/50 VUs initialized
+badkeys   [   0% ]
+
+running (0m00.2s), 000/050 VUs, 18 complete and 0 interrupted iterations
+badkeys   [   0% ] 000/050 VUs  0m00.2s/1m30s  100.00 iters/s
+
+running (0m01.2s), 001/050 VUs, 118 complete and 0 interrupted iterations
+badkeys   [   1% ] 001/050 VUs  0m01.2s/1m30s  100.00 iters/s
+
+running (0m02.2s), 001/050 VUs, 218 complete and 0 interrupted iterations
+badkeys   [   2% ] 001/050 VUs  0m02.2s/1m30s  100.00 iters/s
+
+running (0m03.2s), 001/050 VUs, 318 complete and 0 interrupted iterations
+badkeys   [   4% ] 001/050 VUs  0m03.2s/1m30s  100.00 iters/s
+
+running (0m04.2s), 000/050 VUs, 418 complete and 0 interrupted iterations
+badkeys   [   5% ] 000/050 VUs  0m04.2s/1m30s  100.00 iters/s
+
+running (0m05.2s), 001/050 VUs, 518 complete and 0 interrupted iterations
+badkeys   [   6% ] 001/050 VUs  0m05.2s/1m30s  100.00 iters/s
+
+running (0m06.2s), 001/050 VUs, 618 complete and 0 interrupted iterations
+badkeys   [   7% ] 001/050 VUs  0m06.2s/1m30s  100.00 iters/s
+
+running (0m07.2s), 000/050 VUs, 718 complete and 0 interrupted iterations
+badkeys   [   8% ] 000/050 VUs  0m07.2s/1m30s  100.00 iters/s
+
+running (0m08.2s), 000/050 VUs, 818 complete and 0 interrupted iterations
+badkeys   [   9% ] 001/050 VUs  0m08.2s/1m30s  100.00 iters/s
+
+running (0m09.2s), 000/050 VUs, 918 complete and 0 interrupted iterations
+badkeys   [  10% ] 000/050 VUs  0m09.2s/1m30s  100.00 iters/s
+
+running (0m10.2s), 001/050 VUs, 1018 complete and 0 interrupted iterations
+badkeys   [  11% ] 001/050 VUs  0m10.2s/1m30s  100.00 iters/s
+
+running (0m11.2s), 001/050 VUs, 1118 complete and 0 interrupted iterations
+badkeys   [  12% ] 001/050 VUs  0m11.2s/1m30s  100.00 iters/s
+
+running (0m12.2s), 001/050 VUs, 1218 complete and 0 interrupted iterations
+badkeys   [  14% ] 001/050 VUs  0m12.2s/1m30s  100.00 iters/s
+
+running (0m13.2s), 001/050 VUs, 1318 complete and 0 interrupted iterations
+badkeys   [  15% ] 001/050 VUs  0m13.2s/1m30s  100.00 iters/s
+
+running (0m14.2s), 000/050 VUs, 1418 complete and 0 interrupted iterations
+badkeys   [  16% ] 000/050 VUs  0m14.2s/1m30s  100.00 iters/s
+
+running (0m15.2s), 001/050 VUs, 1518 complete and 0 interrupted iterations
+badkeys   [  17% ] 001/050 VUs  0m15.2s/1m30s  100.00 iters/s
+
+running (0m16.2s), 001/050 VUs, 1618 complete and 0 interrupted iterations
+badkeys   [  18% ] 001/050 VUs  0m16.2s/1m30s  100.00 iters/s
+
+running (0m17.2s), 001/050 VUs, 1718 complete and 0 interrupted iterations
+badkeys   [  19% ] 001/050 VUs  0m17.2s/1m30s  100.00 iters/s
+
+running (0m18.2s), 001/050 VUs, 1818 complete and 0 interrupted iterations
+badkeys   [  20% ] 001/050 VUs  0m18.2s/1m30s  100.00 iters/s
+
+running (0m19.2s), 001/050 VUs, 1918 complete and 0 interrupted iterations
+badkeys   [  21% ] 001/050 VUs  0m19.2s/1m30s  100.00 iters/s
+
+running (0m20.2s), 001/050 VUs, 2018 complete and 0 interrupted iterations
+badkeys   [  22% ] 001/050 VUs  0m20.2s/1m30s  100.00 iters/s
+
+running (0m21.2s), 001/050 VUs, 2118 complete and 0 interrupted iterations
+badkeys   [  24% ] 001/050 VUs  0m21.2s/1m30s  100.00 iters/s
+
+running (0m22.2s), 001/050 VUs, 2218 complete and 0 interrupted iterations
+badkeys   [  25% ] 001/050 VUs  0m22.2s/1m30s  100.00 iters/s
+
+running (0m23.2s), 000/050 VUs, 2318 complete and 0 interrupted iterations
+badkeys   [  26% ] 000/050 VUs  0m23.2s/1m30s  100.00 iters/s
+
+running (0m24.2s), 001/050 VUs, 2418 complete and 0 interrupted iterations
+badkeys   [  27% ] 001/050 VUs  0m24.2s/1m30s  100.00 iters/s
+
+running (0m25.2s), 001/050 VUs, 2518 complete and 0 interrupted iterations
+badkeys   [  28% ] 001/050 VUs  0m25.2s/1m30s  100.00 iters/s
+
+running (0m26.2s), 001/050 VUs, 2618 complete and 0 interrupted iterations
+badkeys   [  29% ] 001/050 VUs  0m26.2s/1m30s  100.00 iters/s
+
+running (0m27.2s), 001/050 VUs, 2718 complete and 0 interrupted iterations
+badkeys   [  30% ] 001/050 VUs  0m27.2s/1m30s  100.00 iters/s
+
+running (0m28.2s), 001/050 VUs, 2818 complete and 0 interrupted iterations
+badkeys   [  31% ] 001/050 VUs  0m28.2s/1m30s  100.00 iters/s
+
+running (0m29.2s), 001/050 VUs, 2918 complete and 0 interrupted iterations
+badkeys   [  32% ] 001/050 VUs  0m29.2s/1m30s  100.00 iters/s
+
+running (0m30.2s), 001/050 VUs, 3018 complete and 0 interrupted iterations
+badkeys   [  34% ] 001/050 VUs  0m30.2s/1m30s  100.00 iters/s
+
+running (0m31.2s), 001/050 VUs, 3118 complete and 0 interrupted iterations
+badkeys   [  35% ] 001/050 VUs  0m31.2s/1m30s  100.00 iters/s
+
+running (0m32.2s), 001/050 VUs, 3218 complete and 0 interrupted iterations
+badkeys   [  36% ] 001/050 VUs  0m32.2s/1m30s  100.00 iters/s
+
+running (0m33.2s), 001/050 VUs, 3318 complete and 0 interrupted iterations
+badkeys   [  37% ] 001/050 VUs  0m33.2s/1m30s  100.00 iters/s
+
+running (0m34.2s), 000/050 VUs, 3418 complete and 0 interrupted iterations
+badkeys   [  38% ] 000/050 VUs  0m34.2s/1m30s  100.00 iters/s
+
+running (0m35.2s), 000/050 VUs, 3517 complete and 0 interrupted iterations
+badkeys   [  39% ] 000/050 VUs  0m35.2s/1m30s  100.00 iters/s
+
+running (0m36.2s), 001/050 VUs, 3618 complete and 0 interrupted iterations
+badkeys   [  40% ] 001/050 VUs  0m36.2s/1m30s  100.00 iters/s
+
+running (0m37.2s), 001/050 VUs, 3718 complete and 0 interrupted iterations
+badkeys   [  41% ] 001/050 VUs  0m37.2s/1m30s  100.00 iters/s
+
+running (0m38.2s), 001/050 VUs, 3818 complete and 0 interrupted iterations
+badkeys   [  42% ] 001/050 VUs  0m38.2s/1m30s  100.00 iters/s
+
+running (0m39.2s), 000/050 VUs, 3918 complete and 0 interrupted iterations
+badkeys   [  44% ] 000/050 VUs  0m39.2s/1m30s  100.00 iters/s
+
+running (0m40.2s), 001/050 VUs, 4018 complete and 0 interrupted iterations
+badkeys   [  45% ] 001/050 VUs  0m40.2s/1m30s  100.00 iters/s
+
+running (0m41.2s), 000/050 VUs, 4118 complete and 0 interrupted iterations
+badkeys   [  46% ] 000/050 VUs  0m41.2s/1m30s  100.00 iters/s
+
+running (0m42.2s), 001/050 VUs, 4218 complete and 0 interrupted iterations
+badkeys   [  47% ] 001/050 VUs  0m42.2s/1m30s  100.00 iters/s
+
+running (0m43.2s), 001/050 VUs, 4318 complete and 0 interrupted iterations
+badkeys   [  48% ] 001/050 VUs  0m43.2s/1m30s  100.00 iters/s
+
+running (0m44.2s), 001/050 VUs, 4418 complete and 0 interrupted iterations
+badkeys   [  49% ] 001/050 VUs  0m44.2s/1m30s  100.00 iters/s
+
+running (0m45.2s), 001/050 VUs, 4518 complete and 0 interrupted iterations
+badkeys   [  50% ] 001/050 VUs  0m45.2s/1m30s  100.00 iters/s
+
+running (0m46.2s), 000/050 VUs, 4618 complete and 0 interrupted iterations
+badkeys   [  51% ] 000/050 VUs  0m46.2s/1m30s  100.00 iters/s
+
+running (0m47.2s), 001/050 VUs, 4718 complete and 0 interrupted iterations
+badkeys   [  52% ] 001/050 VUs  0m47.2s/1m30s  100.00 iters/s
+
+running (0m48.2s), 001/050 VUs, 4818 complete and 0 interrupted iterations
+badkeys   [  54% ] 001/050 VUs  0m48.2s/1m30s  100.00 iters/s
+
+running (0m49.2s), 001/050 VUs, 4918 complete and 0 interrupted iterations
+badkeys   [  55% ] 001/050 VUs  0m49.2s/1m30s  100.00 iters/s
+
+running (0m50.2s), 001/050 VUs, 5018 complete and 0 interrupted iterations
+badkeys   [  56% ] 001/050 VUs  0m50.2s/1m30s  100.00 iters/s
+
+running (0m51.2s), 000/050 VUs, 5118 complete and 0 interrupted iterations
+badkeys   [  57% ] 000/050 VUs  0m51.2s/1m30s  100.00 iters/s
+
+running (0m52.2s), 001/050 VUs, 5218 complete and 0 interrupted iterations
+badkeys   [  58% ] 001/050 VUs  0m52.2s/1m30s  100.00 iters/s
+
+running (0m53.2s), 000/050 VUs, 5318 complete and 0 interrupted iterations
+badkeys   [  59% ] 000/050 VUs  0m53.2s/1m30s  100.00 iters/s
+
+running (0m54.2s), 001/050 VUs, 5418 complete and 0 interrupted iterations
+badkeys   [  60% ] 001/050 VUs  0m54.2s/1m30s  100.00 iters/s
+
+running (0m55.2s), 000/050 VUs, 5518 complete and 0 interrupted iterations
+badkeys   [  61% ] 000/050 VUs  0m55.2s/1m30s  100.00 iters/s
+
+running (0m56.2s), 001/050 VUs, 5618 complete and 0 interrupted iterations
+badkeys   [  62% ] 001/050 VUs  0m56.2s/1m30s  100.00 iters/s
+
+running (0m57.2s), 001/050 VUs, 5718 complete and 0 interrupted iterations
+badkeys   [  64% ] 001/050 VUs  0m57.2s/1m30s  100.00 iters/s
+
+running (0m58.2s), 001/050 VUs, 5818 complete and 0 interrupted iterations
+badkeys   [  65% ] 001/050 VUs  0m58.2s/1m30s  100.00 iters/s
+
+running (0m59.2s), 001/050 VUs, 5918 complete and 0 interrupted iterations
+badkeys   [  66% ] 001/050 VUs  0m59.2s/1m30s  100.00 iters/s
+
+running (1m00.2s), 000/050 VUs, 6018 complete and 0 interrupted iterations
+badkeys   [  67% ] 000/050 VUs  1m00.2s/1m30s  100.00 iters/s
+
+running (1m01.2s), 001/050 VUs, 6118 complete and 0 interrupted iterations
+badkeys   [  68% ] 001/050 VUs  1m01.2s/1m30s  100.00 iters/s
+
+running (1m02.2s), 001/050 VUs, 6218 complete and 0 interrupted iterations
+badkeys   [  69% ] 001/050 VUs  1m02.2s/1m30s  100.00 iters/s
+
+running (1m03.2s), 001/050 VUs, 6318 complete and 0 interrupted iterations
+badkeys   [  70% ] 001/050 VUs  1m03.2s/1m30s  100.00 iters/s
+
+running (1m04.2s), 000/050 VUs, 6418 complete and 0 interrupted iterations
+badkeys   [  71% ] 001/050 VUs  1m04.2s/1m30s  100.00 iters/s
+
+running (1m05.2s), 001/050 VUs, 6518 complete and 0 interrupted iterations
+badkeys   [  72% ] 001/050 VUs  1m05.2s/1m30s  100.00 iters/s
+
+running (1m06.2s), 000/050 VUs, 6618 complete and 0 interrupted iterations
+badkeys   [  74% ] 000/050 VUs  1m06.2s/1m30s  100.00 iters/s
+
+running (1m07.2s), 000/050 VUs, 6718 complete and 0 interrupted iterations
+badkeys   [  75% ] 000/050 VUs  1m07.2s/1m30s  100.00 iters/s
+
+running (1m08.2s), 001/050 VUs, 6818 complete and 0 interrupted iterations
+badkeys   [  76% ] 001/050 VUs  1m08.2s/1m30s  100.00 iters/s
+
+running (1m09.2s), 000/050 VUs, 6918 complete and 0 interrupted iterations
+badkeys   [  77% ] 000/050 VUs  1m09.2s/1m30s  100.00 iters/s
+
+running (1m10.2s), 001/050 VUs, 7018 complete and 0 interrupted iterations
+badkeys   [  78% ] 001/050 VUs  1m10.2s/1m30s  100.00 iters/s
+
+running (1m11.2s), 001/050 VUs, 7118 complete and 0 interrupted iterations
+badkeys   [  79% ] 001/050 VUs  1m11.2s/1m30s  100.00 iters/s
+
+running (1m12.2s), 001/050 VUs, 7217 complete and 0 interrupted iterations
+badkeys   [  80% ] 001/050 VUs  1m12.2s/1m30s  100.00 iters/s
+
+running (1m13.2s), 001/050 VUs, 7318 complete and 0 interrupted iterations
+badkeys   [  81% ] 001/050 VUs  1m13.2s/1m30s  100.00 iters/s
+
+running (1m14.2s), 001/050 VUs, 7418 complete and 0 interrupted iterations
+badkeys   [  82% ] 001/050 VUs  1m14.2s/1m30s  100.00 iters/s
+
+running (1m15.2s), 000/050 VUs, 7518 complete and 0 interrupted iterations
+badkeys   [  84% ] 000/050 VUs  1m15.2s/1m30s  100.00 iters/s
+
+running (1m16.2s), 001/050 VUs, 7618 complete and 0 interrupted iterations
+badkeys   [  85% ] 001/050 VUs  1m16.2s/1m30s  100.00 iters/s
+
+running (1m17.2s), 001/050 VUs, 7718 complete and 0 interrupted iterations
+badkeys   [  86% ] 001/050 VUs  1m17.2s/1m30s  100.00 iters/s
+
+running (1m18.2s), 001/050 VUs, 7818 complete and 0 interrupted iterations
+badkeys   [  87% ] 001/050 VUs  1m18.2s/1m30s  100.00 iters/s
+
+running (1m19.2s), 002/050 VUs, 7917 complete and 0 interrupted iterations
+badkeys   [  88% ] 002/050 VUs  1m19.2s/1m30s  100.00 iters/s
+
+running (1m20.2s), 001/050 VUs, 8018 complete and 0 interrupted iterations
+badkeys   [  89% ] 001/050 VUs  1m20.2s/1m30s  100.00 iters/s
+
+running (1m21.2s), 001/050 VUs, 8118 complete and 0 interrupted iterations
+badkeys   [  90% ] 001/050 VUs  1m21.2s/1m30s  100.00 iters/s
+
+running (1m22.2s), 001/050 VUs, 8218 complete and 0 interrupted iterations
+badkeys   [  91% ] 001/050 VUs  1m22.2s/1m30s  100.00 iters/s
+
+running (1m23.2s), 001/050 VUs, 8318 complete and 0 interrupted iterations
+badkeys   [  92% ] 001/050 VUs  1m23.2s/1m30s  100.00 iters/s
+
+running (1m24.2s), 001/050 VUs, 8418 complete and 0 interrupted iterations
+badkeys   [  94% ] 001/050 VUs  1m24.2s/1m30s  100.00 iters/s
+
+running (1m25.2s), 000/050 VUs, 8518 complete and 0 interrupted iterations
+badkeys   [  95% ] 000/050 VUs  1m25.2s/1m30s  100.00 iters/s
+
+running (1m26.2s), 000/050 VUs, 8618 complete and 0 interrupted iterations
+badkeys   [  96% ] 000/050 VUs  1m26.2s/1m30s  100.00 iters/s
+
+running (1m27.2s), 000/050 VUs, 8718 complete and 0 interrupted iterations
+badkeys   [  97% ] 000/050 VUs  1m27.2s/1m30s  100.00 iters/s
+
+running (1m28.2s), 001/050 VUs, 8818 complete and 0 interrupted iterations
+badkeys   [  98% ] 001/050 VUs  1m28.2s/1m30s  100.00 iters/s
+
+running (1m29.2s), 000/050 VUs, 8918 complete and 0 interrupted iterations
+badkeys   [  99% ] 000/050 VUs  1m29.2s/1m30s  100.00 iters/s
+
+     G£ô 401 for a missing or wrong key
+     G£ô never a 5xx
+
+     checks.....................: 100.00% G£ô 18002      G£ù 0   
+     data_received..............: 1.8 MB  20 kB/s
+     data_sent..................: 4.4 MB  49 kB/s
+     http_req_blocked...........: avg=67.91-¦s  min=4.47-¦s  med=12.78-¦s  max=94.75ms  p(90)=16.59-¦s  p(95)=24.63-¦s  p(99)=97.86-¦s 
+     http_req_connecting........: avg=4.94-¦s   min=0s      med=0s       max=2.25ms   p(90)=0s       p(95)=0s       p(99)=0s      
+     http_req_duration..........: avg=4.46ms   min=2.18ms  med=4.02ms   max=65.64ms  p(90)=5.49ms   p(95)=6.45ms   p(99)=10.24ms 
+     http_req_failed............: 100.00% G£ô 9001       G£ù 0   
+     http_req_receiving.........: avg=283.34-¦s min=34.29-¦s med=188.26-¦s max=12.9ms   p(90)=477.57-¦s p(95)=758.95-¦s p(99)=1.68ms  
+     http_req_sending...........: avg=89.64-¦s  min=31.94-¦s med=71.73-¦s  max=39.5ms   p(90)=116.42-¦s p(95)=144.69-¦s p(99)=274.38-¦s
+     http_req_tls_handshaking...: avg=0s       min=0s      med=0s       max=0s       p(90)=0s       p(95)=0s       p(99)=0s      
+     http_req_waiting...........: avg=4.09ms   min=2.02ms  med=3.7ms    max=63.15ms  p(90)=4.96ms   p(95)=5.9ms    p(99)=9.19ms  
+     http_reqs..................: 9001    100.002421/s
+     iteration_duration.........: avg=5.22ms   min=2.55ms  med=4.73ms   max=120.36ms p(90)=6.3ms    p(95)=7.26ms   p(99)=11.33ms 
+     iterations.................: 9001    100.002421/s
+     vus........................: 1       min=0        max=2 
+     vus_max....................: 50      min=28       max=50
+
+
+running (1m30.0s), 000/050 VUs, 9001 complete and 0 interrupted iterations
+badkeys G£ô [ 100% ] 000/050 VUs  1m30s  100.00 iters/s

@@ -226,3 +226,4 @@ models/
 api_keys*.txt
 *.apikey
 secret*.yaml
+credentials.md

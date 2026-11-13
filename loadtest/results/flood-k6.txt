@@ -1,0 +1,104 @@
+
+          /\      |GÇ+GÇ+| /GÇ+GÇ+/   /GÇ+GÇ+/   
+     /\  /  \     |  |/  /   /  /    
+    /  \/    \    |     (   /   GÇ+GÇ+\  
+   /          \   |  |\  \ |  (GÇ+)  | 
+  / __________ \  |__| \__\ \_____/ .io
+
+     execution: local
+        script: /scripts/k6-score.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 600 max VUs, 2m0s max duration (incl. graceful stop):
+              * flood: 150.00 iterations/s for 1m30s (maxVUs: 100-600, gracefulStop: 30s)
+
+
+Init    [  29% ] 029/100 VUs initialized
+flood   [   0% ]
+
+Init    [  60% ] 060/100 VUs initialized
+flood   [   0% ]
+
+Init    [  88% ] 088/100 VUs initialized
+flood   [   0% ]
+
+running (0m00.7s), 075/100 VUs, 30 complete and 0 interrupted iterations
+flood   [   1% ] 075/100 VUs  0m00.7s/1m30s  150.00 iters/s
+
+running (0m01.7s), 110/110 VUs, 84 complete and 0 interrupted iterations
+flood   [   2% ] 110/110 VUs  0m01.7s/1m30s  150.00 iters/s
+
+running (0m02.7s), 124/124 VUs, 143 complete and 0 interrupted iterations
+flood   [   3% ] 124/124 VUs  0m02.7s/1m30s  150.00 iters/s
+
+running (0m03.7s), 134/134 VUs, 204 complete and 0 interrupted iterations
+flood   [   4% ] 134/134 VUs  0m03.7s/1m30s  150.00 iters/s
+
+running (0m04.7s), 145/145 VUs, 283 complete and 0 interrupted iterations
+flood   [   5% ] 145/145 VUs  0m04.7s/1m30s  150.00 iters/s
+
+running (0m05.7s), 157/157 VUs, 351 complete and 0 interrupted iterations
+flood   [   6% ] 157/157 VUs  0m05.7s/1m30s  150.00 iters/s
+
+running (0m06.7s), 167/171 VUs, 424 complete and 0 interrupted iterations
+flood   [   7% ] 167/171 VUs  0m06.7s/1m30s  150.00 iters/s
+
+running (0m07.7s), 181/186 VUs, 502 complete and 0 interrupted iterations
+flood   [   9% ] 181/186 VUs  0m07.7s/1m30s  150.00 iters/s
+
+running (0m08.7s), 199/200 VUs, 574 complete and 0 interrupted iterations
+flood   [  10% ] 199/200 VUs  0m08.7s/1m30s  150.00 iters/s
+
+running (0m09.7s), 216/216 VUs, 641 complete and 0 interrupted iterations
+flood   [  11% ] 216/216 VUs  0m09.7s/1m30s  150.00 iters/s
+
+running (0m10.7s), 224/229 VUs, 718 complete and 0 interrupted iterations
+flood   [  12% ] 224/229 VUs  0m10.7s/1m30s  150.00 iters/s
+
+running (0m11.7s), 240/240 VUs, 789 complete and 0 interrupted iterations
+flood   [  13% ] 240/240 VUs  0m11.7s/1m30s  150.00 iters/s
+
+running (0m12.7s), 254/254 VUs, 856 complete and 0 interrupted iterations
+flood   [  14% ] 254/254 VUs  0m12.7s/1m30s  150.00 iters/s
+
+running (0m13.7s), 270/270 VUs, 921 complete and 0 interrupted iterations
+flood   [  15% ] 270/270 VUs  0m13.7s/1m30s  150.00 iters/s
+
+running (0m14.7s), 284/284 VUs, 989 complete and 0 interrupted iterations
+flood   [  16% ] 284/284 VUs  0m14.7s/1m30s  150.00 iters/s
+
+running (0m15.7s), 296/296 VUs, 1055 complete and 0 interrupted iterations
+flood   [  17% ] 296/296 VUs  0m15.7s/1m30s  150.00 iters/s
+
+running (0m16.7s), 302/308 VUs, 1125 complete and 0 interrupted iterations
+flood   [  19% ] 302/308 VUs  0m16.7s/1m30s  150.00 iters/s
+
+running (0m17.7s), 316/319 VUs, 1197 complete and 0 interrupted iterations
+flood   [  20% ] 316/319 VUs  0m17.7s/1m30s  150.00 iters/s
+
+running (0m18.7s), 335/336 VUs, 1274 complete and 0 interrupted iterations
+flood   [  21% ] 335/336 VUs  0m18.7s/1m30s  150.00 iters/s
+
+running (0m19.7s), 355/355 VUs, 1323 complete and 0 interrupted iterations
+flood   [  22% ] 355/355 VUs  0m19.7s/1m30s  150.00 iters/s
+
+running (0m20.7s), 367/368 VUs, 1407 complete and 0 interrupted iterations
+flood   [  23% ] 367/368 VUs  0m20.7s/1m30s  150.00 iters/s
+
+running (0m21.7s), 384/384 VUs, 1457 complete and 0 interrupted iterations
+flood   [  24% ] 384/384 VUs  0m21.7s/1m30s  150.00 iters/s
+
+running (0m22.7s), 393/394 VUs, 1518 complete and 0 interrupted iterations
+flood   [  25% ] 393/394 VUs  0m22.7s/1m30s  150.00 iters/s
+
+running (0m23.7s), 401/407 VUs, 1598 complete and 0 interrupted iterations
+flood   [  26% ] 401/407 VUs  0m23.7s/1m30s  150.00 iters/s
+
+running (0m24.7s), 419/420 VUs, 1673 complete and 0 interrupted iterations
+flood   [  27% ] 419/420 VUs  0m24.7s/1m30s  150.00 iters/s
+
+running (0m25.7s), 439/439 VUs, 1734 complete and 0 interrupted iterations
+flood   [  29% ] 439/439 VUs  0m25.7s/1m30s  150.00 iters/s
+
+running (0m26.7s), 455/456 VUs, 1790 complete and 0 interrupted iterations
+flood   [  30% ] 455/456 VUs  0m26.7s/1m30s  150.00 iters/s

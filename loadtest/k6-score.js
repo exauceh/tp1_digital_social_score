@@ -92,6 +92,38 @@ const SCENARIOS = {
     preAllocatedVUs: 50,
     maxVUs: 300,
   },
+  // --- attack simulations (step 6): our own API, from inside the cluster -----------------------
+  // badkeys: a flood of requests with a missing or wrong key -> only 401, and the alert
+  //          AuthenticationFailuresHigh must fire.
+  badkeys: {
+    executor: 'constant-arrival-rate',
+    exec: 'badKeys',
+    rate: 100,
+    timeUnit: '1s',
+    duration: '90s',
+    preAllocatedVUs: 50,
+    maxVUs: 300,
+  },
+  // malformed: invalid or hostile inputs with a valid key -> 422 (never 500), request id sanitised.
+  malformed: {
+    executor: 'constant-arrival-rate',
+    exec: 'malformed',
+    rate: 10,
+    timeUnit: '1s',
+    duration: '60s',
+    preAllocatedVUs: 20,
+    maxVUs: 100,
+  },
+  // flood: one client with a valid key far above what the service can serve (no per-client limit
+  //        exists yet: this shows what that costs the other clients).
+  flood: {
+    executor: 'constant-arrival-rate',
+    rate: 150,
+    timeUnit: '1s',
+    duration: '90s',
+    preAllocatedVUs: 100,
+    maxVUs: 600,
+  },
 };
 
 // Ramp only: every request is tagged with the rate that was requested when it was sent, by slices
@@ -151,4 +183,62 @@ export default function () {
     logged += 1;
     console.warn(`FAILED at ${new Date().toISOString()} status=${response.status} error=${response.error_code}`);
   }
+}
+
+// --- attack scenarios ---------------------------------------------------------------------------
+
+const JSON_HEADERS = { 'Content-Type': 'application/json' };
+
+// A missing key and a wrong key must both give the same 401 and never reach the model.
+export function badKeys() {
+  const missing = Math.random() < 0.5;
+  const headers = missing ? JSON_HEADERS : Object.assign({}, JSON_HEADERS, { 'X-API-Key': `wrong-${Math.random()}` });
+  const response = http.post(`${BASE_URL}/score`, JSON.stringify({ text: pickText() }), {
+    headers,
+    timeout: '10s',
+    tags: { attack: 'badkeys' },
+  });
+  check(response, { '401 for a missing or wrong key': (r) => r.status === 401 });
+  check(response, { 'never a 5xx': (r) => r.status < 500 });
+}
+
+// Hostile inputs, one at random per iteration. Each must be refused with 422 (or answered 200 for the
+// ones that are legitimate), and never produce a 5xx.
+const MALFORMED = [
+  { name: 'empty text', body: JSON.stringify({ text: '' }), expect: 422 },
+  { name: 'blank text', body: JSON.stringify({ text: '    ' }), expect: 422 },
+  { name: 'text too long (5001 chars)', body: JSON.stringify({ text: 'a'.repeat(5001) }), expect: 422 },
+  { name: 'missing field', body: JSON.stringify({}), expect: 422 },
+  { name: 'wrong type', body: JSON.stringify({ text: 123 }), expect: 422 },
+  { name: 'not JSON', body: 'this is not json', expect: 422 },
+  { name: 'huge body (1 MB)', body: JSON.stringify({ text: 'a'.repeat(1000000) }), expect: 422 },
+  { name: 'markup and SQL in the text', body: JSON.stringify({ text: "<script>alert(1)</script>'; DROP TABLE users;--" }), expect: 200 },
+];
+
+export function malformed() {
+  if (Math.random() < 0.1) {
+    requestIdInjection();
+    return;
+  }
+  const input = MALFORMED[Math.floor(Math.random() * MALFORMED.length)];
+  const response = http.post(`${BASE_URL}/score`, input.body, {
+    headers: Object.assign({}, JSON_HEADERS, { 'X-API-Key': API_KEY }),
+    timeout: '10s',
+    tags: { attack: 'malformed' },
+  });
+  check(response, { [`${input.name}: ${input.expect}`]: (r) => r.status === input.expect });
+  check(response, { 'never a 5xx': (r) => r.status < 500 });
+  if (response.status >= 500 && logged < 40) {
+    logged += 1;
+    console.warn(`UNEXPECTED ${response.status} for: ${input.name}`);
+  }
+}
+
+// A hostile X-Request-ID must be replaced, not echoed back (it would end up in the logs).
+export function requestIdInjection() {
+  const injected = '<script>alert(1)</script>';
+  const response = http.post(`${BASE_URL}/score`, JSON.stringify({ text: 'hello' }), {
+    headers: Object.assign({}, JSON_HEADERS, { 'X-API-Key': API_KEY, 'X-Request-ID': injected }),
+  });
+  check(response, { 'hostile request id replaced': (r) => r.status === 200 && r.json('request_id') !== injected });
 }
