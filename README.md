@@ -457,18 +457,41 @@ limite de 2 CPU n'est jamais utilisée.
 
 ## Reprise après panne (failover)
 
-**Non réalisé.** Le scénario `failover` a seulement été exécuté sans perturbation (40 req/s, 0 erreur, P95 52 ms,
-2 pods prêts) : cela ne prouve rien sur la tolérance à la panne. Ce que la configuration permet d'attendre, sans
-l'avoir mesuré : 2 pods minimum répartis sur 2 zones, un PodDisruptionBudget (`minAvailable: 1`) et un déploiement
-progressif sans indisponibilité. Pour le mesurer :
+Charge constante de 40 req/s pendant 4 minutes (`failover`), avec une panne provoquée 90 s après le début.
 
-```powershell
-$env:DSS_API_KEY = "<clé d'un client>"
-.\loadtest\run-loadtest.ps1 -Scenario failover -Disrupt pod    # supprime un pod après 90 s
-.\loadtest\run-loadtest.ps1 -Scenario failover -Disrupt node   # vide le nœud d'un pod après 90 s
-.\loadtest\summarize-results.ps1
-.\loadtest\run-loadtest.ps1 -Cleanup
-```
+### Panne d'un pod
+
+Un pod a été supprimé à 14:38:51 (événement `Killing` du cluster). Le fichier d'événements de ce passage a été écrasé
+par un test suivant : l'heure et le type de panne (suppression d'un pod) viennent des événements Kubernetes, pas du
+fichier d'événements du script.
+
+| Mesure | Valeur |
+|---|---|
+| Requêtes | 9 321 (38,8 req/s en moyenne), 279 itérations perdues |
+| Échecs | 73 (0,78 %) : 33 connexions refusées, 39 délais dépassés (10 s), 1 délai de connexion |
+| Quand | 72 échecs entre 14:38:50 et 14:39:20 (30 s), 1 échec à 14:40:50 |
+| Latence k6 | médiane 35 ms, moyenne 1,64 s, P90 5,48 s, P95 7,4 s, P99 8,58 s, maximum 9,41 s |
+| Pods disponibles | 2 → 1 (vers 14:39:15) → 2 (vers 14:39:45) → 3 (14:41:15, ajout du HPA) |
+| P95 côté serveur | 48 ms avant la panne ; 9,4 à 9,7 s de 14:39:15 à 14:40:15 ; 4,8 s à 14:40:30 ; 1,3 s à 14:41:00 ; 80 ms à 14:41:15 |
+
+- **Le service ne s'est jamais arrêté** : le pod restant a continué à répondre (18 à 29 req/s servies pendant la panne),
+  mais 0,78 % des requêtes ont échoué en 30 s.
+- **Connexions refusées** : le pod supprimé a cessé d'accepter des connexions avant d'être retiré de la liste du Service.
+  Le déploiement n'a pas de `preStop` pour retarder l'arrêt (voir les améliorations).
+- **La latence est restée dégradée beaucoup plus longtemps que les erreurs** (environ 2 min 20 s) : avec un seul pod,
+  les 40 req/s dépassent sa capacité (environ 37 req/s) et une file se forme. Même une fois le deuxième pod revenu
+  (environ 45 s après la suppression), le retard accumulé s'est résorbé lentement.
+- **Deux pods au minimum ne suffisent donc pas** : perdre l'un des deux, c'est perdre la capacité nécessaire à cette
+  charge.
+
+### Panne d'un nœud : essayée, non concluante, non reprise
+
+À 14:46:35, le nœud `gke-dss-std-default-pool-661c9ff3-jzpp` (qui hébergeait un pod de l'API) a été vidé (`drain`). Le
+`drain` a aussi évincé le pod k6, qui tournait sur le même nœud : le générateur de charge s'est arrêté avec la panne
+(débit servi de 31,7 req/s à 14:46:30, puis 0 à 14:47:30). Il n'y a donc ni résumé k6 ni mesure sous charge après la
+panne. Le test n'a pas été refait : le test de panne d'un pod a été retenu pour évaluer la reprise. Le script ne vide
+plus un nœud qui héberge k6, de sorte que `-Disrupt node` pourrait être relancé sans ce défaut. La tolérance à la
+perte d'un nœud n'est donc pas mesurée.
 
 ## Limites de la mesure
 
@@ -479,6 +502,8 @@ $env:DSS_API_KEY = "<clé d'un client>"
 - Les redémarrages ne sont pas disponibles dans Prometheus (pas de `kube-state-metrics` exploitable) ; ils ont été
   relevés avec `kubectl`.
 - Pas de test d'endurance ni de test depuis l'extérieur du cluster.
+- Failover : un seul passage valide (panne d'un pod) ; la panne d'un nœud n'est pas mesurée (premiers essais perdus :
+  script arrêté par un avertissement de `kubectl`, puis pod k6 évincé avec le nœud).
 
 ## Améliorations proposées
 
@@ -489,6 +514,7 @@ $env:DSS_API_KEY = "<clé d'un client>"
 | Latence de plusieurs secondes sous saturation | Limiter la file et répondre `429` avec `Retry-After` au lieu de tout accepter | Réponse rapide et explicite plutôt qu'une attente de 5 s |
 | Mêmes textes rescorés | **Cache** (Redis/Memorystore) des scores, clé = empreinte du texte anonymisé, durée de vie courte (RGPD : jamais le texte lui-même) | Moins de calcul pour les textes répétés ; gain à mesurer |
 | Exposition de l'API | **Load balancer** (Ingress/Gateway ou LB interne) devant le Service, avec contrôles de santé et limitation de débit par client | Répartition entre zones et protection contre les excès d'un client |
+| Connexions refusées lors de l'arrêt d'un pod, et perte de capacité avec 2 pods | `preStop` de 10 s (`sleep`) et `terminationGracePeriodSeconds` adapté, `minReplicas` à 3 | Le pod arrêté reste joignable le temps d'être retiré du Service ; la perte d'un pod ne fait plus passer sous la capacité |
 | Perte d'un nœud ou d'une zone | **Redondance** : `topologySpreadConstraints` entre zones et nœuds, au moins 3 pods, PDB conservé | Une panne ne retire qu'une partie de la capacité |
 | 1 Gi demandé pour 0,4 à 0,5 Go utilisé | Réduire la demande mémoire à environ 640 Mi (limite 1 Gi) | Moins de nœuds, moins de coût |
 
@@ -543,9 +569,10 @@ Trois attaques ont été lancées avec k6 depuis le cluster, contre notre propre
 | Logs pendant les attaques | Aucune clé, aucun texte, aucune IP | 11 417 lignes relues : 0 clé, 0 texte (ni balises ni SQL), 0 adresse IP (seule `0.0.0.0`, l'adresse d'écoute du serveur), 0 erreur, 0 trace d'exception | Réussi |
 | Montée progressive (`ramp`), voir Exercice 5 | Latence stable, pas d'erreur | Saturation vers 75 req/s avec 2 pods ; 0 % d'erreur après correction de `/health` | Partiel : la latence monte à plusieurs secondes |
 | Pic à 250 req/s (`spike`), voir Exercice 5 | Le service reste disponible | 220 req/s servis avec 6 pods, 0 % d'erreur après correction, P95 4,8 s | Partiel : très lent pendant le pic |
-| Dépassement par un client valide (`flood`) | Mesure de l'effet | **Test invalide** : le pod k6 a été tué par manque de mémoire (voir plus bas), sans résumé k6 | Non conclu |
-| Panne d'un pod (`failover -Disrupt pod`) | Service continu | Non réalisé | Non fait |
-| Panne d'un nœud (`failover -Disrupt node`) | Service continu | Non réalisé | Non fait |
+| Dépassement par un client valide (`flood`), 1er passage | Mesure de l'effet | Pod k6 tué par manque de mémoire après 2 min (sans résumé k6). Côté serveur, avec 2 pods : 425 requêtes en cours, P95 9,5 s, 0 réponse 500 | Dégradé (test k6 incomplet) |
+| Dépassement par un client valide (`flood`), 2e passage | Mesure de l'effet | 13 501 requêtes à 149,5 req/s, 0 échec, P95 212 ms, P99 351 ms ; HPA de 4 à 6 pods (CPU 88 %) | Réussi, mais démarré avec 4 pods déjà en place |
+| Panne d'un pod (`failover -Disrupt pod`) | Service continu | 73 échecs (0,78 %) en 30 s, puis latence dégradée pendant environ 2 min 20 s (P95 jusqu'à 9,7 s) | Partiel |
+| Panne d'un nœud (`failover -Disrupt node`) | Service continu | Non concluant : le `drain` a évincé le pod k6 | Non mesuré |
 
 ## Analyse des logs et des comportements anormaux
 
@@ -559,19 +586,19 @@ beaucoup plus élevé n'a pas été essayé.
 quel texte : il est anonymisé et scoré, puis n'apparaît pas dans les logs. Le temps maximal observé par k6 est de
 3,3 s, dont la cause n'a pas été analysée (le corps de 1 Mo est une hypothèse, non vérifiée).
 
-**Dépassement par un client valide.** Le test n'a pas pu être terminé : le pod k6 a été tué par manque de mémoire
-après environ 2 minutes (limite de 768 Mi, `OOMKilled`). C'est une limite du générateur de charge, pas de l'API. Ce que
-l'API a subi pendant ce temps est mesuré côté serveur :
+**Dépassement par un client valide.** Deux passages, aux résultats opposés selon la capacité disponible.
 
-- jusqu'à 425 requêtes en cours en même temps (la file d'attente) ;
-- latence P95 de 9,5 s ;
-- environ 2 300 requêtes servies, 0 réponse 500 ;
-- le HPA a ajouté des pods, mais ils n'étaient pas prêts avant la fin du test ;
-- les alertes `LatencyP95Above500ms` et `LatencySLOViolated` sont passées à l'état `pending` sans arriver à
-  `firing`, la perturbation ayant été plus courte que leur durée d'attente.
+- *Premier passage, avec 2 pods.* Le pod k6 a été tué par manque de mémoire après environ 2 minutes (limite de
+  768 Mi, `OOMKilled`) : pas de résumé k6. Côté serveur, jusqu'à 425 requêtes en cours (la file d'attente), latence P95
+  de 9,5 s, environ 2 300 requêtes servies, 0 réponse 500. Les alertes `LatencyP95Above500ms` et `LatencySLOViolated` sont
+  passées à l'état `pending` sans arriver à `firing`, la perturbation ayant été plus courte que leur durée d'attente.
+- *Second passage, limite de mémoire de k6 portée à 1,5 Gi.* 13 501 requêtes à 149,5 req/s, aucun échec, latence P95
+  de 212 ms, P99 de 351 ms, maximum 827 ms. Le HPA est passé de 4 à 6 pods (CPU 88 %). Ce passage a démarré avec
+  4 pods déjà en place, soit environ 148 req/s de capacité (4 fois 37) : le résultat est bon parce que la capacité
+  était déjà là, pas parce que l'API se protège.
 
-Un seul client valide peut donc dégrader le service pour tous les autres : il n'existe pas de limite de débit par
-client. La limite de mémoire du pod k6 a été portée à 1,5 Gi ; le test est à relancer.
+Un seul client valide peut donc dégrader le service pour tous les autres si la capacité disponible est inférieure à
+son débit (premier passage) : il n'existe pas de limite de débit par client.
 
 **Alertes.** `AuthenticationFailuresHigh` s'est bien déclenchée. Aucun canal de notification n'est configuré : une alerte
 passe à `firing` dans Prometheus, mais personne n'est prévenu.
@@ -582,11 +609,14 @@ passe à `firing` dans Prometheus, mais personne n'est prévenu.
   sans pod redémarré ni ajouté.
 - **Saturation** : le service reste en vie (aucune erreur 5xx, aucun redémarrage), mais devient très lent : la
   continuité est dégradée en latence, pas en disponibilité.
-- **Panne de pod ou de nœud** : non testée, voir l'Exercice 5 pour les commandes.
+- **Panne d'un pod** : le service n'a pas été interrompu, mais 0,78 % des requêtes ont échoué en 30 s et la latence est
+  restée dégradée environ 2 min 20 s (voir l'Exercice 5).
+- **Panne d'un nœud** : non mesurée (essai non concluant, non repris).
 
 ## Limites et points non faits
 
-- `flood` à relancer (mémoire du pod k6 corrigée) ; le failover (pod et nœud) n'a pas été mesuré.
+- La panne d'un nœud n'est pas mesurée (l'essai a évincé le pod k6 ; le test d'un pod a été retenu).
+- `flood` n'a été réussi qu'avec 4 pods déjà en place ; un test à froid, avec 2 pods, n'a pas de résumé k6.
 - Pas de limite de débit par client ni de réponse `429` : à ajouter (voir les améliorations de l'Exercice 5).
 - Pas de canal de notification pour les alertes.
 - Les attaques simulées sont modestes et ne remplacent pas un test d'intrusion.

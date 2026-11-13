@@ -1,6 +1,6 @@
 ﻿# Resultats des tests de charge
 
-Genere par `loadtest/summarize-results.ps1` le 2026-11-12 15:38 a partir des fichiers de ce dossier et de Prometheus.
+Genere par `loadtest/summarize-results.ps1` le 2026-11-13 14:51 a partir des fichiers de ce dossier et de Prometheus.
 
 ## Tableau (format du cours numero 3)
 
@@ -9,7 +9,8 @@ Genere par `loadtest/summarize-results.ps1` le 2026-11-12 15:38 a partir des fic
 | ramp | 60.6 | 108.6 | 1040 | 3500 | 3950 | 0.00 | 427 | 48 | 412 | |
 | sustained | 60.0 | 60.1 | 44 | 109 | 351 | 0.00 | 0 | 50 | 360 | |
 | spike | 131.5 | 220.5 | 2720 | 4760 | 5450 | 0.00 | 3246 | 54 | 456 | |
-| failover | 40.0 | 40.0 | 27 | 52 | 87 | 0.00 | 0 | 41 | 409 | |
+| failover | 38.8 | 38.2 | 1640 | 7400 | 8580 | 0.78 | 279 | 24 | 418 | |
+| flood | 149.5 | 149.4 | 72 | 212 | 351 | 0.00 | 0 | 61 | 402 | |
 
 ## Detail par scenario
 
@@ -42,12 +43,22 @@ Genere par `loadtest/summarize-results.ps1` le 2026-11-12 15:38 a partir des fic
 
 ### failover
 
-- Fenetre de mesure : 14:30:02-14:34:33 (heure locale)
-- Requetes : 9600 ; en echec (k6) : 0.00 % ; iterations perdues : 0 ; VUs max : 50
-- Latence cote client (k6) : moyenne 27 ms, mediane 21 ms, P90 45 ms, P95 52 ms, P99 87 ms, max 306 ms
-- Autoscaling : pods de 2 a 2, **minimum de pods prets : 2**, noeuds de 6 a 6, CPU du HPA maximal : 50 % de la demande
-- Cote serveur (Prometheus) : debit max servi 40.0 req/s, P95 50 ms, reponses 5xx 0.00 %, redemarrages de conteneurs n/a
-- Ressources : CPU total moyen 0.80 coeur(s), max 1.13 ; memoire moyenne par pod 409 Mo, max 424 Mo
+- Fenetre de mesure : 14:44:59-14:48:02 (heure locale)
+- Requetes : 9321 ; en echec (k6) : 0.78 % ; iterations perdues : 279 ; VUs max : 285
+- Latence cote client (k6) : moyenne 1640 ms, mediane 35 ms, P90 5480 ms, P95 7400 ms, P99 8580 ms, max 9410 ms
+- Autoscaling : pods de 3 a 3, **minimum de pods prets : 2**, noeuds de 5 a 5, CPU du HPA maximal : 35 % de la demande
+- Cote serveur (Prometheus) : debit max servi 38.2 req/s, P95 51 ms, reponses 5xx 0.00 %, redemarrages de conteneurs n/a
+- Ressources : CPU total moyen 0.59 coeur(s), max 0.97 ; memoire moyenne par pod 418 Mo, max 421 Mo
+- Panne provoquee : 14:46:35  draining node gke-dss-std-default-pool-661c9ff3-jzpp (hosts pod dss-api-759bb59f5f-sdcrf) ; node/gke-dss-std-default-pool-661c9ff3-jzpp cordoned
+
+### flood
+
+- Fenetre de mesure : 14:24:53-14:27:01 (heure locale)
+- Requetes : 13501 ; en echec (k6) : 0.00 % ; iterations perdues : 0 ; VUs max : 100
+- Latence cote client (k6) : moyenne 72 ms, mediane 44 ms, P90 165 ms, P95 212 ms, P99 351 ms, max 827 ms
+- Autoscaling : pods de 4 a 6, **minimum de pods prets : 4**, noeuds de 4 a 4, CPU du HPA maximal : 88 % de la demande
+- Cote serveur (Prometheus) : debit max servi 149.4 req/s, P95 219 ms, reponses 5xx 0.00 %, redemarrages de conteneurs n/a
+- Ressources : CPU total moyen 2.02 coeur(s), max 3.57 ; memoire moyenne par pod 402 Mo, max 410 Mo
 
 ## Latence par niveau de charge (ramp)
 

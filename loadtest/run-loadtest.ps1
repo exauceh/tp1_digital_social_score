@@ -110,6 +110,7 @@ $started = Get-Date
 $nominalSeconds = @{ ramp = 240; sustained = 180; spike = 230; failover = 240; badkeys = 90; malformed = 60; flood = 90 }
 $maxSeconds = $nominalSeconds[$Scenario] + 300
 $disrupted = $false
+try {
 while ($true) {
     Get-Snapshot | Add-Content $timeline
     $status = kubectl get job $jobName -n $loadNamespace -o jsonpath="{.status.succeeded}/{.status.failed}" 2>$null
@@ -121,7 +122,21 @@ while ($true) {
     }
     if ($Scenario -eq "failover" -and $Disrupt -ne "none" -and -not $disrupted -and $elapsed -ge 90) {
         $disrupted = $true
-        $podName = (kubectl get pods -n $TargetNamespace -l app=dss-api -o jsonpath="{.items[0].metadata.name}")
+        # Never remove the node that runs the load generator: a drain would evict k6 itself and
+        # the test would end with the failure it is supposed to measure (this happened once).
+        $k6Node = kubectl get pods -n $loadNamespace -l job-name=$jobName -o jsonpath="{.items[0].spec.nodeName}"
+        $apiPods = @(kubectl get pods -n $TargetNamespace -l app=dss-api -o wide --no-headers | ForEach-Object {
+                $columns = $_ -split "\s+"
+                [pscustomobject]@{ Name = $columns[0]; Node = $columns[6] }
+            })
+        $target = $apiPods | Where-Object { $_.Node -ne $k6Node } | Select-Object -First 1
+        if (-not $target) {
+            "{0}  no API pod runs outside the node of k6 ({1}): nothing was disrupted, run the test again" -f (Get-Date -Format "HH:mm:ss"), $k6Node | Add-Content $events
+            Write-Step "Every API pod shares the node of k6: no disruption, run the test again"
+            Start-Sleep -Seconds $SnapshotSeconds
+            continue
+        }
+        $podName = $target.Name
         if ($Disrupt -eq "pod") {
             "{0}  deleting pod {1}" -f (Get-Date -Format "HH:mm:ss"), $podName | Add-Content $events
             Write-Step "Deleting pod $podName"
@@ -131,17 +146,27 @@ while ($true) {
             $nodeName = (kubectl get pod $podName -n $TargetNamespace -o jsonpath="{.spec.nodeName}")
             "{0}  draining node {1} (hosts pod {2})" -f (Get-Date -Format "HH:mm:ss"), $nodeName, $podName | Add-Content $events
             Write-Step "Draining node $nodeName"
-            kubectl drain $nodeName --ignore-daemonsets --delete-emptydir-data --force --timeout=120s 2>&1 | Add-Content $events
-            "{0}  drain finished, node left cordoned until the end of the test" -f (Get-Date -Format "HH:mm:ss") | Add-Content $events
+            # Set before the drain: whatever happens next, the node is put back in service at the end.
             $script:drainedNode = $nodeName
+            # kubectl writes its warnings ("ignoring DaemonSet-managed Pods") on stderr: with
+            # $ErrorActionPreference = "Stop", PowerShell would take each of them for a fatal error and
+            # abort the script in the middle of the drain. The messages are only kept as text.
+            $previousPreference = $ErrorActionPreference
+            $ErrorActionPreference = "Continue"
+            kubectl drain $nodeName --ignore-daemonsets --delete-emptydir-data --force --timeout=120s 2>&1 | ForEach-Object { "$_" } | Add-Content $events
+            $ErrorActionPreference = $previousPreference
+            "{0}  drain finished, node left cordoned until the end of the test" -f (Get-Date -Format "HH:mm:ss") | Add-Content $events
         }
     }
     Start-Sleep -Seconds $SnapshotSeconds
 }
-
-if ($script:drainedNode) {
-    kubectl uncordon $script:drainedNode | Out-Null
-    "{0}  node {1} uncordoned" -f (Get-Date -Format "HH:mm:ss"), $script:drainedNode | Add-Content $events
+}
+finally {
+    # Also runs when the script is interrupted or fails: never leave a node cordoned.
+    if ($script:drainedNode) {
+        kubectl uncordon $script:drainedNode | Out-Null
+        "{0}  node {1} uncordoned" -f (Get-Date -Format "HH:mm:ss"), $script:drainedNode | Add-Content $events
+    }
 }
 
 Write-Step "Scenario finished, collecting the k6 summary"

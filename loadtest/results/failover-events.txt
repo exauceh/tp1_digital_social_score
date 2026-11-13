@@ -1,0 +1,14 @@
+14:46:35  draining node gke-dss-std-default-pool-661c9ff3-jzpp (hosts pod dss-api-759bb59f5f-sdcrf)
+node/gke-dss-std-default-pool-661c9ff3-jzpp cordoned
+Warning: ignoring DaemonSet-managed Pods: gmp-system/collector-x2j5w, kube-system/filestore-node-v25fq, kube-system/fluentbit-gke-q69x2, kube-system/gke-metadata-server-nmz56, kube-system/gke-metrics-agent-kf9nq, kube-system/netd-wpvpd, kube-system/node-local-dns-dkz7v, kube-system/pdcsi-node-778lc
+evicting pod loadtest/k6-failover-c2kdj
+evicting pod kube-system/konnectivity-agent-785fffcd56-9jhpl
+evicting pod dss/dss-api-759bb59f5f-sdcrf
+evicting pod kube-system/kube-dns-5ff7ddbbf7-2bnd2
+pod/k6-failover-c2kdj evicted
+pod/dss-api-759bb59f5f-sdcrf evicted
+pod/kube-dns-5ff7ddbbf7-2bnd2 evicted
+pod/konnectivity-agent-785fffcd56-9jhpl evicted
+node/gke-dss-std-default-pool-661c9ff3-jzpp drained
+14:47:09  drain finished, node left cordoned until the end of the test
+14:47:25  node gke-dss-std-default-pool-661c9ff3-jzpp uncordoned
