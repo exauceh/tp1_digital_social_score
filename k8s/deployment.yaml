@@ -51,6 +51,18 @@ spec:
             # so a wrong name or a missing permission cannot take the API down.
             - name: API_KEYS_SECRET
               value: projects/PROJECT_ID_PLACEHOLDER/secrets/dss-api-keys/versions/latest
+            # Protects /metrics once the API is reachable from outside the cluster (TP n°2): a
+            # separate secret from the API keys above, so it cannot unlock /score. A plain
+            # Kubernetes Secret (not Secret Manager): the Managed Prometheus collector that scrapes
+            # /metrics reads Kubernetes Secrets directly, see k8s/podmonitoring.yaml.
+            # `optional: true` so the deployment still starts if the secret has not been created
+            # yet: /metrics is then left open, as documented in security.py.
+            - name: METRICS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: dss-metrics-token
+                  key: token
+                  optional: true
           resources:
             # CPU request drives the autoscaler (hpa.yaml). Memory: about 750 MB measured on Windows
             # with the CUDA build of PyTorch, so this is an upper estimate for the Linux CPU image:

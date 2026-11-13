@@ -3,8 +3,9 @@
 Routes:
 
 - ``GET  /health``: startup, readiness and liveness probe (Kubernetes); needs no key.
-- ``GET  /metrics``: Prometheus metrics (see ``metrics.py``); needs no key because it is only
-  reachable inside the cluster and exposes aggregated numbers, never a text.
+- ``GET  /metrics``: Prometheus metrics (see ``metrics.py``), aggregated numbers, never a text.
+  Open unless ``METRICS_TOKEN`` is set, in which case it needs ``Authorization: Bearer <token>``
+  (a separate secret from the client API keys: it does not unlock ``/score``).
 - ``POST /score``: ``{"text": "..."}`` -> ``{"score": ..., "labels": {...}, "request_id": ...}``.
   Needs a valid API key in the ``X-API-Key`` header, otherwise the answer is ``401``.
 
@@ -14,9 +15,9 @@ tied to the API key), the text length, the score and the latency are logged: nev
 key or the caller's IP address (the uvicorn access log, which contains it, is disabled).
 
 Configuration (environment variables): ``API_KEYS`` (required, see ``security.py``),
-``MODEL_DIR`` (artifacts directory, default ``models/lstm``), ``LOG_LEVEL`` (default ``INFO``) and
-``TORCH_NUM_THREADS`` (default 2: measured on CPU, using every core makes this small LSTM slower
-and its latency erratic).
+``METRICS_TOKEN`` (optional, protects ``/metrics``), ``MODEL_DIR`` (artifacts directory, default
+``models/lstm``), ``LOG_LEVEL`` (default ``INFO``) and ``TORCH_NUM_THREADS`` (default 2: measured
+on CPU, using every core makes this small LSTM slower and its latency erratic).
 """
 
 import logging
@@ -37,6 +38,7 @@ from fastapi import Depends, FastAPI, HTTPException, Request, Response, Security
 from fastapi.security import APIKeyHeader
 from pydantic import BaseModel, Field, StringConstraints
 
+from tp1_digital_social_score.body_limit import MAX_BODY_BYTES, MaxBodySizeMiddleware
 from tp1_digital_social_score.lstm_model import LstmPredictor
 from tp1_digital_social_score.metrics import (
     CONTENT_TYPE_LATEST,
@@ -45,7 +47,13 @@ from tp1_digital_social_score.metrics import (
     ApiMetrics,
 )
 from tp1_digital_social_score.scoring import LABELS, load_weights, toxicity_score
-from tp1_digital_social_score.security import API_KEY_HEADER, ApiKeyStore, load_api_keys
+from tp1_digital_social_score.security import (
+    API_KEY_HEADER,
+    ApiKeyStore,
+    load_api_keys,
+    load_metrics_token,
+    metrics_token_matches,
+)
 from tp1_digital_social_score.text_pipeline import load_nlp, prepare_texts
 
 logger = logging.getLogger(__name__)
@@ -193,7 +201,10 @@ def create_app(model_dir: Path | None = None, api_keys: ApiKeyStore | None = Non
         yield
 
     app = FastAPI(title="Digital Social Score API", version="0.1.0", lifespan=lifespan)
+    app.add_middleware(MaxBodySizeMiddleware, max_bytes=MAX_BODY_BYTES)
     app.state.metrics = metrics
+    # "" (the default) leaves /metrics open: see load_metrics_token's docstring.
+    app.state.metrics_token = load_metrics_token()
 
     @app.middleware("http")
     async def record_metrics(
@@ -215,11 +226,25 @@ def create_app(model_dir: Path | None = None, api_keys: ApiKeyStore | None = Non
             template = getattr(route, "path", UNMATCHED_ROUTE)
             metrics.observe_request(request.method, template, status, time.perf_counter() - started)
 
+    async def authorize_metrics(request: Request) -> None:
+        """When ``METRICS_TOKEN`` is set, require it as ``Authorization: Bearer <token>``.
+
+        ``async def`` for the same reason as the routes below: a sync dependency would run in the
+        shared thread pool and could queue behind ``/score`` under load.
+
+        /metrics is scraped by Prometheus, not called by a client: there is no caller identity to
+        log on a failure (logging the presented value would be the secret itself), so unlike
+        ``authenticate`` this raises without writing a log line.
+        """
+        token: str = request.app.state.metrics_token
+        if token and not metrics_token_matches(token, request.headers.get("Authorization")):
+            raise HTTPException(status_code=401, detail="Invalid or missing metrics token")
+
     # /metrics and /health are `async def` on purpose. A plain `def` route runs in the thread pool
     # (40 threads) that /score also uses; under load all of them wait for the model, so a probe
     # would queue behind them, miss its 2 s timeout and get the pod removed from the Service, then
     # killed by the liveness probe. Both handlers are instant, so the event loop can run them.
-    @app.get("/metrics", include_in_schema=False)
+    @app.get("/metrics", include_in_schema=False, dependencies=[Depends(authorize_metrics)])
     async def prometheus_metrics() -> Response:
         return Response(content=metrics.render(), media_type=CONTENT_TYPE_LATEST)
 

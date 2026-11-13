@@ -36,6 +36,10 @@ logger = logging.getLogger(__name__)
 API_KEY_HEADER = "X-API-Key"
 API_KEYS_ENV_VAR = "API_KEYS"
 API_KEYS_SECRET_ENV_VAR = "API_KEYS_SECRET"
+# Separate from the client API keys: /metrics is machine-to-machine (scraped by Prometheus), not a
+# client of the scoring service, so it must not share a key with any client nor unlock /score.
+METRICS_TOKEN_ENV_VAR = "METRICS_TOKEN"
+METRICS_TOKEN_HEADER_PREFIX = "Bearer "
 SECRET_VERSION_PATTERN = re.compile(
     r"^projects/[^/\s]+/secrets/[A-Za-z0-9_-]+/versions/(?:latest|\d+)$"
 )
@@ -97,6 +101,31 @@ class ApiKeyStore:
             if hmac.compare_digest(digest, expected):
                 matched = client_id
         return matched
+
+
+def load_metrics_token() -> str:
+    """The token required on ``/metrics`` (``Authorization: Bearer <token>``), or ``""``.
+
+    Unlike the API keys, an unset token leaves ``/metrics`` open: it has no client-facing feature
+    to fail closed on, and that keeps local development and the tests working without any extra
+    setup. Set ``METRICS_TOKEN`` to protect it once the API is reachable from outside the cluster.
+    """
+    return os.environ.get(METRICS_TOKEN_ENV_VAR, "").strip()
+
+
+def metrics_token_matches(expected: str, authorization_header: str | None) -> bool:
+    """Whether ``authorization_header`` carries ``expected`` as a ``Bearer`` token.
+
+    Constant-time comparison. ``expected`` must be non-empty (checked by the caller): comparing
+    against an empty token would make every empty/missing header match.
+    """
+    presented = authorization_header or ""
+    token = (
+        presented[len(METRICS_TOKEN_HEADER_PREFIX) :]
+        if presented.startswith(METRICS_TOKEN_HEADER_PREFIX)
+        else ""
+    )
+    return hmac.compare_digest(expected, token)
 
 
 def fetch_secret(version_name: str) -> str:

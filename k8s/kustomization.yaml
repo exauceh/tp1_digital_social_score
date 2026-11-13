@@ -13,3 +13,4 @@ resources:
   - pdb.yaml
   - podmonitoring.yaml
   - alert-rules.yaml
+  - gmp-metrics-token-rbac.yaml

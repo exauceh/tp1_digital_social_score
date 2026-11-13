@@ -14,3 +14,12 @@ spec:
     - port: http          # named port of the container (see deployment.yaml)
       path: /metrics
       interval: 15s
+      # Matches the METRICS_TOKEN of deployment.yaml: without this, the collector would get 401
+      # once that token is set, and Prometheus and Grafana would go blind. Defaults to "Bearer" if
+      # the API has no token configured, the collector sends "Authorization: Bearer " (harmless,
+      # /metrics ignores it).
+      authorization:
+        credentials:
+          secret:
+            name: dss-metrics-token
+            key: token

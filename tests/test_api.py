@@ -18,6 +18,7 @@ from tp1_digital_social_score.api import (
     ScoringService,
     create_app,
 )
+from tp1_digital_social_score.body_limit import MAX_BODY_BYTES
 from tp1_digital_social_score.lstm_model import FloatArray
 from tp1_digital_social_score.scoring import LABELS
 from tp1_digital_social_score.security import API_KEY_HEADER, ApiKeyStore, make_entry
@@ -183,6 +184,38 @@ def test_the_maximum_allowed_input_is_accepted(client: TestClient) -> None:
     assert client.post("/score", json={"text": "x" * MAX_TEXT_CHARS}).status_code == 200
 
 
+# --- Request body size (denial of service) --------------------------------------------------------
+
+
+def test_a_body_declared_too_large_by_content_length_is_rejected(client: TestClient) -> None:
+    """Rejected from the declared Content-Length alone: the oversized body is never read."""
+    response = client.post(
+        "/score",
+        content=b"{}",  # irrelevant: the Content-Length header below is what gets checked
+        headers={"Content-Length": str(MAX_BODY_BYTES + 1), "Content-Type": "application/json"},
+    )
+    assert response.status_code == 413
+
+
+def test_a_body_actually_larger_than_the_limit_is_rejected(client: TestClient) -> None:
+    """A lying or absent Content-Length does not help: the bytes received are counted too."""
+    oversized = b'{"text": "' + b"a" * MAX_BODY_BYTES + b'"}'
+    # Content-Length below: understated on purpose, the byte count must not be trusted blindly.
+    response = client.post(
+        "/score",
+        content=oversized,
+        headers={"Content-Length": "2", "Content-Type": "application/json"},
+    )
+    assert response.status_code == 413
+
+
+def test_a_body_right_at_the_limit_still_reaches_the_application(client: TestClient) -> None:
+    """The limit does not shrink what a legitimate maximum-length request is allowed to send."""
+    # MAX_TEXT_CHARS (5000) stays far below MAX_BODY_BYTES (body_limit.py): still 422, not 413.
+    response = client.post("/score", json={"text": "x" * (MAX_TEXT_CHARS + 1)})
+    assert response.status_code == 422
+
+
 # --- RGPD ----------------------------------------------------------------------------------------
 
 
@@ -246,6 +279,43 @@ def test_metrics_are_exposed_without_a_key(client: TestClient) -> None:
     assert response.headers["content-type"].startswith("text/plain")
     assert "# TYPE api_requests_total counter" in response.text
     assert "# TYPE api_latency_seconds histogram" in response.text
+
+
+def test_metrics_has_no_token_check_when_metrics_token_is_unset(
+    artifacts_dir: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv("METRICS_TOKEN", raising=False)
+    with make_client(artifacts_dir) as fresh:
+        assert fresh.get("/metrics").status_code == 200
+
+
+def test_metrics_requires_the_token_once_one_is_configured(
+    artifacts_dir: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("METRICS_TOKEN", "the-metrics-token")
+    with make_client(artifacts_dir) as fresh:
+        no_header = fresh.get("/metrics")
+        wrong_token = fresh.get("/metrics", headers={"Authorization": "Bearer wrong"})
+        not_bearer = fresh.get("/metrics", headers={"Authorization": "the-metrics-token"})
+        right_token = fresh.get("/metrics", headers={"Authorization": "Bearer the-metrics-token"})
+    assert no_header.status_code == 401
+    assert wrong_token.status_code == 401
+    assert not_bearer.status_code == 401
+    assert right_token.status_code == 200
+
+
+def test_metrics_token_does_not_unlock_score(
+    artifacts_dir: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The two secrets are independent: the metrics token is not a client API key."""
+    monkeypatch.setenv("METRICS_TOKEN", API_KEY)  # even if it happens to equal a real API key
+    with make_client(artifacts_dir) as fresh:
+        response = fresh.post(
+            "/score",
+            json={"text": "hello"},
+            headers={API_KEY_HEADER: "", "Authorization": f"Bearer {API_KEY}"},
+        )
+    assert response.status_code == 401  # /score only looks at X-API-Key, never Authorization
 
 
 def test_expected_series_exist_at_zero_before_any_request(artifacts_dir: Path) -> None:

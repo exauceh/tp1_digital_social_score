@@ -5,10 +5,13 @@ metadata:
   labels:
     app: dss-api
 spec:
-  # ClusterIP: reachable only from inside the cluster (and through `kubectl port-forward`).
-  # The API has no authentication yet, so it must not get a public IP. Once JWT/API key and HTTPS
-  # are in place (step 4 of the TP), expose it through an Ingress or a Gateway instead.
-  type: ClusterIP
+  # LoadBalancer (TP n°2, course "attacks between classmates"): a public IP is needed so that
+  # classmates can reach /score from outside the cluster. Authentication (X-API-Key) and input
+  # validation stay in front of it; nothing else restricts who can connect yet
+  # (loadBalancerSourceRanges is not set on purpose, for now). Revert to ClusterIP once the exercise
+  # is over: `kubectl patch service dss-api -n dss -p "{\"spec\":{\"type\":\"ClusterIP\"}}"`
+  # (or re-apply this file after switching it back), and consider deleting the cluster entirely.
+  type: LoadBalancer
   selector:
     app: dss-api
   ports:

@@ -1,0 +1,38 @@
+# Grants the Managed Prometheus collector (service account "collector" in "gmp-system") read
+# access to the single Secret it needs to scrape /metrics with its bearer token: no other secret
+# of this namespace, no write access. Required because PodMonitoring's authorization.credentials
+# field makes the collector read the Secret itself (see k8s/podmonitoring.yaml); without this Role
+# the collector's own identity (not the API's) gets a Kubernetes RBAC "forbidden", not a 401 from
+# the API, and every target health turns "down" with "secret ... not found or forbidden".
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: gmp-collector-read-metrics-token
+  namespace: dss
+rules:
+  # "list"/"watch" are also needed: Prometheus reads secrets through an informer (list+watch),
+  # not a one-off get, and RBAC resourceNames does not restrict list/watch (the apiserver still
+  # returns the whole collection) - so this grants list/watch on every Secret of this namespace,
+  # not just this one. Today "dss-metrics-token" is the only Secret here (`kubectl get secrets -n
+  # dss`); re-check that before adding another one, or move this token to its own namespace.
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames: ["dss-metrics-token"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: gmp-collector-read-metrics-token
+  namespace: dss
+subjects:
+  - kind: ServiceAccount
+    name: collector
+    namespace: gmp-system
+roleRef:
+  kind: Role
+  name: gmp-collector-read-metrics-token
+  apiGroup: rbac.authorization.k8s.io

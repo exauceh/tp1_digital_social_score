@@ -36,4 +36,9 @@ ENV PATH="/app/.venv/bin:$PATH" \
 EXPOSE 8080
 # --no-access-log: the uvicorn access log writes the caller's IP address (personal data) for every
 # request. The API logs its own line per request, without any address (see api.py).
-CMD ["uvicorn", "tp1_digital_social_score.api:app", "--host", "0.0.0.0", "--port", "8080", "--no-access-log"]
+# --limit-concurrency 200: nothing else caps how many requests uvicorn accepts at once. The single
+# lock around the model (see ScoringService.score in api.py) already serialises the real work to
+# one request at a time, so queuing far more than this never helps throughput, only lets a flood
+# hold ever more memory; past the limit uvicorn answers 503 instead of accepting another body.
+CMD ["uvicorn", "tp1_digital_social_score.api:app", "--host", "0.0.0.0", "--port", "8080", \
+     "--no-access-log", "--limit-concurrency", "200"]

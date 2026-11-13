@@ -217,3 +217,33 @@ $token = gcloud auth print-access-token
 Invoke-RestMethod -Method Post -Uri "https://monitoring.googleapis.com/v1/projects/$PROJECT_ID/location/global/prometheus/api/v1/query" `
   -Headers @{ Authorization = "Bearer $token" } -Body @{ query = 'sum(rate(api_auth_failures_total[1m]))' } | ConvertTo-Json -Depth 6
 #     Nettoyage à la fin : .\loadtest\run-loadtest.ps1 -Cleanup ; kubectl delete namespace monitoring
+
+# 19. Exposition publique (TP n°2) : LoadBalancer, jeton /metrics et clé invitee
+#     a) Rendre l'API joignable depuis l'exterieur du cluster, sans restriction de source pour l'instant
+#        (k8s/service.yaml est deja en "type: LoadBalancer"). Appliquer puis relever l'IP :
+kubectl apply -f k8s/service.yaml -n dss
+kubectl get service dss-api -n dss
+#        Remettre en ClusterIP a la fin : kubectl patch service dss-api -n dss -p '{"spec":{"type":"ClusterIP"}}'
+#     b) Jeton de /metrics (secret Kubernetes, PAS Secret Manager) : /metrics reste ouvert pour
+#        quiconque a l'IP tant que ce secret n'existe pas (voir METRICS_TOKEN dans security.py).
+#        Generer un jeton puis creer le secret dans le namespace dss, AVANT de reappliquer
+#        podmonitoring.yaml (qui exige desormais ce secret pour scraper) :
+$metricsToken = uv run python -I -c "import secrets; print(secrets.token_urlsafe(32))"
+kubectl create secret generic dss-metrics-token -n dss "--from-literal=token=$metricsToken" --dry-run=client -o yaml | kubectl apply -f -
+Remove-Variable metricsToken
+#        Puis appliquer le reste (podmonitoring.yaml branche le meme secret ; deployment.yaml lit
+#        METRICS_TOKEN et redemarre les pods pour l'exiger sur /metrics) :
+kubectl apply -f k8s/podmonitoring.yaml -n dss
+kubectl kustomize k8s | ForEach-Object { $_ -replace 'IMAGE_PLACEHOLDER', $Image -replace 'PROJECT_ID_PLACEHOLDER', $PROJECT_ID } | kubectl apply -f -
+kubectl rollout status deployment/dss-api -n dss
+#        Verifier : 401 sans jeton, 200 avec, et que Grafana continue de recevoir des points.
+curl.exe -s -o NUL -w "sans jeton: %{http_code}\n" "http://<IP_PUBLIQUE>/metrics"
+#     c) Clé API "invitee" pour vos camarades (clé separee de "dev", a revoquer apres le TP) :
+$generated     = uv run python -I -m tp1_digital_social_score.security generate guest 2>$null
+$GUEST_API_KEY = $generated[0]    # a donner aux camarades (en-tête X-API-Key)
+$GUEST_ENTRY   = $generated[1]
+$current = gcloud secrets versions access latest --secret=$SECRET
+"$current,$GUEST_ENTRY" | gcloud secrets versions add $SECRET --data-file=-
+kubectl rollout restart deployment/dss-api -n dss
+#        Pour revoquer en fin de TP : relire le secret, retirer l'entree "guest:...", ajouter une
+#        nouvelle version (comme a l'étape 13), puis redemarrer les pods.

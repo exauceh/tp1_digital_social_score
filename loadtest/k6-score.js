@@ -211,7 +211,8 @@ const MALFORMED = [
   { name: 'missing field', body: JSON.stringify({}), expect: 422 },
   { name: 'wrong type', body: JSON.stringify({ text: 123 }), expect: 422 },
   { name: 'not JSON', body: 'this is not json', expect: 422 },
-  { name: 'huge body (1 MB)', body: JSON.stringify({ text: 'a'.repeat(1000000) }), expect: 422 },
+  // 413 since the MaxBodySizeMiddleware (64 KiB) rejects it before the 5000-char field check runs.
+  { name: 'huge body (1 MB)', body: JSON.stringify({ text: 'a'.repeat(1000000) }), expect: 413 },
   { name: 'markup and SQL in the text', body: JSON.stringify({ text: "<script>alert(1)</script>'; DROP TABLE users;--" }), expect: 200 },
 ];
 
