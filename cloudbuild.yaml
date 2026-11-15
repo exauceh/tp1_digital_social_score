@@ -101,7 +101,8 @@ steps:
       - -c
       - |
         set -eu
-        gcloud components install kubectl gke-gcloud-auth-plugin --quiet
+        # cloud-sdk:slim ships with its component manager disabled; install via apt instead.
+        apt-get update -qq && apt-get install -qq -y kubectl google-cloud-cli-gke-gcloud-auth-plugin
         export USE_GKE_GCLOUD_AUTH_PLUGIN=True
         gcloud container clusters get-credentials "${_CLUSTER}" \
           --region "${_CLUSTER_LOCATION}" --project "${PROJECT_ID}"
