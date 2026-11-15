@@ -112,11 +112,6 @@ steps:
           | kubectl apply -f -
         kubectl rollout status "deployment/dss-api" -n "${_NAMESPACE}" --timeout=300s
 
-artifacts:
-  objects:
-    location: "gs://${PROJECT_ID}_cloudbuild/dss-api/${SHORT_SHA}/"
-    paths: ["vulnerabilities.txt"]
-
 options:
   logging: CLOUD_LOGGING_ONLY
 
