@@ -278,7 +278,14 @@ gcloud builds triggers create github `
   --name="dss-api-deploy" --repo-name="tp1_digital_social_score" --repo-owner="exauceh" `
   --branch-pattern="^main$" --build-config="cloudbuild.yaml" `
   --service-account="projects/$PROJECT_ID/serviceAccounts/dss-deployer@$PROJECT_ID.iam.gserviceaccount.com"
-#     d) Tester sans attendre un vrai push :
+#     d) models/lstm est dans .gitignore (27 Mo, pas du code source) : le checkout GitHub que
+#        Cloud Build clone ne les a donc jamais. Les deposer dans un bucket prive, lu seulement
+#        par dss-deployer, et le pipeline (etape "fetch-model") les recopie avant le build Docker.
+gcloud storage buckets create gs://tp1-digital-score-models --location=$REGION --uniform-bucket-level-access
+gcloud storage cp -r models/lstm/* gs://tp1-digital-score-models/lstm/
+gcloud storage buckets add-iam-policy-binding gs://tp1-digital-score-models `
+  --member="serviceAccount:$DEPLOYER_SA" --role=roles/storage.objectViewer
+#     e) Tester sans attendre un vrai push :
 gcloud builds triggers run dss-api-deploy --branch=main
 gcloud builds list --ongoing
 #        Suivre un build precis : gcloud builds log <BUILD_ID> --stream

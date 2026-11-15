@@ -11,6 +11,11 @@
 # fails the pipeline itself if a CRITICAL vulnerability with a fix available is found, so the
 # report is not just sitting unread somewhere. It does not block on HIGH or on CRITICAL findings
 # without a fix yet (there is nothing this project could do about those today).
+#
+# Model artifacts (models/lstm/*) are gitignored on purpose (27 MB, not source) and so are never
+# in the GitHub checkout Cloud Build clones from. The "fetch-model" step pulls them from the
+# gs://tp1-digital-score-models bucket into the workspace before the Docker build needs them
+# (see step_deployment.md, step 20d, for how that bucket is populated and secured).
 
 substitutions:
   _REGION: europe-west1
@@ -19,6 +24,7 @@ substitutions:
   _CLUSTER: dss-std
   _CLUSTER_LOCATION: europe-west1
   _NAMESPACE: dss
+  _MODEL_BUCKET: tp1-digital-score-models
 
 steps:
   - id: test
@@ -35,6 +41,16 @@ steps:
         # Model artifacts are not in the repository (see .gitignore): the one test that needs them
         # skips itself. Everything else (security, validation, RGPD guarantees) still runs.
         uv run pytest tests/ -q
+
+  - id: fetch-model
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        set -eu
+        mkdir -p models/lstm
+        gcloud storage cp "gs://${_MODEL_BUCKET}/lstm/*" models/lstm/
 
   - id: build
     name: gcr.io/cloud-builders/docker
