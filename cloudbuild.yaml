@@ -1,0 +1,107 @@
+# Build, test, scan, push and deploy the scoring API (TP2, course n°5, étape 5 : DevSecOps).
+#
+# Triggered by a Cloud Build trigger watching `main` on GitHub (see step_deployment.md, step 20).
+# Runs as a dedicated service account (dss-deployer@PROJECT.iam.gserviceaccount.com), not Cloud
+# Build's own default service account: least privilege, same principle as every other identity in
+# this project (dss-api, dss-nodes, gmp-frontend, collector...).
+#
+# Security step (asked by the TP): Artifact Registry scans every pushed image automatically once
+# the Container Scanning API is enabled (step_deployment.md, step 20c) — no extra build step is
+# needed to produce it, but the "check-vulnerabilities" step below reads that scan's result and
+# fails the pipeline itself if a CRITICAL vulnerability with a fix available is found, so the
+# report is not just sitting unread somewhere. It does not block on HIGH or on CRITICAL findings
+# without a fix yet (there is nothing this project could do about those today).
+
+substitutions:
+  _REGION: europe-west1
+  _REPO: dss-api
+  _IMAGE_NAME: dss-lstm
+  _CLUSTER: dss-std
+  _CLUSTER_LOCATION: europe-west1
+  _NAMESPACE: dss
+
+steps:
+  - id: test
+    name: python:3.13-slim
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        set -eu
+        pip install --quiet --no-cache-dir uv
+        uv sync --locked --no-default-groups --group dev
+        uv run ruff check src/ tests/ attack/
+        uv run mypy src/ tests/
+        # Model artifacts are not in the repository (see .gitignore): the one test that needs them
+        # skips itself. Everything else (security, validation, RGPD guarantees) still runs.
+        uv run pytest tests/ -q
+
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE_NAME}:${SHORT_SHA}"
+      - .
+
+  - id: push
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE_NAME}:${SHORT_SHA}"
+
+  # Runs before the deploy on purpose: a critical, fixable vulnerability must stop the rollout, not
+  # just get reported after the fact.
+  - id: check-vulnerabilities
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        set -eu
+        IMAGE="${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE_NAME}:${SHORT_SHA}"
+        echo "Waiting for the Artifact Registry vulnerability scan of $$IMAGE..."
+        for _ in $(seq 1 20); do
+          STATE=$$(gcloud artifacts docker images describe "$$IMAGE" \
+            --project "${PROJECT_ID}" --show-package-vulnerability \
+            --format="value(discovery_summary.discovery.analysisStatus)" 2>/dev/null || true)
+          [ "$$STATE" = "FINISHED_SUCCESS" ] && break
+          sleep 15
+        done
+        gcloud artifacts docker images describe "$$IMAGE" \
+          --project "${PROJECT_ID}" --show-package-vulnerability \
+          --format="table(vulnerability.cvssScore, vulnerability.severity, vulnerability.packageIssue[0].affectedPackage, vulnerability.fixAvailable)" \
+          > vulnerabilities.txt || true
+        cat vulnerabilities.txt
+        if grep -q "CRITICAL" vulnerabilities.txt && grep -q "True" vulnerabilities.txt; then
+          echo "A CRITICAL vulnerability with a known fix was found: failing the build."
+          exit 1
+        fi
+
+  - id: deploy
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        set -eu
+        gcloud components install kubectl gke-gcloud-auth-plugin --quiet
+        export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+        gcloud container clusters get-credentials "${_CLUSTER}" \
+          --region "${_CLUSTER_LOCATION}" --project "${PROJECT_ID}"
+        IMAGE="${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE_NAME}:${SHORT_SHA}"
+        kubectl kustomize k8s \
+          | sed "s|IMAGE_PLACEHOLDER|$$IMAGE|g; s|PROJECT_ID_PLACEHOLDER|${PROJECT_ID}|g" \
+          | kubectl apply -f -
+        kubectl rollout status "deployment/dss-api" -n "${_NAMESPACE}" --timeout=300s
+
+artifacts:
+  objects:
+    location: "gs://${PROJECT_ID}_cloudbuild/dss-api/${SHORT_SHA}/"
+    paths: ["vulnerabilities.txt"]
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+serviceAccount: "projects/${PROJECT_ID}/serviceAccounts/dss-deployer@${PROJECT_ID}.iam.gserviceaccount.com"
+timeout: 1200s

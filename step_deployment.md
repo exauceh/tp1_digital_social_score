@@ -247,3 +247,38 @@ $current = gcloud secrets versions access latest --secret=$SECRET
 kubectl rollout restart deployment/dss-api -n dss
 #        Pour revoquer en fin de TP : relire le secret, retirer l'entree "guest:...", ajouter une
 #        nouvelle version (comme a l'étape 13), puis redemarrer les pods.
+
+# 20. Automatiser le deploiement (TP2 etape 5) : Cloud Build + Artifact Registry + GKE
+#     Pipeline dans cloudbuild.yaml : tests (ruff/mypy/pytest) -> build -> push -> scan de
+#     vulnerabilites (Artifact Registry, bloque le build si une faille CRITICAL corrigeable est
+#     trouvee) -> deploiement sur le cluster. Execute par un compte de service dedie, pas le
+#     compte par defaut de Cloud Build (moindre privilege, comme pour dss-api/dss-nodes).
+#     a) Activer les API necessaires et le scan automatique des images poussees
+gcloud services enable cloudbuild.googleapis.com containerscanning.googleapis.com --project $PROJECT_ID
+#     b) Compte de service dedie au deploiement, avec seulement les droits necessaires
+gcloud iam service-accounts create dss-deployer --display-name="Cloud Build : build/push/deploy de dss-api"
+$DEPLOYER_SA = "dss-deployer@$PROJECT_ID.iam.gserviceaccount.com"
+gcloud artifacts repositories add-iam-policy-binding $REPO --location=$REGION `
+  --member="serviceAccount:$DEPLOYER_SA" --role=roles/artifactregistry.writer
+gcloud projects add-iam-policy-binding $PROJECT_ID `
+  --member="serviceAccount:$DEPLOYER_SA" --role=roles/container.developer
+gcloud projects add-iam-policy-binding $PROJECT_ID `
+  --member="serviceAccount:$DEPLOYER_SA" --role=roles/logging.logWriter
+#        Lire les resultats du scan de vulnerabilites necessite ce role en plus :
+gcloud projects add-iam-policy-binding $PROJECT_ID `
+  --member="serviceAccount:$DEPLOYER_SA" --role=roles/containeranalysis.occurrences.viewer
+#        Le compte qui LANCE le build (vous, ou le declencheur) doit pouvoir emprunter cette identite :
+gcloud iam service-accounts add-iam-policy-binding $DEPLOYER_SA `
+  --member="user:VOTRE_EMAIL" --role=roles/iam.serviceAccountUser
+#     c) Connecter le depot GitHub a Cloud Build (une fois, via la console ou gcloud) puis creer
+#        le declencheur : push sur main -> cloudbuild.yaml. L'installation de l'app GitHub Cloud
+#        Build se fait dans la console (Cloud Build > Declencheurs > Connecter un depot) ; une fois
+#        connecte, creer le declencheur en CLI :
+gcloud builds triggers create github `
+  --name="dss-api-deploy" --repo-name="tp1_digital_social_score" --repo-owner="exauceh" `
+  --branch-pattern="^main$" --build-config="cloudbuild.yaml" `
+  --service-account="projects/$PROJECT_ID/serviceAccounts/dss-deployer@$PROJECT_ID.iam.gserviceaccount.com"
+#     d) Tester sans attendre un vrai push :
+gcloud builds triggers run dss-api-deploy --branch=main
+gcloud builds list --ongoing
+#        Suivre un build precis : gcloud builds log <BUILD_ID> --stream
