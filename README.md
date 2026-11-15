@@ -621,3 +621,100 @@ passe à `firing` dans Prometheus, mais personne n'est prévenu.
 - Pas de canal de notification pour les alertes.
 - Les attaques simulées sont modestes et ne remplacent pas un test d'intrusion.
 - Une seule exécution par test.
+
+# TP 2 — De la menace à la défense
+
+## Exercice 1 : Fiche d'analyse « Attaque IA »
+
+**Attaque choisie : exemple adversarial (perturbation de texte) contre le classifieur de toxicité.**
+
+C'est l'attaque développée par le cours n°5 (section 15, « Attaques adversariales ») : introduire des fautes
+volontaires ou des caractères proches dans un texte toxique pour le faire passer sous le seuil de détection, sans
+changer son sens pour un lecteur humain.
+
+| Champ | Contenu |
+|---|---|
+| **Type d'attaque** | Adversarial example (évasion), boîte grise : le pipeline (anonymisation + nettoyage + LSTM) est connu, le modèle entraîné ne l'est pas |
+| **Cible** | `POST /score` du modèle `Digital Social Score` (LSTM bidirectionnel, 6 labels de toxicité) |
+| **Objectif de l'attaquant** | Faire publier un commentaire réellement toxique en le faisant noter comme inoffensif par l'API, sans que le sens change pour un lecteur humain |
+| **Point d'entrée exploité** | Le pipeline de préparation du texte (`text_pipeline.prepare_texts`) : anonymisation par regex + NER spaCy, puis nettoyage (minuscules, suppression de la ponctuation, normalisation Unicode). Il a été conçu pour normaliser du texte propre, pas pour résister à une perturbation volontaire |
+| **Impact attendu — technique** | Le score de toxicité chute sous le seuil pour des textes réellement toxiques (hausse du taux de faux négatifs) ; latence inchangée, car la perturbation ne change pas la taille du texte |
+| **Impact attendu — éthique** | Le système de modération échoue précisément sur les contenus qu'il devait filtrer (insultes, menaces, propos haineux) : les personnes visées restent exposées |
+| **Impact attendu — RGPD** | Limité ici : l'attaque ne vise pas des données personnelles au-delà de ce qui est déjà anonymisé avant le scoring ; aucune fuite de donnée supplémentaire |
+| **Risque IA Act (provisoire)** | Système de modération de contenu : risque « limité » dans la plupart des usages (obligation de transparence), potentiellement « élevé » si le score conditionne un accès à un service ou une sanction automatique. À confirmer à l'étape 4 du TP2 |
+
+### Pourquoi ce choix plutôt qu'une autre attaque du cours
+
+| Attaque du cours (p.41-43) | Écartée parce que |
+|---|---|
+| Injection JSON / RCE (`eval()`) | Ne s'applique pas : FastAPI/Pydantic ne font jamais `eval()` sur l'entrée (vérifié dans le code) |
+| Data Poisoning | Demanderait de corrompre et ré-entraîner le modèle : hors de portée d'une attaque sur l'API en production |
+| DoW / DoS | Déjà traité au TP1 (Exercices 5 et 6, scénarios `ramp`, `spike`, `flood`) ; ne fait bouger ni la précision ni le taux de faux positifs, seulement la latence |
+| Model Extraction / Inversion | Mesurable, mais la métrique porterait sur un modèle de substitution, pas sur « précision/taux de faux positifs/latence » du modèle attaqué, comme demandé à l'étape 2 |
+| Prompt Injection | Ne s'applique pas : notre modèle n'est pas génératif, il n'y a pas de prompt à détourner |
+
+L'exemple adversarial est la seule attaque de la liste qui modifie directement les trois métriques demandées par le
+TP2 (précision, taux de faux positifs, latence), et qui exploite une vraie faiblesse déjà identifiée dans notre
+propre pipeline.
+
+## Exercice 2 : Mise en œuvre de l'attaque
+
+Code dans [`attack/`](attack/) :
+
+- [`perturb.py`](attack/perturb.py) : perturbation d'un texte qui garde le sens pour un lecteur humain (fautes de
+  frappe, homoglyphes cyrilliques visuellement identiques, « leetspeak », doublement de lettre, espace de largeur
+  nulle), appliquée à une part réglable des mots de 4 lettres ou plus.
+- [`adversarial_attack.py`](attack/adversarial_attack.py) : lance l'attaque directement sur les artefacts du modèle
+  (même pipeline que l'API : anonymisation, nettoyage, LSTM, score pondéré), sans serveur ni clé API, pour pouvoir
+  mesurer l'impact sur un échantillon réel plutôt que sur une seule phrase comme l'exemple du cours.
+- [`plot_results.py`](attack/plot_results.py) : construit le graphique comparatif.
+
+**Protocole.** 500 commentaires du jeu de test Jigsaw (`raw_data/test.csv` + `test_labels.csv`), tirés au sort à
+parts égales entre réellement toxiques et réellement propres (250/250), graine fixée pour la reproductibilité. La
+« vérité terrain » est qu'un commentaire est toxique si au moins une des 6 étiquettes vaut 1. Le modèle « signale »
+un commentaire si au moins une des 6 probabilités dépasse le seuil propre à cette étiquette, calibré à
+l'entraînement (`models/lstm/metrics.json`), pas un seuil choisi arbitrairement sur le score final. La moitié des
+mots de 4 lettres ou plus est perturbée dans chaque commentaire, y compris les commentaires propres (pour voir si la
+perturbation crée elle-même des faux positifs).
+
+```powershell
+uv run python -I attack/adversarial_attack.py --sample-size 500 --rate 0.5 --seed 0
+uv run --extra attack python -I attack/plot_results.py
+```
+
+### Résultats
+
+| Métrique | Avant | Après | Variation |
+|---|---:|---:|---:|
+| Précision | 92,9 % | 91,9 % | −1,0 point |
+| Rappel | 78,8 % | 68,0 % | **−10,8 points** |
+| Taux de faux positifs | 6,0 % | 6,0 % | inchangé |
+| Exactitude | 86,4 % | 81,0 % | −5,4 points |
+| Score moyen | 23,5 / 100 | 22,7 / 100 | −0,8 point |
+| Latence moyenne (inférence seule) | 7,9 ms | 7,6 ms | inchangée |
+| Latence P95 (inférence seule) | 11,9 ms | 12,4 ms | inchangée |
+
+**40 des 250 commentaires réellement toxiques (16 %) ont échappé à la détection** une fois perturbés, alors qu'ils
+étaient correctement signalés avant.
+
+![Comparaison avant/après](attack/results/comparison.png)
+
+### Interprétation
+
+- **L'attaque fonctionne** : le rappel chute de 10,8 points, soit 40 commentaires toxiques en moins détectés sur
+  250. C'est l'effet recherché : des perturbations qui ne changent rien au sens pour un lecteur humain suffisent à
+  faire sortir un commentaire toxique du radar du modèle.
+- **Le taux de faux positifs ne bouge pas** (6,0 % avant et après) : la perturbation, appliquée aussi aux
+  commentaires propres, ne les fait pas basculer côté toxique. L'attaque est donc ciblée (elle aide l'attaquant),
+  pas un simple bruit qui dégraderait tout le système au hasard.
+- **La latence ne change pas** : la perturbation ne change ni la longueur du texte ni son découpage en mots
+  (`split()`), donc le temps d'inférence reste comparable. Seul le résultat change, pas le coût de calcul.
+- **Pourquoi ça marche** : le découpage du LSTM se fait sur les espaces (`encode_texts` dans `lstm_model.py`), avec
+  un vocabulaire fixe de 49 978 mots appris à l'entraînement. Un mot inconnu (`niice`, `fuсk` avec un с cyrillique,
+  un mot avec une espace de largeur nulle au milieu) devient le même jeton `<unk>` que n'importe quel autre mot
+  inconnu : le modèle perd l'information que portait ce mot. Le pipeline d'anonymisation (regex + spaCy NER) et le
+  nettoyage (`clean_data`) n'ont jamais été conçus pour résister à une perturbation volontaire, seulement à
+  normaliser du texte "propre".
+- **Limite de cette mesure** : un seul taux de perturbation (50 % des mots éligibles) et une seule graine ; les
+  résultats peuvent varier avec un taux plus faible (perturbation plus discrète, donc peut-être moins efficace) ou
+  plus élevé (texte moins lisible, donc moins réaliste comme attaque).
