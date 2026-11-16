@@ -29,14 +29,16 @@ import uuid
 from collections.abc import AsyncIterator, Awaitable, Callable, Sequence
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
+from importlib import resources
 from pathlib import Path
 from typing import Annotated
 
 import spacy
 import torch
 from fastapi import Depends, FastAPI, HTTPException, Request, Response, Security
+from fastapi.responses import HTMLResponse
 from fastapi.security import APIKeyHeader
-from pydantic import BaseModel, Field, StringConstraints
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 
 from tp1_digital_social_score.body_limit import MAX_BODY_BYTES, MaxBodySizeMiddleware
 from tp1_digital_social_score.lstm_model import LstmPredictor
@@ -46,7 +48,12 @@ from tp1_digital_social_score.metrics import (
     UNMATCHED_ROUTE,
     ApiMetrics,
 )
-from tp1_digital_social_score.scoring import LABELS, load_weights, toxicity_score
+from tp1_digital_social_score.scoring import (
+    LABELS,
+    load_thresholds,
+    load_weights,
+    toxicity_score,
+)
 from tp1_digital_social_score.security import (
     API_KEY_HEADER,
     ApiKeyStore,
@@ -62,13 +69,43 @@ MAX_TEXT_CHARS = 5000  # the longest comment of the Jigsaw dataset has 5000 char
 DEFAULT_TORCH_THREADS = 2
 REQUEST_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
 
+# Test page served at "/" (static/): it only talks to this same origin, loads nothing from
+# elsewhere and runs no inline script, so the policy can forbid everything else.
+UI_CONTENT_SECURITY_POLICY = (
+    "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; "
+    "img-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+)
+UI_HEADERS = {
+    "Content-Security-Policy": UI_CONTENT_SECURITY_POLICY,
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "no-referrer",
+    "Cache-Control": "no-cache",
+}
+UI_FILES = {
+    "index.html": "text/html; charset=utf-8",
+    "app.js": "text/javascript; charset=utf-8",
+    "style.css": "text/css; charset=utf-8",
+}
+
+
+def load_ui_files() -> dict[str, bytes]:
+    """Read the test page once at startup (``static/`` ships inside the installed package)."""
+    static = resources.files("tp1_digital_social_score") / "static"
+    return {name: (static / name).read_bytes() for name in UI_FILES}
+
 Text = Annotated[
     str, StringConstraints(strip_whitespace=True, min_length=1, max_length=MAX_TEXT_CHARS)
 ]
 
 
 class ScoreRequest(BaseModel):
-    text: Text
+    model_config = ConfigDict(
+        json_schema_extra={
+            "examples": [{"text": "You are a stupid idiot and nobody cares about your edits."}]
+        }
+    )
+
+    text: Annotated[Text, Field(description="Texte à évaluer (anglais), 1 à 5 000 caractères")]
 
 
 class Prediction(BaseModel):
@@ -80,6 +117,12 @@ class Prediction(BaseModel):
 
 class ScoreResponse(Prediction):
     request_id: str
+
+
+class ThresholdsResponse(BaseModel):
+    """Decision threshold of each label (``null`` when unknown), calibrated at training time."""
+
+    thresholds: dict[str, float | None]
 
 
 class HealthResponse(BaseModel):
@@ -197,10 +240,23 @@ def create_app(model_dir: Path | None = None, api_keys: ApiKeyStore | None = Non
             lock=threading.Lock(),
             metrics=metrics,
         )
+        app.state.thresholds = load_thresholds(directory)
         logger.info("Scoring service ready")
         yield
 
-    app = FastAPI(title="Digital Social Score API", version="0.1.0", lifespan=lifespan)
+    app = FastAPI(
+        title="Digital Social Score API",
+        version="2.1",
+        description=(
+            "Score de toxicité d'un texte, de 0 (inoffensif) à 100 (très toxique).\n\n"
+            "Cliquez sur **Authorize** et saisissez votre clé API (en-tête `X-API-Key`), puis "
+            "« Try it out » sur `POST /score`. Une page de test plus simple est disponible "
+            "sur [`/`](/).\n\nLe texte est anonymisé avant le modèle, n'est jamais stocké ni "
+            "journalisé."
+        ),
+        lifespan=lifespan,
+    )
+    ui_files = load_ui_files()
     app.add_middleware(MaxBodySizeMiddleware, max_bytes=MAX_BODY_BYTES)
     app.state.metrics = metrics
     # "" (the default) leaves /metrics open: see load_metrics_token's docstring.
@@ -252,7 +308,46 @@ def create_app(model_dir: Path | None = None, api_keys: ApiKeyStore | None = Non
     async def health() -> HealthResponse:
         return HealthResponse(status="ok")
 
-    @app.post("/score", response_model=ScoreResponse)
+    # Test page: static files, no key needed to load it (the key is typed into the page and only
+    # sent with each /score call). `async def` like /health: never queued behind /score.
+    @app.get("/", include_in_schema=False)
+    async def ui_page() -> HTMLResponse:
+        return HTMLResponse(ui_files["index.html"], headers=UI_HEADERS)
+
+    @app.get("/ui/{name}", include_in_schema=False)
+    async def ui_asset(name: str) -> Response:
+        if name == "index.html" or name not in UI_FILES:
+            raise HTTPException(status_code=404, detail="Not Found")
+        return Response(ui_files[name], media_type=UI_FILES[name], headers=UI_HEADERS)
+
+    @app.get(
+        "/thresholds",
+        response_model=ThresholdsResponse,
+        summary="Seuils de décision des labels",
+        description=(
+            "Seuil de chaque label, calibré à l'entraînement : un label est signalé quand sa "
+            "probabilité le dépasse. Sert à expliquer un résultat ; le score n'en dépend pas."
+        ),
+        responses={401: {"description": "Clé API absente ou invalide"}},
+        dependencies=[Depends(authenticate)],
+    )
+    def thresholds(request: Request) -> ThresholdsResponse:
+        return ThresholdsResponse(thresholds=request.app.state.thresholds)
+
+    @app.post(
+        "/score",
+        response_model=ScoreResponse,
+        summary="Évaluer la toxicité d'un texte",
+        description=(
+            "Renvoie le score global (0 à 100), la probabilité de chacun des 6 labels et "
+            "l'identifiant de la requête (repris de `X-Request-ID` s'il est sûr)."
+        ),
+        responses={
+            401: {"description": "Clé API absente ou invalide"},
+            413: {"description": "Corps de requête supérieur à 64 Kio"},
+            422: {"description": "Texte vide, absent ou supérieur à 5 000 caractères"},
+        },
+    )
     def score(
         body: ScoreRequest, request: Request, client_id: Annotated[str, Depends(authenticate)]
     ) -> ScoreResponse:

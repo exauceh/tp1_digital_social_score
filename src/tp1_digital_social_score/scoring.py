@@ -58,6 +58,23 @@ def load_weights(model_dir: Path) -> dict[str, float]:
     return validate_weights(dict(DEFAULT_SCORE_WEIGHTS))
 
 
+def load_thresholds(model_dir: Path) -> dict[str, float | None]:
+    """Decision threshold of each label, calibrated at training time (``metrics.json``).
+
+    ``None`` for a label whose threshold is not recorded: the thresholds are only used to explain
+    a result (test page), never to compute the score, so a missing one is not an error.
+    """
+    path = model_dir / "metrics.json"
+    per_label: dict[str, dict[str, float]] = {}
+    if path.exists():
+        per_label = json.loads(path.read_text(encoding="utf-8")).get("per_label", {})
+    thresholds: dict[str, float | None] = {}
+    for label in LABELS:
+        value = per_label.get(label, {}).get("threshold")
+        thresholds[label] = round(float(value), 4) if value is not None else None
+    return thresholds
+
+
 def toxicity_score(probs: FloatArray, weights: dict[str, float]) -> FloatArray:
     """Digital Social Score in [0, 100] for label probabilities of shape (n_rows, 6)."""
     weight_vector = np.array([weights[label] for label in LABELS], dtype=np.float32)

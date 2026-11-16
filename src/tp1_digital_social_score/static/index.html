@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Digital Social Score</title>
+  <link rel="stylesheet" href="/ui/style.css">
+  <script src="/ui/app.js" defer></script>
+</head>
+<body>
+  <header class="bar">
+    <h1>Digital Social Score</h1>
+    <span id="health" class="health" data-state="unknown">API : vérification…</span>
+  </header>
+
+  <main>
+    <section class="card">
+      <label for="api-key">Clé API</label>
+      <div class="row">
+        <input id="api-key" type="password" autocomplete="off" spellcheck="false"
+               placeholder="Collez votre clé (en-tête X-API-Key)">
+        <button id="toggle-key" type="button" class="ghost">Afficher</button>
+      </div>
+      <p class="hint">La clé reste dans cet onglet uniquement : elle n'est jamais mise dans l'URL
+        ni envoyée ailleurs qu'à cette API.</p>
+    </section>
+
+    <section class="card">
+      <div class="examples" aria-label="Exemples">
+        <span class="hint">Exemples :</span>
+        <button type="button" class="chip" data-example="neutral">Neutre</button>
+        <button type="button" class="chip" data-example="insult">Insulte</button>
+        <button type="button" class="chip" data-example="threat">Menace</button>
+        <button type="button" class="chip" data-example="hate">Haine de groupe</button>
+        <button type="button" class="chip" data-example="pii">Données perso</button>
+        <button type="button" class="chip" data-example="emoji">Emojis</button>
+      </div>
+
+      <label for="text">Texte à analyser</label>
+      <textarea id="text" maxlength="5000" rows="6"
+                placeholder="Écrivez ou collez un commentaire en anglais…"></textarea>
+      <div class="meta"><span id="count">0</span> / 5000 caractères · Ctrl+Entrée pour analyser</div>
+
+      <div class="actions">
+        <button id="analyze" type="button" class="primary">Analyser</button>
+      </div>
+      <p id="error" class="error" role="alert" hidden></p>
+
+      <div id="result" class="result" hidden>
+        <div class="score-line">
+          <span class="score-label">Score</span>
+          <span id="score-value" class="score-value"></span>
+          <span class="score-max">/ 100</span>
+          <span id="level" class="level"></span>
+        </div>
+        <div id="gauge" class="gauge" role="meter" aria-valuemin="0" aria-valuemax="100"
+             aria-label="Score de toxicité">
+          <div class="gauge-fill"></div>
+        </div>
+
+        <details id="details" class="details">
+          <summary>Voir plus</summary>
+          <p class="hint">Probabilité de chaque label. Le trait vertical marque le seuil de décision
+            du label (calibré à l'entraînement) ; ▲ signale un label qui le dépasse.</p>
+          <ul id="labels" class="labels"></ul>
+        </details>
+      </div>
+    </section>
+
+    <p class="hint footer">Score de 0 (inoffensif) à 100 (très toxique). Les niveaux affichés
+      (faible / modéré / élevé) servent seulement à la lecture : ce n'est pas une décision de
+      modération. Aucun texte n'est conservé, ni ici ni par l'API.</p>
+  </main>
+</body>
+</html>
