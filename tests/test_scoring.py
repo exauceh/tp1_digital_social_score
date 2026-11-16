@@ -9,6 +9,7 @@ import pytest
 from tp1_digital_social_score.scoring import (
     DEFAULT_SCORE_WEIGHTS,
     LABELS,
+    load_thresholds,
     load_weights,
     toxicity_score,
     validate_weights,
@@ -65,3 +66,19 @@ def test_load_weights_reads_a_file_next_to_the_model(tmp_path: Path) -> None:
     custom = {label: 1 / len(LABELS) for label in LABELS}
     (model_dir / "score_weights.json").write_text(json.dumps(custom), encoding="utf-8")
     assert load_weights(model_dir) == pytest.approx(custom)
+
+
+def test_load_thresholds_reads_the_calibrated_values(tmp_path: Path) -> None:
+    per_label = {label: {"threshold": 0.5} for label in LABELS}
+    per_label["threat"] = {"threshold": 0.123456}
+    del per_label["insult"]  # a missing threshold is reported as None, not an error
+    (tmp_path / "metrics.json").write_text(json.dumps({"per_label": per_label}), encoding="utf-8")
+    thresholds = load_thresholds(tmp_path)
+    assert set(thresholds) == set(LABELS)
+    assert thresholds["threat"] == 0.1235
+    assert thresholds["insult"] is None
+    assert thresholds["toxic"] == 0.5
+
+
+def test_load_thresholds_without_metrics_file(tmp_path: Path) -> None:
+    assert load_thresholds(tmp_path) == dict.fromkeys(LABELS)

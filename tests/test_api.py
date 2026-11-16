@@ -87,6 +87,73 @@ def test_health_needs_no_key(client: TestClient, monkeypatch: pytest.MonkeyPatch
     assert response.json() == {"status": "ok"}
 
 
+# --- test page (static/) ------------------------------------------------------------------------
+
+UI_ASSETS = {
+    "/": "text/html",
+    "/ui/app.js": "text/javascript",
+    "/ui/style.css": "text/css",
+}
+
+
+@pytest.mark.parametrize(("path", "content_type"), UI_ASSETS.items())
+def test_ui_is_served_without_a_key_and_with_a_strict_policy(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch, path: str, content_type: str
+) -> None:
+    monkeypatch.delitem(client.headers, API_KEY_HEADER)
+    response = client.get(path)
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith(content_type)
+    policy = response.headers["Content-Security-Policy"]
+    for directive in ("default-src 'none'", "script-src 'self'", "connect-src 'self'"):
+        assert directive in policy
+    assert "unsafe-inline" not in policy
+    assert response.headers["X-Content-Type-Options"] == "nosniff"
+
+
+@pytest.mark.parametrize("path", ["/ui/index.html", "/ui/unknown.js", "/ui/..%2Fapi.py"])
+def test_ui_serves_only_its_own_files(client: TestClient, path: str) -> None:
+    assert client.get(path).status_code == 404
+
+
+def test_ui_page_runs_no_inline_code(client: TestClient) -> None:
+    """The CSP forbids inline code: an inline script or handler would silently not run."""
+    page = client.get("/").text
+    assert "<script>" not in page
+    assert "onclick=" not in page and "onload=" not in page and "style=" not in page
+
+
+def test_ui_never_injects_html(client: TestClient) -> None:
+    script = client.get("/ui/app.js").text
+    assert "innerHTML" not in script and "outerHTML" not in script
+    assert "insertAdjacentHTML" not in script and "document.write" not in script
+
+
+def test_ui_shows_the_label_detail_only_on_demand(client: TestClient) -> None:
+    page = client.get("/").text
+    assert '<details id="details"' in page and "<summary>Voir plus</summary>" in page
+    assert '<details id="details" open' not in page  # collapsed by default
+
+
+def test_thresholds_need_a_key(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delitem(client.headers, API_KEY_HEADER)
+    assert client.get("/thresholds").status_code == 401
+
+
+def test_thresholds_cover_every_label(client: TestClient) -> None:
+    response = client.get("/thresholds")
+    assert response.status_code == 200
+    # The test artifacts record no thresholds: every label is present, with null.
+    assert response.json() == {"thresholds": dict.fromkeys(LABELS)}
+
+
+def test_ui_routes_are_not_in_the_api_documentation(client: TestClient) -> None:
+    schema = client.get("/openapi.json").json()
+    assert set(schema["paths"]) == {"/health", "/score", "/thresholds"}
+    example = schema["components"]["schemas"]["ScoreRequest"]["examples"][0]
+    assert example["text"]
+
+
 def test_score(client: TestClient) -> None:
     response = client.post("/score", json={"text": "You are an idiot"})
     assert response.status_code == 200

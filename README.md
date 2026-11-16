@@ -718,3 +718,29 @@ uv run --extra attack python -I attack/plot_results.py
 - **Limite de cette mesure** : un seul taux de perturbation (50 % des mots éligibles) et une seule graine ; les
   résultats peuvent varier avec un taux plus faible (perturbation plus discrète, donc peut-être moins efficace) ou
   plus élevé (texte moins lisible, donc moins réaliste comme attaque).
+
+## Interface de test de l'API
+
+Une page web est servie par l'API elle-même sur `GET /` (fichiers dans
+[`src/tp1_digital_social_score/static/`](src/tp1_digital_social_score/static/)). Elle n'ajoute ni dépendance ni
+service à déployer : elle part avec l'image, en local comme sur le cluster.
+
+| Fonction | Détail |
+|---|---|
+| Clé API | Saisie dans la page, gardée dans l'onglet seulement (`sessionStorage`), jamais dans l'URL |
+| Exemples | Neutre, insulte, menace, haine de groupe, données personnelles, emojis (cas de l'Exercice 3) |
+| Résultat | Score global (0 à 100) avec une jauge pastel et un niveau de lecture (faible < 20, modéré < 50, élevé) |
+| Voir plus | Section repliée par défaut : probabilité de chaque label (triés), avec le seuil de décision calibré à l'entraînement (trait vertical) et ▲ quand il est dépassé. Les seuils viennent de `GET /thresholds` (clé requise), lue dans `models/lstm/metrics.json` |
+| Erreurs | Messages clairs pour 401, 413, 422, 503 et API injoignable ; état de `/health` en haut de page |
+
+**Sécurité.** Politique CSP stricte (`default-src 'none'`, scripts et appels réseau limités à la même origine, aucun
+code en ligne), `nosniff`, `no-referrer`. Les textes sont insérés avec `textContent`, jamais en HTML (pas de XSS).
+La page ne conserve aucun texte. Sans HTTPS, la clé circule en clair : utiliser `kubectl port-forward` ou la clé
+« invitée » révocable. Swagger (`/docs`) est aussi enrichi : exemple prérempli, descriptions, codes d'erreur.
+
+```powershell
+$g = uv run python -I -m tp1_digital_social_score.security generate dev 2>$null
+$env:API_KEYS = $g[1]; $g[0]          # la clé à coller dans la page
+uv run uvicorn tp1_digital_social_score.api:app --port 8080
+# puis ouvrir http://localhost:8080/
+```
