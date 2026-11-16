@@ -1,0 +1,46 @@
+{
+  "sample_size": 500,
+  "perturbation_rate": 0.5,
+  "seed": 0,
+  "conditions": {
+    "original_no_defense": {
+      "precision": 0.9292452830188679,
+      "recall": 0.788,
+      "false_positive_rate": 0.06,
+      "accuracy": 0.864,
+      "mean_score": 23.492929458618164,
+      "latency_ms_mean": 7.390302006388083,
+      "latency_ms_p95": 11.182705027749758
+    },
+    "original_with_defense": {
+      "precision": 0.9292452830188679,
+      "recall": 0.788,
+      "false_positive_rate": 0.06,
+      "accuracy": 0.864,
+      "mean_score": 23.501962661743164,
+      "latency_ms_mean": 8.59804000123404,
+      "latency_ms_p95": 15.072545007569708
+    },
+    "perturbed_no_defense": {
+      "precision": 0.918918918918919,
+      "recall": 0.68,
+      "false_positive_rate": 0.06,
+      "accuracy": 0.81,
+      "mean_score": 22.7348575592041,
+      "latency_ms_mean": 7.505783999804407,
+      "latency_ms_p95": 12.027484978898425
+    },
+    "perturbed_with_defense": {
+      "precision": 0.9323671497584541,
+      "recall": 0.772,
+      "false_positive_rate": 0.056,
+      "accuracy": 0.858,
+      "mean_score": 22.850263595581055,
+      "latency_ms_mean": 7.326733997324482,
+      "latency_ms_p95": 11.504519992740825
+    }
+  },
+  "toxic_comments_that_evaded_detection_without_defense": 40,
+  "of_those_recovered_by_the_defense": 35,
+  "toxic_comments_total": 250
+}

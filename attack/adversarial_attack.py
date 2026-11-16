@@ -108,9 +108,14 @@ def score_texts(
     nlp: spacy.language.Language,
     predictor: LstmPredictor,
     weights: dict[str, float],
+    vocab: dict[str, int] | None = None,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Same steps as ScoringService.score in api.py: anonymise, clean, predict, weigh."""
-    prepared = prepare_texts(texts, nlp)
+    """Same steps as ScoringService.score in api.py: anonymise, clean, predict, weigh.
+
+    ``vocab`` turns the defense on (see ``defense.py``); left out, matches the "without defense"
+    behaviour this script measured before the defense existed (TP2 étape 2).
+    """
+    prepared = prepare_texts(texts, nlp, vocab)
     probabilities = predictor.predict(prepared)
     scores = toxicity_score(probabilities, weights)
     return probabilities, scores
@@ -121,12 +126,13 @@ def measure_latency(
     nlp: spacy.language.Language,
     predictor: LstmPredictor,
     weights: dict[str, float],
+    vocab: dict[str, int] | None = None,
 ) -> list[float]:
     """Latency of scoring ONE text at a time (what a /score caller actually experiences)."""
     durations = []
     for text in texts:
         started = time.perf_counter()
-        score_texts([text], nlp, predictor, weights)
+        score_texts([text], nlp, predictor, weights, vocab)
         durations.append(time.perf_counter() - started)
     return durations
 

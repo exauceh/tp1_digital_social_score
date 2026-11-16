@@ -56,3 +56,17 @@ def test_prepare_texts_replaces_names(nlp: spacy.language.Language) -> None:
 def test_prepare_texts_keeps_order_and_count(nlp: spacy.language.Language) -> None:
     prepared = prepare_texts(["First text", "Second text", "Third text"], nlp)
     assert prepared == ["first text", "second text", "third text"]
+
+
+def test_prepare_texts_without_vocab_leaves_perturbed_words_broken(
+    nlp: spacy.language.Language,
+) -> None:
+    """Without the defense (no vocab given), a zero-width space still splits the word in two."""
+    (prepared,) = prepare_texts(["this is ni​ce"], nlp)
+    assert prepared == "this is ni ce"
+
+
+def test_prepare_texts_with_vocab_undoes_the_perturbation(nlp: spacy.language.Language) -> None:
+    vocab = {"this": 2, "is": 3, "nice": 4}
+    (prepared,) = prepare_texts(["this is ni​ce"], nlp, vocab)
+    assert prepared == "this is nice"

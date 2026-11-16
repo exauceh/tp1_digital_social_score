@@ -718,3 +718,87 @@ uv run --extra attack python -I attack/plot_results.py
 - **Limite de cette mesure** : un seul taux de perturbation (50 % des mots éligibles) et une seule graine ; les
   résultats peuvent varier avec un taux plus faible (perturbation plus discrète, donc peut-être moins efficace) ou
   plus élevé (texte moins lisible, donc moins réaliste comme attaque).
+
+## Exercice 3 : Conception d'une défense
+
+**Principe.** Les cinq techniques de `perturb.py` ne changent jamais qu'un seul caractère par mot perturbé :
+substitution (homoglyphe, leetspeak), transposition de deux lettres adjacentes (« swap »), ou insertion d'un
+caractère (lettre doublée, espace de largeur nulle). Autrement dit, quatre des cinq techniques placent le mot perturbé
+exactement à une distance de Damerau-Levenshtein de 1 du mot d'origine. Un seul mécanisme générique — corriger tout
+mot inconnu du vocabulaire du modèle vers le mot du vocabulaire situé à une édition de distance — suffit donc à
+neutraliser l'homoglyphe, le leetspeak, le swap et le doublement, sans avoir à les traiter séparément ni à
+reconnaître quelle technique a été utilisée.
+
+La cinquième technique (espace de largeur nulle) échappe à ce mécanisme : au moment où le mot perturbé atteint la
+tokenisation, le nettoyage existant (`NON_WORD_PATTERN = r"[^\w\s]"` dans `clean_data.py`) a déjà transformé le
+caractère invisible en une espace visible, coupant le mot en deux tokens — il n'y a alors plus un seul mot sur lequel
+appliquer une correction par distance d'édition. Elle a besoin d'une étape dédiée, appliquée *avant* ce découpage.
+
+Défense implémentée dans [`src/tp1_digital_social_score/defense.py`](src/tp1_digital_social_score/defense.py), posée
+côté serveur (jamais côté client, qui est justement l'attaquant potentiel) :
+
+1. `defend_raw_text` : supprime les caractères invisibles (espace de largeur nulle et apparentés) du texte brut, avant
+   le nettoyage qui les transformerait en coupure de mot.
+2. `correct_unknown_words` : après le nettoyage habituel (minuscules, ponctuation retirée), tout token absent du
+   vocabulaire du modèle (`LstmPredictor.vocab`) est remplacé par le mot du vocabulaire à une édition de distance,
+   s'il en existe un (suppression, transposition, substitution ou insertion — l'algorithme classique de correction
+   orthographique de Norvig). Un token déjà connu, trop court (< 4 lettres, comme le seuil de l'attaque elle-même) ou
+   trop long (> 20 caractères, pour borner le coût si un texte malveillant envoie un « mot » de plusieurs milliers de
+   caractères) n'est pas touché.
+
+Branchée dans `text_pipeline.prepare_texts` (paramètre `vocab`, optionnel pour que le script d'attaque puisse mesurer
+le cas « sans défense ») et activée en production dans `ScoringService.score` (`api.py`), qui passe désormais
+`self.predictor.vocab`.
+
+Code de mesure : [`attack/defense_eval.py`](attack/defense_eval.py) (réexécute l'attaque de l'exercice 2 sur le même
+échantillon, avec et sans défense) et [`attack/plot_defense_results.py`](attack/plot_defense_results.py) (graphique).
+
+```powershell
+uv run python -I attack/defense_eval.py --sample-size 500 --rate 0.5 --seed 0
+uv run --extra attack python -I attack/plot_defense_results.py
+```
+
+### Résultats
+
+| Métrique | Original | Attaqué, sans défense | Attaqué, avec défense |
+|---|---:|---:|---:|
+| Précision | 92,9 % | 91,9 % | 93,2 % |
+| Rappel | 78,8 % | 68,0 % | **77,2 %** |
+| Taux de faux positifs | 6,0 % | 6,0 % | 5,6 % |
+| Exactitude | 86,4 % | 81,0 % | 85,8 % |
+| Score moyen | 23,5 / 100 | 22,7 / 100 | 22,9 / 100 |
+| Latence moyenne (inférence seule) | 7,4 ms | 7,5 ms | 7,3 ms |
+| Latence P95 (inférence seule) | 11,2 ms | 12,0 ms | 11,5 ms |
+
+Effet sur du trafic **jamais attaqué** (coût de la défense au repos) : précision, rappel, taux de faux positifs et
+exactitude identiques à la mesure sans défense (différences au-delà de la 3ᵉ décimale uniquement, dues au score
+moyen) — la correction ne modifie aucun texte propre, puisque ses mots sont déjà tous dans le vocabulaire.
+
+**35 des 40 commentaires toxiques qui avaient échappé à la détection (87,5 %) sont de nouveau détectés** une fois la
+défense activée.
+
+![Comparaison original / attaqué / défendu](attack/results/defense_comparison.png)
+
+### Interprétation
+
+- **La défense récupère l'essentiel du rappel perdu** : 68,0 % → 77,2 %, à 1,6 point du rappel original (78,8 %),
+  contre une chute de 10,8 points sans défense. Les 5 commentaires non récupérés sur 40 sont ceux où la perturbation
+  a produit un mot à une distance de plus d'une édition du mot d'origine (par exemple un mot court de 4 lettres
+  perturbé deux fois à cause d'un chevauchement, ou un mot dont la version corrompue coïncide par hasard avec un
+  autre mot du vocabulaire — la correction choisit alors ce faux ami plutôt que le mot voulu).
+- **Aucun effet de bord mesuré sur le trafic propre** : la précision et le taux de faux positifs sur les textes
+  originaux sont inchangés avec la défense active. C'est attendu : `correct_unknown_words` ne touche jamais un token
+  déjà connu du vocabulaire, et un texte non attaqué n'en produit pas d'inconnu.
+- **Coût en latence négligeable** : quelques dixièmes de milliseconde, au niveau du bruit de mesure. La correction ne
+  coûte cher que pour les tokens *inconnus* du vocabulaire (le cas courant — un mot reconnu — sort en O(1)), et leur
+  nombre reste petit même dans un texte entièrement perturbé.
+- **Pourquoi un mécanisme unique suffit** : l'attaque et la défense exploitent la même propriété du pipeline, vue de
+  deux côtés opposés. L'attaquant choisit volontairement des perturbations minimales (un seul caractère) pour rester
+  lisible par un humain ; cette contrainte de discrétion est justement ce qui rend chaque mot perturbé récupérable
+  par une correction à une édition de distance. Une perturbation plus agressive (plusieurs caractères changés)
+  échapperait à cette défense, mais serait aussi beaucoup plus visible pour un modérateur humain relisant le
+  commentaire signalé — un compromis que l'attaquant ne peut pas éviter.
+- **Limite** : la défense ne corrige que les mots à une édition de distance exacte d'un mot du vocabulaire ; elle ne
+  généralise pas à des perturbations plus importantes, et un mot corrompu qui coïncide avec un autre mot valide du
+  vocabulaire peut être corrigé vers le mauvais mot (faux ami). Elle n'a pas non plus été testée contre un taux de
+  perturbation différent de celui de l'exercice 2 (50 %).

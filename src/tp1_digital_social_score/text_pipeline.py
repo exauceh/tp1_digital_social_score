@@ -19,6 +19,7 @@ from tp1_digital_social_score.clean_data import (
     PLACEHOLDER_PATTERN,
     WHITESPACE_PATTERN,
 )
+from tp1_digital_social_score.defense import correct_unknown_words, defend_raw_text
 from tp1_digital_social_score.process_data import SPACY_MODEL, anonymize_texts
 
 logger = logging.getLogger(__name__)
@@ -43,7 +44,23 @@ def clean_text(text: str) -> str:
     return WHITESPACE_PATTERN.sub(" ", cleaned).strip()
 
 
-def prepare_texts(texts: Sequence[str], nlp: spacy.language.Language) -> list[str]:
-    """Anonymise then clean raw comments, ready to be fed to the model."""
+def prepare_texts(
+    texts: Sequence[str],
+    nlp: spacy.language.Language,
+    vocab: dict[str, int] | None = None,
+) -> list[str]:
+    """Anonymise then clean raw comments, ready to be fed to the model.
+
+    ``vocab`` is the model's own word -> id mapping (``LstmPredictor.vocab``). When given, it turns
+    on the adversarial-example defense (see ``defense.py``): invisible characters are stripped
+    before cleaning, and any token the model would not recognise is corrected to its closest
+    single-edit vocabulary match. Left out (the default), the pipeline behaves exactly as it did
+    before the defense existed — used by the attack script to measure the "without defense" case.
+    """
     anonymized, _counts = anonymize_texts(texts, nlp, n_process=1)
-    return [clean_text(text) for text in anonymized]
+    if vocab is not None:
+        anonymized = [defend_raw_text(text) for text in anonymized]
+    cleaned = [clean_text(text) for text in anonymized]
+    if vocab is not None:
+        cleaned = [correct_unknown_words(text, vocab) for text in cleaned]
+    return cleaned

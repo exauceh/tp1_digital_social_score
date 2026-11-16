@@ -102,7 +102,7 @@ class ScoringService:
         with self.lock:
             # Timed once the lock is held: the metric is the work itself, without the queueing.
             started = time.perf_counter()
-            prepared = prepare_texts(texts, self.nlp)
+            prepared = prepare_texts(texts, self.nlp, self.predictor.vocab)
             probabilities = self.predictor.predict(prepared)
             self.metrics.inference_latency.observe(time.perf_counter() - started)
         scores = toxicity_score(probabilities, self.weights)
