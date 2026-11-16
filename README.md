@@ -802,3 +802,54 @@ défense activée.
   généralise pas à des perturbations plus importantes, et un mot corrompu qui coïncide avec un autre mot valide du
   vocabulaire peut être corrigé vers le mauvais mot (faux ami). Elle n'a pas non plus été testée contre un taux de
   perturbation différent de celui de l'exercice 2 (50 %).
+
+## Exercice 4 : Conformité IA Act
+
+### Catégorie de risque : **risque limité** (obligation de transparence), sous conditions d'usage
+
+Le règlement distingue quatre niveaux. Voici le raisonnement, du plus grave au moins grave :
+
+| Niveau IA Act | S'applique à notre modèle ? | Justification |
+|---|---|---|
+| **Inacceptable** (art. 5) | Non, **à condition de ne pas l'utiliser pour noter des personnes** | Le nom du projet (« Digital Social Score ») évoque la notation sociale, interdite. Ici le score note un **texte** (sa toxicité), pas une personne, et rien ne l'agrège par individu. Si quelqu'un l'utilisait pour classer des utilisateurs, ce serait un autre système, interdit |
+| **Haut risque** (art. 6, annexe III) | Non en l'état, **oui si le score décide seul** | L'annexe III vise l'accès à l'éducation, à l'emploi, aux services essentiels, au crédit, etc. Notre API n'en fait pas partie : elle oriente une relecture. Elle basculerait en haut risque si son score déclenchait seul un refus d'accès ou une sanction |
+| **Limité** (art. 50) | **Oui** | Système qui interagit avec des personnes et produit un jugement sur leurs contenus : obligation d'informer que la décision est assistée par une IA |
+| **Minimal** | — | Trop faible : un faux positif ou un faux négatif touche une personne réelle (un commentaire à tort bloqué, ou une menace laissée en ligne) |
+
+### Exigences retenues et où elles sont respectées
+
+| Exigence | État | Preuve |
+|---|---|---|
+| Transparence (art. 50) | À appliquer par l'intégrateur : informer l'utilisateur que le tri est assisté par IA | Usage prévu et usages exclus écrits dans [`model_card.json`](model_card.json) |
+| Supervision humaine | Prévue : le score oriente, un humain tranche | `intended_use` et `out_of_scope_use` de la fiche |
+| Gouvernance des données | Anonymisation avant scoring, aucun texte stocké | Exercice 1 du TP1, registre RGPD |
+| Robustesse et cybersécurité | Attaque adversariale testée, défense mesurée (rappel 68,0 % → 77,2 %) ; authentification par clé, limite de taille, supervision | Exercices 2 et 3 du TP2, TP1 |
+| Exactitude documentée | Métriques par étiquette dans la fiche | `performance` |
+| Biais | **Mesuré : présent** | Voir ci-dessous |
+
+### Biais mesuré
+
+Les classifieurs de toxicité apprennent que les mots désignant un groupe (« gay », « muslim », « black »...)
+apparaissent souvent dans des commentaires toxiques, et signalent à tort des commentaires propres qui les mentionnent
+simplement. [`compliance/bias_check.py`](compliance/bias_check.py) le mesure : parmi des commentaires **réellement
+propres** (les 6 étiquettes à 0) du jeu de test, 1 000 mentionnant un des 18 termes d'identité contre 1 000 sans.
+
+| Commentaires réellement propres | Taux de faux positifs |
+|---|---:|
+| Sans terme d'identité | 6,4 % |
+| Avec un terme d'identité | **11,1 %** |
+
+Un commentaire propre qui mentionne un groupe a **1,7 fois plus de chances** d'être signalé à tort. D'où
+`"bias_detected": true` dans la fiche, plutôt que le `false` du modèle fourni dans l'énoncé : le déclarer à `false`
+sans l'avoir mesuré aurait été une affirmation non vérifiée.
+
+```powershell
+uv run python -I compliance/bias_check.py --per-group 1000 --seed 0
+```
+
+**Conséquence pratique** : aucune sanction automatique sur ce score (confirme le niveau « limité » : un tel biais
+serait inacceptable dans un système à haut risque). Pistes d'atténuation, non faites ici : ré-entraîner avec des
+exemples propres mentionnant des groupes, ou fixer un seuil par groupe.
+
+**Limites** : 18 termes seulement ; dialecte, genre, handicap et autres axes ne sont pas mesurés ; un seul tirage
+(graine 0) ; la comparaison suppose que les deux groupes ont des thèmes comparables, ce qui n'est pas garanti.

@@ -289,3 +289,22 @@ gcloud storage buckets add-iam-policy-binding gs://tp1-digital-score-models `
 gcloud builds triggers run dss-api-deploy --branch=main
 gcloud builds list --ongoing
 #        Suivre un build precis : gcloud builds log <BUILD_ID> --stream
+
+# 21. Commandes usuelles : Grafana et logs des pods
+#     a) Lancer Grafana (tunnel local, rien n'est expose sur Internet) :
+kubectl port-forward svc/grafana 3000:3000 -n monitoring
+#        Puis ouvrir http://localhost:3000 (utilisateur "admin", mot de passe cree a l'etape 17b).
+#     b) Logs de l'API (dss-api, namespace dss) :
+kubectl logs -l app=dss-api -n dss --tail=50          # derniers logs de tous les pods
+kubectl logs -l app=dss-api -n dss --tail=50 -f        # puis suivre en continu (Ctrl+C pour arreter)
+kubectl get pods -n dss                                 # noms des pods, pour cibler un seul pod :
+kubectl logs <nom_du_pod> -n dss --tail=100
+#     c) Logs de Grafana / du collecteur Managed Prometheus (namespace monitoring) :
+kubectl logs deploy/grafana -n monitoring --tail=50
+kubectl logs deploy/gmp-frontend -n monitoring --tail=50
+#        Le collecteur Managed Prometheus tourne dans le namespace kube-system (un pod par noeud) :
+kubectl get pods -n kube-system -l app=managed-prometheus-collector
+kubectl logs -n kube-system -l app=managed-prometheus-collector --tail=50
+#     d) Logs persistants dans Cloud Logging (au-dela de ce que kubectl logs garde localement) :
+gcloud logging read 'resource.type="k8s_container" AND resource.labels.namespace_name="dss"' `
+  --limit=50 --format="table(timestamp, textPayload)" --freshness=1h

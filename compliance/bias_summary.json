@@ -1,0 +1,9 @@
+{
+  "per_group_sample_size": 1000,
+  "seed": 0,
+  "false_positive_rate": {
+    "with_identity_term": 0.111,
+    "without_identity_term": 0.064
+  },
+  "ratio": 1.734375
+}

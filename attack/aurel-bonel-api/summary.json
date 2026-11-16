@@ -1,0 +1,28 @@
+{
+  "target": "http://34.54.213.190/score",
+  "sample_size": 200,
+  "perturbation_rate": 0.5,
+  "seed": 0,
+  "before": {
+    "precision": 0.8532110091743119,
+    "recall": 0.93,
+    "false_positive_rate": 0.16,
+    "accuracy": 0.885,
+    "mean_score": 57.217000000000006,
+    "round_trip_ms_mean": 55.37487999943551,
+    "round_trip_ms_p95": 106.4332250331061,
+    "server_latency_ms_mean": 25.6591
+  },
+  "after": {
+    "precision": 0.7433628318584071,
+    "recall": 0.84,
+    "false_positive_rate": 0.29,
+    "accuracy": 0.775,
+    "mean_score": 60.8465,
+    "round_trip_ms_mean": 53.75771000311943,
+    "round_trip_ms_p95": 94.02158999291714,
+    "server_latency_ms_mean": 28.2549
+  },
+  "toxic_comments_that_evaded_detection": 10,
+  "toxic_comments_total": 100
+}

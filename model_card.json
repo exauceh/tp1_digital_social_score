@@ -1,0 +1,53 @@
+{
+  "model_name": "Digital Social Score v2",
+  "description": "Détection de propos toxiques dans un texte anglais : 6 probabilités (toxic, severe_toxic, obscene, threat, insult, identity_hate) agrégées en un score de toxicité de 0 à 100",
+  "risk_level": "limité (IA Act, art. 50 : obligation de transparence) ; passe à haut risque si le score pilote seul une décision affectant l'accès d'une personne à un service ou à un droit",
+  "intended_use": "Aide à la modération de commentaires : le score oriente la relecture humaine, il ne décide pas seul d'une sanction",
+  "out_of_scope_use": [
+    "Notation, classement ou évaluation d'une personne (scoring social, interdit par l'IA Act art. 5)",
+    "Décision automatique sans relecture humaine (suppression de compte, refus d'un service)",
+    "Textes dans une autre langue que l'anglais"
+  ],
+  "architecture": "BiLSTM (embedding 128, couche cachée 128, pooling max + moyenne), vocabulaire de 49 978 mots",
+  "data_source": "Jigsaw Toxic Comment Classification Challenge (Kaggle) : commentaires de pages de discussion Wikipédia, anglais",
+  "training_data_processing": "Anonymisation (regex + NER spaCy) puis nettoyage avant entraînement ; identique en production",
+  "privacy_measures": [
+    "anonymisation avant scoring (e-mails, IP, URL, téléphones, noms, lieux)",
+    "aucun texte stocké ni journalisé (les journaux contiennent un request_id, un identifiant client pseudonyme, la longueur et le score)",
+    "clés API stockées sous forme de hash SHA-256 dans Secret Manager",
+    "chiffrement des journaux au repos par Cloud Logging (par défaut chez Google, non configuré par le projet)"
+  ],
+  "performance": {
+    "evaluation_set": "63 978 commentaires du jeu de test Kaggle",
+    "macro_precision": 0.455,
+    "macro_recall": 0.702,
+    "macro_f1": 0.545,
+    "macro_roc_auc": 0.973,
+    "note": "seuils calibrés par étiquette ; la précision est faible pour les étiquettes rares (severe_toxic : 0.26, threat : 0.36)"
+  },
+  "robustness": {
+    "attack_tested": "exemple adversarial (homoglyphes, leetspeak, lettres échangées ou doublées, espace de largeur nulle)",
+    "recall_original": 0.788,
+    "recall_attacked_without_defense": 0.68,
+    "recall_attacked_with_defense": 0.772,
+    "defense": "suppression des caractères invisibles + correction à une édition de distance des mots inconnus du vocabulaire",
+    "known_limit": "les perturbations de plus d'un caractère par mot ne sont pas corrigées"
+  },
+  "bias_detected": true,
+  "bias_details": {
+    "type": "faux positifs sur les mentions de groupes (gay, muslim, black, woman...)",
+    "false_positive_rate_with_identity_term": 0.111,
+    "false_positive_rate_without_identity_term": 0.064,
+    "ratio": 1.73,
+    "measured_on": "1 000 commentaires réellement propres de chaque catégorie, jeu de test Kaggle",
+    "mitigation": "aucune à ce jour ; relecture humaine obligatoire avant toute sanction",
+    "limit": "liste de 18 termes seulement ; les autres axes (dialecte, genre, handicap) ne sont pas mesurés"
+  },
+  "limitations": [
+    "Anglais uniquement",
+    "Dépend du vocabulaire appris : un mot absent est compté comme inconnu",
+    "Ne comprend pas le contexte (ironie, citation d'une insulte pour la condamner)"
+  ],
+  "version": "2.1",
+  "last_update": "2026-11-16"
+}
