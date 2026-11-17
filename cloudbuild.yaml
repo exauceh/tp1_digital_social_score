@@ -104,11 +104,13 @@ steps:
       - |
         set -u
         IMAGE="${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE_NAME}:${SHORT_SHA}"
+        # cloud-sdk:slim has no python3 on PATH: use the interpreter gcloud itself runs on.
+        PYTHON=$$(gcloud info --format="value(basic.python_location)")
         for attempt in $(seq 1 40); do
           gcloud artifacts docker images describe "$$IMAGE" --project "${PROJECT_ID}" \
             --show-package-vulnerability --format=json > /tmp/scan.json 2>/dev/null \
             || echo '{}' > /tmp/scan.json
-          python3 ci/vulnerability_gate.py /tmp/scan.json
+          "$$PYTHON" ci/vulnerability_gate.py /tmp/scan.json
           RESULT=$$?
           [ "$$RESULT" -ne 3 ] && exit "$$RESULT"
           echo "Scan not finished (attempt $$attempt/40), waiting 15 s"
