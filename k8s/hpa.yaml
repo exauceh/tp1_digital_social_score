@@ -7,7 +7,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: dss-api
-  minReplicas: 2
+  minReplicas: 3   # one more than before: a pod takes 1 to 2.5 minutes to add, longer than a flood lasts
   maxReplicas: 6
   metrics:
     - type: Resource
@@ -15,4 +15,4 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 60   # percent of the 1 CPU requested by each pod
+          averageUtilization: 40   # percent of the 1 CPU requested by each pod; lower = scales before saturation

@@ -137,7 +137,7 @@ dans Artifact Registry puis lancée dans un cluster.
 | Machines | GKE Standard, 2 zones (`europe-west1-b` et `-c`), 1 à 3 nœuds `e2-standard-2` par zone | Disques `pd-standard` et compte de service dédié aux nœuds. Autopilot a été essayé d'abord puis abandonné : chaque nœud Autopilot a un disque SSD de 100 Go et le quota SSD du projet (250 Go) limitait le cluster à 2 petits nœuds, pleins de composants système, d'où des pods en `Pending` (`GCE quota exceeded`) |
 | Disponibilité | 2 pods, `PodDisruptionBudget` | Un pod peut tomber ou être mis à jour pendant que l'autre répond ; au moins 1 pod reste actif pendant une maintenance |
 | Mise à jour | `RollingUpdate` sans indisponibilité | Un nouveau pod doit être prêt avant qu'un ancien soit retiré ; retour arrière possible avec `kubectl rollout undo` |
-| Montée en charge | `HorizontalPodAutoscaler` et autoscaler de nœuds | De 2 à 6 pods (cible de 60 % du CPU demandé), et de 1 à 3 nœuds par zone |
+| Montée en charge | `HorizontalPodAutoscaler` et autoscaler de nœuds | De 3 à 6 pods (cible de 40 % du CPU demandé), et de 1 à 3 nœuds par zone |
 | Dimensionnement | 1 CPU / 1 Go demandés, 2 CPU / 1,5 Go au maximum | Mémoire mesurée sur le cluster : 279 à 400 Mo par pod, les demandes sont donc larges |
 | Réseau | `Service` interne (`ClusterIP`) | Pas d'IP publique. L'API est protégée par une clé (Exercice 4) mais n'a pas de HTTPS. Les tests passent par `kubectl port-forward` ou depuis l'intérieur du cluster |
 | Sécurité du pod | non-root, aucune élévation de privilèges, capacités Linux retirées, namespace en niveau `restricted` | Réduit la surface d'attaque (approche *zero trust*) |
@@ -351,7 +351,7 @@ quand l'API ralentit, ce qui évite de masquer la saturation. Les textes sont un
 |---|---|
 | Cluster | GKE Standard `dss-std`, europe-west1, `e2-standard-2`, 1 à 3 nœuds par zone |
 | Pods | 1 conteneur, 1 CPU demandé (limite 2), 1 Gi demandé |
-| Autoscaling | HPA de 2 à 6 pods, cible 60 % de CPU |
+| Autoscaling | HPA de 2 à 6 pods, cible 60 % de CPU (au moment de ces tests ; passé depuis à 3 à 6 pods et 40 %) |
 | Scénarios | `ramp` : 5 → 25 → 50 → 100 → 150 req/s (60 s par palier) ; `sustained` : 60 req/s pendant 3 min ; `spike` : 10 → 250 req/s en 230 s ; `failover` : 40 req/s pendant 4 min |
 
 ## Résultats

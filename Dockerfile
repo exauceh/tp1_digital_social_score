@@ -40,5 +40,7 @@ EXPOSE 8080
 # lock around the model (see ScoringService.score in api.py) already serialises the real work to
 # one request at a time, so queuing far more than this never helps throughput, only lets a flood
 # hold ever more memory; past the limit uvicorn answers 503 instead of accepting another body.
+# This is only the backstop: it counts every request, probes included, so it stays high. The
+# real cap on /score (30 in flight, probes exempt) is ConcurrencyLimitMiddleware in the app.
 CMD ["uvicorn", "tp1_digital_social_score.api:app", "--host", "0.0.0.0", "--port", "8080", \
      "--no-access-log", "--limit-concurrency", "200"]

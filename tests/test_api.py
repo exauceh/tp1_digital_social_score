@@ -472,6 +472,9 @@ def test_health_and_metrics_answer_while_every_worker_thread_is_busy(
     """
     release = threading.Event()
     in_flight = 60  # more than the 40 threads of the pool
+    # The load-shedding cap (30) is below the pool size, so it would refuse these requests before
+    # they could saturate the pool: lift it to test the pool itself.
+    monkeypatch.setattr("tp1_digital_social_score.api.MAX_IN_FLIGHT_SCORES", 1000)
     with make_client(artifacts_dir) as busy:
         predictor = service_of(busy).predictor
         original_predict = predictor.predict
@@ -499,3 +502,35 @@ def test_health_and_metrics_answer_while_every_worker_thread_is_busy(
             assert all(future.result(timeout=60).status_code == 200 for future in scoring)
     assert health.status_code == 200
     assert scraped.status_code == 200
+
+
+def test_score_sheds_load_with_503_while_probes_keep_answering(
+    artifacts_dir: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Past the in-flight cap /score answers 503 at once; /health is never refused."""
+    release = threading.Event()
+    cap, sent = 2, 6
+    monkeypatch.setattr("tp1_digital_social_score.api.MAX_IN_FLIGHT_SCORES", cap)
+    with make_client(artifacts_dir) as busy:
+        predictor = service_of(busy).predictor
+        original_predict = predictor.predict
+
+        def blocked_predict(texts: Sequence[str]) -> FloatArray:
+            release.wait(timeout=30)
+            return original_predict(texts)
+
+        monkeypatch.setattr(predictor, "predict", blocked_predict)
+        with ThreadPoolExecutor(max_workers=sent + 2) as pool:
+            scoring = [
+                pool.submit(busy.post, "/score", json={"text": "hello"}) for _ in range(sent)
+            ]
+            time.sleep(1.0)
+            try:
+                health = pool.submit(busy.get, "/health").result(timeout=3)
+            finally:
+                release.set()
+            codes = sorted(future.result(timeout=60).status_code for future in scoring)
+        shed = busy.app.state.metrics.registry.get_sample_value("api_requests_shed_total")  # type: ignore[attr-defined]
+    assert health.status_code == 200
+    assert codes == [200] * cap + [503] * (sent - cap)
+    assert shed == sent - cap

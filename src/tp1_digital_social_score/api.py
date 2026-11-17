@@ -41,6 +41,10 @@ from fastapi.security import APIKeyHeader
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 
 from tp1_digital_social_score.body_limit import MAX_BODY_BYTES, MaxBodySizeMiddleware
+from tp1_digital_social_score.concurrency_limit import (
+    MAX_IN_FLIGHT_SCORES,
+    ConcurrencyLimitMiddleware,
+)
 from tp1_digital_social_score.lstm_model import LstmPredictor
 from tp1_digital_social_score.metrics import (
     CONTENT_TYPE_LATEST,
@@ -92,6 +96,7 @@ def load_ui_files() -> dict[str, bytes]:
     """Read the test page once at startup (``static/`` ships inside the installed package)."""
     static = resources.files("tp1_digital_social_score") / "static"
     return {name: (static / name).read_bytes() for name in UI_FILES}
+
 
 Text = Annotated[
     str, StringConstraints(strip_whitespace=True, min_length=1, max_length=MAX_TEXT_CHARS)
@@ -258,6 +263,13 @@ def create_app(model_dir: Path | None = None, api_keys: ApiKeyStore | None = Non
     )
     ui_files = load_ui_files()
     app.add_middleware(MaxBodySizeMiddleware, max_bytes=MAX_BODY_BYTES)
+    # Added after the body limit, so it wraps it: a shed request is refused before its body is read.
+    app.add_middleware(
+        ConcurrencyLimitMiddleware,
+        max_in_flight=MAX_IN_FLIGHT_SCORES,
+        on_shed=metrics.shed.inc,
+    )
+    logger.info("Load shedding on /score above %d requests in flight", MAX_IN_FLIGHT_SCORES)
     app.state.metrics = metrics
     # "" (the default) leaves /metrics open: see load_metrics_token's docstring.
     app.state.metrics_token = load_metrics_token()

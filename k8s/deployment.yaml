@@ -5,8 +5,9 @@ metadata:
   labels:
     app: dss-api
 spec:
-  # Two replicas on purpose: one can fail or be updated while the other keeps serving (redundancy).
-  replicas: 2
+  # Same as the HPA minimum (k8s/hpa.yaml): applying this file must not drop the count below it.
+  # Several replicas on purpose: one can fail or be updated while the others keep serving.
+  replicas: 3
   strategy:
     type: RollingUpdate
     rollingUpdate:

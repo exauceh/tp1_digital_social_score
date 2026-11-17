@@ -19,7 +19,7 @@ LATENCY_BUCKETS: tuple[float, ...] = (0.01, 0.025, 0.05, 0.1, 0.2, 0.3, 0.5, 1.0
 SCORE_BUCKETS: tuple[float, ...] = (1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100)
 
 # Status codes /score can answer: 200 scored, 401 refused key, 422 invalid body, 500 server error.
-KNOWN_SCORE_STATUSES = ("200", "401", "422", "500")
+KNOWN_SCORE_STATUSES = ("200", "401", "422", "500", "503")
 
 # Routes that are not counted: probes and scraping would drown the real traffic.
 IGNORED_ROUTES = frozenset({"/health", "/metrics"})
@@ -64,6 +64,11 @@ class ApiMetrics:
         self.auth_failures = Counter(
             "api_auth_failures_total",
             "Requests refused because the API key was missing or invalid",
+            registry=self.registry,
+        )
+        self.shed = Counter(
+            "api_requests_shed_total",
+            "Requests refused with 503 because too many /score requests were already in flight",
             registry=self.registry,
         )
         self._declare_known_series()
