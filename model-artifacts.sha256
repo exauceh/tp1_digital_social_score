@@ -1,0 +1,6 @@
+# SHA-256 of the served model artifacts (models/lstm, kept in gs://tp1-digital-score-models).
+# Checked by the fetch-model step of cloudbuild.yaml: a modified artifact stops the deploy.
+# Regenerate after a retraining: sha256sum models/lstm/metrics.json models/lstm/model.pt models/lstm/vocab.json
+a294b2a412cc87f0fe421033c33dff0574132344d441b1ed9ba43cf115d0529e *models/lstm/metrics.json
+988cf74bb6a6e2b2eb86921cdc5e67f3843892488219abed3bd0c224a0273af3 *models/lstm/model.pt
+e99c0b0a314a1e699a2da919a076f2443132990180e71f43a6591bcdcd61df31 *models/lstm/vocab.json

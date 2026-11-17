@@ -64,7 +64,7 @@ def perturb_text(text: str, rate: float = 0.5, seed: int | None = None) -> str:
 
     Deterministic for a given ``(text, rate, seed)``, so a run can be reproduced exactly.
     """
-    rng = random.Random(seed)
+    rng = random.Random(seed)  # noqa: S311 (reproducible test data, not cryptography)
     words = WORD_PATTERN.findall(text)
     eligible = [w for w in words if len(w) >= 4]
     # Approximate: this samples among distinct word *strings* here but matches by string below, so

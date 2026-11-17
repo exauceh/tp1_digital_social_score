@@ -5,17 +5,19 @@
 # Build's own default service account: least privilege, same principle as every other identity in
 # this project (dss-api, dss-nodes, gmp-frontend, collector...).
 #
-# Security step (asked by the TP): Artifact Registry scans every pushed image automatically once
-# the Container Scanning API is enabled (step_deployment.md, step 20c) — no extra build step is
-# needed to produce it, but the "check-vulnerabilities" step below reads that scan's result and
-# fails the pipeline itself if a CRITICAL vulnerability with a fix available is found, so the
-# report is not just sitting unread somewhere. It does not block on HIGH or on CRITICAL findings
-# without a fix yet (there is nothing this project could do about those today).
+# Each step stops the pipeline when its check fails, so nothing reaches the cluster unchecked:
 #
-# Model artifacts (models/lstm/*) are gitignored on purpose (27 MB, not source) and so are never
-# in the GitHub checkout Cloud Build clones from. The "fetch-model" step pulls them from the
-# gs://tp1-digital-score-models bucket into the workspace before the Docker build needs them
-# (see step_deployment.md, step 20d, for how that bucket is populated and secured).
+#   step                   risk covered                                  tool
+#   secret-scan            a key or password committed to the repository  gitleaks
+#   test                   code defects, insecure code patterns (SAST),   ruff (+ Bandit rules),
+#                          type errors, regressions                       mypy, pytest
+#                          a runtime dependency with a known vulnerability pip-audit
+#   fetch-model            a tampered model (poisoning, backdoor) in GCS  SHA-256 manifest
+#   check-vulnerabilities  an image with a fixable CRITICAL vulnerability Artifact Registry scan
+#   deploy                 only runs once every check above has passed    kubectl
+#
+# Model artifacts (models/lstm/*) are gitignored on purpose (27 MB, not source): the fetch-model
+# step pulls them from gs://tp1-digital-score-models (see step_deployment.md, step 20d).
 
 substitutions:
   _REGION: europe-west1
@@ -27,6 +29,20 @@ substitutions:
   _MODEL_BUCKET: tp1-digital-score-models
 
 steps:
+  # First, on the checked-out sources only (before the model is fetched). Default gitleaks rules;
+  # .gitleaks.toml only allowlists the test keys and the lockfile hashes. --redact keeps a found
+  # secret out of the build logs.
+  - id: secret-scan
+    name: zricethezav/gitleaks:v8.18.4
+    args:
+      - detect
+      - --source=.
+      - --no-git
+      - --config=.gitleaks.toml
+      - --redact
+      - --verbose
+      - --exit-code=1
+
   - id: test
     name: python:3.13-slim
     entrypoint: bash
@@ -36,11 +52,20 @@ steps:
         set -eu
         pip install --quiet --no-cache-dir uv
         uv sync --locked --no-default-groups --group dev
-        uv run ruff check src/ tests/ attack/
-        uv run mypy src/ tests/
+        # ruff includes the Bandit (S) rules: static security analysis of the code.
+        uv run ruff check src/ tests/ attack/ compliance/ ci/
+        uv run mypy src/ tests/ ci/
         # Model artifacts are not in the repository (see .gitignore): the one test that needs them
         # skips itself. Everything else (security, validation, RGPD guarantees) still runs.
         uv run pytest tests/ -q
+        # Dependency scan of exactly what the image ships (same groups as the Dockerfile). The
+        # "+cpu" label only marks PyTorch's CPU build of the same release, which PyPI does not
+        # host: it is removed so that torch is audited instead of skipped.
+        uv export --frozen --no-default-groups --no-emit-project --no-hashes \
+          --format requirements-txt \
+          | sed -E 's/^(torch==[0-9.]+)\+[a-z0-9]+/\1/' > /tmp/runtime-requirements.txt
+        uv run pip-audit -r /tmp/runtime-requirements.txt --disable-pip --no-deps \
+          --progress-spinner off
 
   - id: fetch-model
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
@@ -51,6 +76,9 @@ steps:
         set -eu
         mkdir -p models/lstm
         gcloud storage cp "gs://${_MODEL_BUCKET}/lstm/*" models/lstm/
+        # Integrity: the artifacts must match the SHA-256 committed in the repository. A model
+        # replaced in the bucket (poisoned, backdoored) fails here, before it is built in.
+        grep -v '^#' model-artifacts.sha256 | sha256sum --check --strict -
 
   - id: build
     name: gcr.io/cloud-builders/docker
@@ -67,32 +95,27 @@ steps:
       - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE_NAME}:${SHORT_SHA}"
 
   # Runs before the deploy on purpose: a critical, fixable vulnerability must stop the rollout, not
-  # just get reported after the fact.
+  # just get reported after the fact. The policy and the parsing are in ci/vulnerability_gate.py.
   - id: check-vulnerabilities
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
     entrypoint: bash
     args:
       - -c
       - |
-        set -eu
+        set -u
         IMAGE="${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE_NAME}:${SHORT_SHA}"
-        echo "Waiting for the Artifact Registry vulnerability scan of $$IMAGE..."
-        for _ in $(seq 1 20); do
-          STATE=$$(gcloud artifacts docker images describe "$$IMAGE" \
-            --project "${PROJECT_ID}" --show-package-vulnerability \
-            --format="value(discovery_summary.discovery.analysisStatus)" 2>/dev/null || true)
-          [ "$$STATE" = "FINISHED_SUCCESS" ] && break
+        for attempt in $(seq 1 40); do
+          gcloud artifacts docker images describe "$$IMAGE" --project "${PROJECT_ID}" \
+            --show-package-vulnerability --format=json > /tmp/scan.json 2>/dev/null \
+            || echo '{}' > /tmp/scan.json
+          python3 ci/vulnerability_gate.py /tmp/scan.json
+          RESULT=$$?
+          [ "$$RESULT" -ne 3 ] && exit "$$RESULT"
+          echo "Scan not finished (attempt $$attempt/40), waiting 15 s"
           sleep 15
         done
-        gcloud artifacts docker images describe "$$IMAGE" \
-          --project "${PROJECT_ID}" --show-package-vulnerability \
-          --format="table(vulnerability.cvssScore, vulnerability.severity, vulnerability.packageIssue[0].affectedPackage, vulnerability.fixAvailable)" \
-          > vulnerabilities.txt || true
-        cat vulnerabilities.txt
-        if grep -q "CRITICAL" vulnerabilities.txt && grep -q "True" vulnerabilities.txt; then
-          echo "A CRITICAL vulnerability with a known fix was found: failing the build."
-          exit 1
-        fi
+        echo "The vulnerability scan did not finish in 10 minutes: failing the build."
+        exit 1
 
   - id: deploy
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
@@ -116,4 +139,4 @@ options:
   logging: CLOUD_LOGGING_ONLY
 
 serviceAccount: "projects/${PROJECT_ID}/serviceAccounts/dss-deployer@${PROJECT_ID}.iam.gserviceaccount.com"
-timeout: 1200s
+timeout: 1800s

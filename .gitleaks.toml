@@ -1,0 +1,12 @@
+# Secret scan run by the secret-scan step of cloudbuild.yaml (gitleaks, default rules).
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Known non-secrets"
+paths = [
+  # Throwaway keys written in the tests on purpose ("another-test-key-not-a-secret-...").
+  '''^tests/''',
+  # Package hashes of the lockfile.
+  '''^uv\.lock$''',
+]

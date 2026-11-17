@@ -285,6 +285,12 @@ gcloud storage buckets create gs://tp1-digital-score-models --location=$REGION -
 gcloud storage cp -r models/lstm/* gs://tp1-digital-score-models/lstm/
 gcloud storage buckets add-iam-policy-binding gs://tp1-digital-score-models `
   --member="serviceAccount:$DEPLOYER_SA" --role=roles/storage.objectViewer
+#        Le pipeline verifie le modele telecharge contre model-artifacts.sha256 (versionne) : apres
+#        un nouvel entrainement, mettre a jour les empreintes ET le bucket, sinon le build echoue.
+#        Remplacer les trois lignes d'empreintes du fichier par la sortie de la commande suivante
+#        (sha256sum est fourni par Git Bash), puis commiter le fichier avec le code.
+sha256sum models/lstm/metrics.json models/lstm/model.pt models/lstm/vocab.json
+gcloud storage cp models/lstm/* gs://tp1-digital-score-models/lstm/
 #     e) Tester sans attendre un vrai push :
 gcloud builds triggers run dss-api-deploy --branch=main
 gcloud builds list --ongoing

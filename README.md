@@ -866,3 +866,42 @@ exemples propres mentionnant des groupes, ou fixer un seuil par groupe.
 
 **Limites** : 18 termes seulement ; dialecte, genre, handicap et autres axes ne sont pas mesurés ; un seul tirage
 (graine 0) ; la comparaison suppose que les deux groupes ont des thèmes comparables, ce qui n'est pas garanti.
+
+## Exercice 5 : Intégration DevSecOps
+
+Le pipeline [`cloudbuild.yaml`](cloudbuild.yaml) (Cloud Build, déclenché à chaque push sur `main`) suit le cycle du
+cours n°5 (section 20) : chaque étape arrête le pipeline si son contrôle échoue, et le déploiement n'a lieu que si
+tout est passé.
+
+| Étape | Risque couvert | Outil | Ajouté à l'étape 5 |
+|---|---|---|---|
+| `secret-scan` | Clé ou mot de passe committé dans le dépôt | gitleaks (règles par défaut, [`.gitleaks.toml`](.gitleaks.toml)) | oui |
+| `test` | Défauts de code, motifs de code dangereux (SAST) | ruff avec les règles Bandit (`S`) | règles `S` : oui |
+| `test` | Erreurs de type, régressions | mypy strict, pytest | non |
+| `test` | Dépendance vulnérable dans l'image | pip-audit | oui |
+| `fetch-model` | Modèle modifié dans le bucket (empoisonnement, porte dérobée) | empreintes SHA-256 versionnées ([`model-artifacts.sha256`](model-artifacts.sha256)) | oui |
+| `check-vulnerabilities` | Image avec une faille CRITICAL corrigeable | scan Artifact Registry + [`ci/vulnerability_gate.py`](ci/vulnerability_gate.py) | réécrit |
+| `deploy` | Image non validée en production | n'est atteint qu'après tous les contrôles | non |
+| (en production) | Fuite de secrets | Secret Manager, IAM à droits minimaux (`dss-deployer`, `dss-api`) | non |
+
+**Ce que les nouveaux contrôles ont trouvé dès leur mise en place :**
+
+- **pip-audit** : `setuptools 81.0.0`, embarqué dans l'image, avait 3 vulnérabilités connues (corrigées en 83.0.0 et
+  84.1.0). Corrigé en exigeant `setuptools>=84.1.0` pour Linux, la plateforme de l'image. La contrainte ne
+  s'applique pas à Windows : la version de PyTorch GPU utilisée pour l'entraînement local plafonne setuptools
+  sous 82.
+- **Le contrôle de vulnérabilités de l'image ne vérifiait rien.** Il lisait des champs absents de la sortie de
+  `gcloud` (son tableau sortait toujours vide), et il cherchait « CRITICAL » et « True » n'importe où dans le
+  rapport plutôt que sur une même faille. Il est réécrit en Python, testé (10 tests), et lit la vraie structure
+  JSON. Sur l'image actuelle : 93 failles, aucune CRITICAL, 9 HIGH dont une seule corrigeable (`zlib`, paquet
+  Debian). La politique bloque les CRITICAL corrigeables et affiche les HIGH dans les logs sans bloquer.
+- **Règles Bandit** : aucun vrai problème. Les signalements étaient des faux positifs (noms de variables
+  d'environnement pris pour des mots de passe, générateur aléatoire utilisé pour des données de test
+  reproductibles), annotés avec leur justification.
+
+**Pourquoi pip-audit plutôt que Safety CLI** (cité par le cours) : même rôle, mais pip-audit (PyPA) n'exige pas de
+compte, alors que les versions récentes de Safety demandent une clé. Seul `en-core-web-sm`, installé depuis une URL
+GitHub, ne peut pas être audité.
+
+**Non fait** : Binary Authorization (la « Cloud Build Policy » du cours), qui interdirait au cluster de lancer une
+image non signée par ce pipeline. L'ordre des étapes joue déjà ce rôle tant que personne ne déploie à la main.

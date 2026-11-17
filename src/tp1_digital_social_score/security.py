@@ -35,11 +35,11 @@ logger = logging.getLogger(__name__)
 
 API_KEY_HEADER = "X-API-Key"
 API_KEYS_ENV_VAR = "API_KEYS"
-API_KEYS_SECRET_ENV_VAR = "API_KEYS_SECRET"
+API_KEYS_SECRET_ENV_VAR = "API_KEYS_SECRET"  # noqa: S105 (a name, not a secret)
 # Separate from the client API keys: /metrics is machine-to-machine (scraped by Prometheus), not a
 # client of the scoring service, so it must not share a key with any client nor unlock /score.
-METRICS_TOKEN_ENV_VAR = "METRICS_TOKEN"
-METRICS_TOKEN_HEADER_PREFIX = "Bearer "
+METRICS_TOKEN_ENV_VAR = "METRICS_TOKEN"  # noqa: S105 (a name, not a secret)
+METRICS_TOKEN_HEADER_PREFIX = "Bearer "  # noqa: S105 (a name, not a secret)
 SECRET_VERSION_PATTERN = re.compile(
     r"^projects/[^/\s]+/secrets/[A-Za-z0-9_-]+/versions/(?:latest|\d+)$"
 )
