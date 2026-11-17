@@ -314,3 +314,27 @@ kubectl logs -n kube-system -l app=managed-prometheus-collector --tail=50
 #     d) Logs persistants dans Cloud Logging (au-dela de ce que kubectl logs garde localement) :
 gcloud logging read 'resource.type="k8s_container" AND resource.labels.namespace_name="dss"' `
   --limit=50 --format="table(timestamp, textPayload)" --freshness=1h
+
+# 22. HTTPS : load balancer applicatif Google + certificat gere (sslip.io, sans nom de domaine)
+#     L'Ingress de k8s/https.yaml cree un load balancer L7 qui termine le TLS. Le nom
+#     136-81-21-137.sslip.io pointe automatiquement vers l'IP reservee, ce qui suffit a Google pour
+#     delivrer et renouveler le certificat. Si l'IP change, changer aussi le nom dans k8s/https.yaml.
+#     a) Prerequis (une fois) : IP globale fixe et politique TLS (TLS 1.2 minimum)
+gcloud compute addresses create dss-api-ip --global --ip-version=IPV4
+gcloud compute addresses describe dss-api-ip --global --format="value(address)"
+gcloud compute ssl-policies create dss-tls12 --profile=MODERN --min-tls-version=1.2 --global
+#     b) Deployer (le pipeline le fait aussi : https.yaml est dans k8s/kustomization.yaml)
+kubectl apply -n dss -f k8s/https.yaml -f k8s/service.yaml
+#     c) Suivre le certificat : Provisioning (15 a 60 min) puis Active
+kubectl get managedcertificate dss-api-cert -n dss -o jsonpath='{.status.certificateStatus} {.status.domainStatus[0].status}'
+kubectl describe ingress dss-api -n dss
+#     d) Verifier : HTTPS valide, HTTP redirige, cle toujours exigee
+curl -sI http://136-81-21-137.sslip.io/health
+curl -s https://136-81-21-137.sslip.io/health
+#     e) Retour arriere si le certificat echoue (FailedNotVisible, FailedCaaForbidden, FailedRateLimited) :
+kubectl delete -n dss -f k8s/https.yaml
+gcloud compute ssl-policies delete dss-tls12 --global --quiet
+#     f) Une fois HTTPS valide : fermer l'ancien point d'entree HTTP (Service repasse en ClusterIP dans
+#        k8s/service.yaml) ; l'Ingress reste la seule entree publique.
+kubectl apply -n dss -f k8s/service.yaml
+curl -s -m 8 http://34.53.169.140/health     # ne doit plus repondre

@@ -9,6 +9,7 @@ resources:
   - serviceaccount.yaml
   - deployment.yaml
   - service.yaml
+  - https.yaml
   - hpa.yaml
   - pdb.yaml
   - podmonitoring.yaml

@@ -4,14 +4,16 @@ metadata:
   name: dss-api
   labels:
     app: dss-api
+  annotations:
+    # Used by the HTTPS Ingress (k8s/https.yaml): the load balancer sends traffic straight to the
+    # pods (network endpoint groups) and health-checks them on /health (BackendConfig "dss-api").
+    cloud.google.com/neg: '{"ingress": true}'
+    cloud.google.com/backend-config: '{"default": "dss-api"}'
 spec:
-  # LoadBalancer (TP n°2, course "attacks between classmates"): a public IP is needed so that
-  # classmates can reach /score from outside the cluster. Authentication (X-API-Key) and input
-  # validation stay in front of it; nothing else restricts who can connect yet
-  # (loadBalancerSourceRanges is not set on purpose, for now). Revert to ClusterIP once the exercise
-  # is over: `kubectl patch service dss-api -n dss -p "{\"spec\":{\"type\":\"ClusterIP\"}}"`
-  # (or re-apply this file after switching it back), and consider deleting the cluster entirely.
-  type: LoadBalancer
+  # ClusterIP: the only public entry point is the HTTPS Ingress (k8s/https.yaml). During the TP2
+  # attacks between teams this Service was a plain-HTTP LoadBalancer (34.53.169.140), closed once
+  # HTTPS was in place so that no client can bypass TLS.
+  type: ClusterIP
   selector:
     app: dss-api
   ports:

@@ -135,11 +135,11 @@ dans Artifact Registry puis lancée dans un cluster.
 | Besoin | Choix | Détail |
 |---|---|---|
 | Machines | GKE Standard, 2 zones (`europe-west1-b` et `-c`), 1 à 3 nœuds `e2-standard-2` par zone | Disques `pd-standard` et compte de service dédié aux nœuds. Autopilot a été essayé d'abord puis abandonné : chaque nœud Autopilot a un disque SSD de 100 Go et le quota SSD du projet (250 Go) limitait le cluster à 2 petits nœuds, pleins de composants système, d'où des pods en `Pending` (`GCE quota exceeded`) |
-| Disponibilité | 2 pods, `PodDisruptionBudget` | Un pod peut tomber ou être mis à jour pendant que l'autre répond ; au moins 1 pod reste actif pendant une maintenance |
+| Disponibilité | 3 pods au minimum, répartis sur 2 zones, `PodDisruptionBudget` | Un pod peut tomber ou être mis à jour pendant que les autres répondent ; au moins 1 pod reste actif pendant une maintenance |
 | Mise à jour | `RollingUpdate` sans indisponibilité | Un nouveau pod doit être prêt avant qu'un ancien soit retiré ; retour arrière possible avec `kubectl rollout undo` |
 | Montée en charge | `HorizontalPodAutoscaler` et autoscaler de nœuds | De 3 à 6 pods (cible de 40 % du CPU demandé), et de 1 à 3 nœuds par zone |
 | Dimensionnement | 1 CPU / 1 Go demandés, 2 CPU / 1,5 Go au maximum | Mémoire mesurée sur le cluster : 279 à 400 Mo par pod, les demandes sont donc larges |
-| Réseau | `Service` interne (`ClusterIP`) | Pas d'IP publique. L'API est protégée par une clé (Exercice 4) mais n'a pas de HTTPS. Les tests passent par `kubectl port-forward` ou depuis l'intérieur du cluster |
+| Réseau | Load balancer applicatif Google (Ingress), HTTPS | Interne (`ClusterIP`) pendant le TP1 ; exposé sur Internet pour le TP2 (attaques entre équipes), d'abord en HTTP, puis en HTTPS sur `https://136-81-21-137.sslip.io` (voir Chiffrement) |
 | Sécurité du pod | non-root, aucune élévation de privilèges, capacités Linux retirées, namespace en niveau `restricted` | Réduit la surface d'attaque (approche *zero trust*) |
 | Santé | sondes de démarrage, de disponibilité et de vie sur `/health` | La sonde de démarrage laisse jusqu'à 3 minutes pour charger spaCy, PyTorch et le modèle |
 | Threads | 2 threads PyTorch par pod | Mesuré : avec 8 threads, l'étape LSTM avait un p95 de 213 ms, contre 9,6 ms avec 2 threads |
@@ -153,8 +153,8 @@ sur n'importe quel autre cluster. Le prix est plus de configuration, et un clust
 **Pourquoi le LSTM sur CPU.** Il est petit (25 Mo), rapide sans GPU et suffisant pour un score de gravité (voir la
 comparaison des modèles). Les fichiers du déploiement sont [Dockerfile](Dockerfile), [k8s/](k8s/) (manifests).
 
-**État d'avancement.** L'API est déployée sur le cluster `dss-std` : 2 pods `Running`, un dans chaque zone, mise à
-jour sans coupure et autoscaling configurés. Les exemples de requêtes de la section suivante viennent d'essais locaux
+**État d'avancement.** L'API est déployée sur le cluster `dss-std` : 3 à 6 pods répartis sur deux zones, mise à jour
+sans coupure et autoscaling configurés, déploiement automatique par Cloud Build (TP2, Exercice 5). Les exemples de requêtes de la section suivante viennent d'essais locaux
 avec le vrai modèle ; l'authentification, la lecture des clés dans Secret Manager et l'absence d'adresse IP dans les
 logs ont été vérifiées sur le cluster (Exercice 4).
 
@@ -164,9 +164,9 @@ Elle est écrite avec FastAPI ([api.py](src/tp1_digital_social_score/api.py)).
 
 | Route | Méthode | Rôle |
 |---|---|---|
-| `/score` | POST | Reçoit un texte, renvoie le score de 0 à 100 (clé API obligatoire, en-tête `X-API-Key`) |
+| `/score` | POST | Reçoit un texte, renvoie un verdict `clean`, `slightly_toxic` ou `toxic` ; le score de 0 à 100 est calculé mais reste côté serveur (clé API obligatoire, en-tête `X-API-Key`) |
 | `/health` | GET | Sonde de santé pour Kubernetes (sans clé) |
-| `/metrics` | GET | Métriques Prometheus, collectées par Managed Service for Prometheus (sans clé, accessible seulement dans le cluster) |
+| `/metrics` | GET | Métriques Prometheus, collectées par Managed Service for Prometheus (jeton `Authorization: Bearer`, distinct des clés API, depuis l'exposition publique) |
 | `/docs` | GET | Documentation interactive, générée automatiquement par FastAPI |
 
 **Chaîne de traitement d'une requête :**
@@ -200,6 +200,14 @@ nom du modèle dans chaque réponse). La route `GET /thresholds`, qui existait p
 Le score reste dans les logs et la métrique `toxicity_score` (accessibles seulement à l'exploitation), pour la
 supervision. Limite : un verdict à trois niveaux reste un oracle que l'on peut interroger ; la réduction de
 l'information le rend plus lent à exploiter, pas impossible, d'où l'intérêt d'une limite de débit par clé.
+
+**Écart assumé avec l'énoncé du TP1.** Le TP1 demande une API « renvoyant un score » de 0 à 100. C'était le cas
+jusqu'au TP2 : `POST /score` renvoyait le score et les six probabilités. Ce choix a été revu après l'audit Red Team du
+professeur et le cours n°5 (section 17, défense contre l'extraction de modèle : « ne jamais envoyer les scores exacts,
+uniquement la classe »). Le score n'a pas disparu : il est toujours calculé à chaque requête, il fonde le verdict, il
+est écrit dans les logs et exporté dans la métrique `toxicity_score` du tableau de bord. Il n'est simplement plus
+renvoyé à l'appelant, qui peut être un attaquant. Les mesures du TP1 (comparaison des modèles, Exercice 2) et les
+exemples ci-dessous montrent les scores calculés.
 
 **Exemple.**
 
@@ -292,14 +300,23 @@ GKE `regular`.
 - **Journal d'accès désactivé :** le journal d'accès d'`uvicorn` écrit l'adresse IP de l'appelant, une donnée
   personnelle. Constaté sur le cluster avant la correction (chaque ligne affichait une IP) et après (0 ligne, aucune IP).
 - **Ce qui est journalisé :** identifiant de requête, identifiant du client (pseudonyme lié à sa clé), longueur du
-  texte, score, latence. Jamais le texte, la clé ni une adresse.
+  texte, verdict, score, latence. Jamais le texte, la clé ni une adresse.
 - **Conservation :** 30 jours (bucket `_Default` de Cloud Logging, vérifié).
 
 ## Chiffrement
 
-- **En transit : pas de HTTPS.** Ce n'est pas mis en place : le projet n'a pas de nom de domaine, nécessaire à un
-  certificat géré, et l'exigence a été écartée. L'API n'est pas exposée sur Internet (`Service` interne) : seul le trafic
-  à l'intérieur du cluster circule en HTTP. Pour l'exposer il faudrait un `Ingress`, un nom de domaine et un certificat.
+- **En transit : HTTPS** sur `https://136-81-21-137.sslip.io` ([k8s/https.yaml](k8s/https.yaml)). Un load balancer applicatif Google
+  (Ingress) termine le TLS avec un certificat géré par Google (émis par Google Trust Services, renouvelé
+  automatiquement). Le projet n'a pas de nom de domaine : `sslip.io` fait pointer `136-81-21-137.sslip.io` vers l'IP
+  fixe réservée, ce qui suffit à Google pour valider le certificat. Une politique TLS impose TLS 1.2 au minimum
+  (profil `MODERN`), et le HTTP est redirigé (`301`) vers HTTPS. Vérifié : certificat valide en TLS 1.3, redirection,
+  `401` sans clé, `200` avec clé, en-tête HSTS désormais effectif, connexion en TLS 1.1 refusée. Entre le load
+  balancer et les pods, le trafic reste en HTTP dans le réseau de Google. Les appels de l'API aux services Google
+  (Secret Manager, Cloud Logging) sont chiffrés en TLS.
+- **Historique :** pendant le TP1, l'API n'était pas exposée (`Service` interne). Pour les attaques entre équipes du
+  TP2, elle a d'abord été exposée **en HTTP** sur un load balancer réseau (`34.53.169.140`), clé API en clair. Ce
+  point d'entrée a été fermé une fois le HTTPS en place : le `Service` est repassé en `ClusterIP`, et l'Ingress HTTPS
+  est désormais la seule entrée publique (vérifié : l'ancienne IP ne répond plus).
 - **Au repos :** le dépôt d'images utilise une clé gérée par Google (vérifié) ; Secret Manager chiffre aussi ses
   secrets avec une clé gérée par Google par défaut.
 
@@ -339,11 +356,12 @@ l'API attribue automatiquement un score à des contenus écrits par des personne
 
 ## Limites et points non faits
 
-- **HTTPS** : non mis en place (voir plus haut).
+- **HTTPS** : en place depuis, seule entrée publique ; l'ancien point d'entrée HTTP est fermé (voir plus haut).
 - **Logs hors UE possible** : localisation `global` du bucket `_Default`.
 - **Compte Compute par défaut** : il garde le rôle `editor` sur le projet. Le cluster ne l'utilise plus, mais il reste
   à retirer.
-- **Scan de vulnérabilités de l'image** et **NetworkPolicy** : non faits.
+- **NetworkPolicy** : non faite. Le **scan de vulnérabilités de l'image** a été ajouté depuis, dans le pipeline
+  (TP2, Exercice 5).
 - **Compte propriétaire unique** : en équipe, il faudrait des rôles dédiés (écriture d'images, déploiement, gestion
   des versions du secret).
 - **Test d'intrusion** : non réalisé.
@@ -531,6 +549,13 @@ perte d'un nœud n'est donc pas mesurée.
 | Perte d'un nœud ou d'une zone | **Redondance** : `topologySpreadConstraints` entre zones et nœuds, au moins 3 pods, PDB conservé | Une panne ne retire qu'une partie de la capacité |
 | 1 Gi demandé pour 0,4 à 0,5 Go utilisé | Réduire la demande mémoire à environ 640 Mi (limite 1 Gi) | Moins de nœuds, moins de coût |
 
+**Mis en place depuis** (après le TP1, non re-mesurés par une nouvelle campagne de charge) :
+
+- `minReplicas` à 3 et cible CPU à 40 % (`k8s/hpa.yaml`).
+- File limitée : au-delà de 30 requêtes `/score` en cours, le pod répond `503` avec `Retry-After` au lieu de les
+  faire attendre (`concurrency_limit.py`). `/health` et `/metrics` ne sont jamais refusés, pour ne pas faire
+  échouer les sondes. Ce n'est pas encore une limite par client (`429`).
+
 # Exercice 6
 
 ## Supervision : Prometheus et Grafana
@@ -630,10 +655,142 @@ passe à `firing` dans Prometheus, mais personne n'est prévenu.
 
 - La panne d'un nœud n'est pas mesurée (l'essai a évincé le pod k6 ; le test d'un pod a été retenu).
 - `flood` n'a été réussi qu'avec 4 pods déjà en place ; un test à froid, avec 2 pods, n'a pas de résumé k6.
-- Pas de limite de débit par client ni de réponse `429` : à ajouter (voir les améliorations de l'Exercice 5).
+- Pas de limite de débit par client ni de réponse `429` : à ajouter (voir les améliorations de l'Exercice 5). Depuis,
+  une limite de concurrence protège la latence (au-delà de 30 requêtes en cours par pod, réponse `503` immédiate),
+  mais elle ne distingue pas les clients.
 - Pas de canal de notification pour les alertes.
 - Les attaques simulées sont modestes et ne remplacent pas un test d'intrusion.
 - Une seule exécution par test.
+
+# Exercice 7
+
+## Schéma de l'infrastructure
+
+### Vue 1 : le service en production
+
+```mermaid
+flowchart LR
+  user["Client<br/>clé API"]
+  ops["Exploitant<br/>gcloud, kubectl"]
+
+  subgraph gcp["Google Cloud"]
+    lb["Load balancer applicatif<br/>HTTPS, certificat géré"]
+    subgraph gke["Cluster GKE"]
+      subgraph nsdss["namespace dss"]
+        api["Pods dss-api, 3 à 6<br/>FastAPI, spaCy, LSTM"]
+      end
+      coll["Collecteur<br/>Managed Prometheus"]
+      subgraph nsmon["namespace monitoring"]
+        graf["Grafana"]
+        front["gmp-frontend"]
+      end
+    end
+    sm[("Secret Manager<br/>empreintes des clés")]
+    logs[("Cloud Logging<br/>logs pseudonymisés")]
+    mp[("Managed Prometheus<br/>métriques, 6 alertes")]
+    ar[("Artifact Registry<br/>images")]
+  end
+
+  user -- "1 · HTTPS + X-API-Key" --> lb
+  lb -. "2 · HTTP" .-> api
+  api -- "3 · Workload Identity" --> sm
+  api -- "4 · logs" --> logs
+  coll -. "5 · /metrics + Bearer" .-> api
+  coll -- "6" --> mp
+  front -- "7 · Workload Identity" --> mp
+  graf -. "8 · HTTP" .-> front
+  ops -- "9 · IAM, port-forward" --> graf
+  ar -- "15 · pull, dss-nodes" --> api
+```
+
+![Vue 1 : le service en production](docs/architecture-service.png)
+
+### Vue 2 : le pipeline de déploiement
+
+```mermaid
+flowchart LR
+  dev["Développeur"]
+  gh["GitHub<br/>branche main"]
+  subgraph gcp["Google Cloud"]
+    cb["Cloud Build<br/>compte dss-deployer"]
+    gcs[("Cloud Storage<br/>artefacts du modèle")]
+    ar[("Artifact Registry<br/>image + scan")]
+    gke["Cluster GKE dss-std<br/>pods dss-api"]
+  end
+
+  dev -- "10 · git push" --> gh
+  gh -- "11 · déclencheur" --> cb
+  cb -- "12 · lecture + SHA-256" --> gcs
+  cb -- "13 · push, puis scan" --> ar
+  cb -- "14 · kubectl apply" --> gke
+  ar -- "15 · pull de l'image" --> gke
+```
+
+![Vue 2 : le pipeline de déploiement](docs/architecture-pipeline.png)
+
+**Légende.**
+
+- **Flèche pleine** : flux chiffré en TLS (appels aux API Google, tunnel `kubectl`).
+- **Flèche en pointillés** : flux en HTTP non chiffré. Aucun ne traverse Internet : le flux 2 reste dans le réseau
+  de Google, les flux 5 et 8 dans le réseau privé (VPC) du cluster.
+- **Cylindre** : service géré par Google, chiffré au repos avec une clé gérée par Google.
+- **Rectangle** : composant que le projet exécute ou configure lui-même.
+- **Cadre « Google Cloud »** : projet `tp1-digital-score`, région `europe-west1` (Belgique). **Cadre « Cluster GKE »** :
+  cluster `dss-std`, réparti sur 2 zones (`europe-west1-b` et `-c`).
+- Les numéros renvoient au tableau des flux ci-dessous ; le flux 15 apparaît dans les deux vues.
+
+## Composants
+
+| Composant | Rôle | Pourquoi ce choix |
+|---|---|---|
+| Load balancer applicatif (L7) | Point d'entrée public `https://136-81-21-137.sslip.io`, termine le TLS, redirige le HTTP, répartit entre les pods des deux zones | Créé par l'Ingress ; certificat géré par Google ; envoie directement aux pods (NEG) |
+| Pods `dss-api` | API FastAPI : validation, anonymisation (regex + spaCy), défense adversariale, LSTM, verdict | Le modèle est dans l'image : aucun accès au stockage pendant le service, démarrage reproductible |
+| HPA, PDB, 2 zones | De 3 à 6 pods selon le CPU ; au moins 1 pod garanti pendant une maintenance | Montée en charge et redondance mesurées à l'Exercice 5 |
+| Secret Manager | Empreintes SHA-256 des clés API (jamais les clés) | Rotation sans reconstruire l'image ; lecture limitée à ce seul secret |
+| Artifact Registry | Images Docker, scannées automatiquement | Registre privé dans la même région ; le scan bloque le déploiement (TP2, Exercice 5) |
+| Cloud Storage | Artefacts du modèle (27 Mo, absents du dépôt git) | Lu par le pipeline uniquement, vérifié par empreinte SHA-256 |
+| Managed Prometheus, Grafana | Métriques, 6 alertes, tableau de bord | Pas de serveur Prometheus à maintenir ; Grafana accessible seulement par tunnel |
+| Cloud Logging | Logs de l'API, 30 jours | Pseudonymisés : identifiant de requête, client, longueur, verdict, score, latence ; jamais le texte ni l'IP |
+| Cloud Build | Pipeline : secrets, tests, dépendances, intégrité du modèle, build, scan, déploiement | Compte dédié à droits minimaux, déclenché par un push sur `main` |
+
+## Flux, authentification et chiffrement
+
+| N° | Flux | Authentification | Chiffrement |
+|---|---|---|---|
+| 1 | Client → load balancer | Clé API dans `X-API-Key`, vérifiée par l'API (empreinte, comparaison en temps constant) | TLS 1.2 minimum (1.3 négocié), certificat géré ; HTTP redirigé vers HTTPS |
+| 2 | Load balancer → pods | Aucune ; contrôle de santé sur `/health` | Non (HTTP dans le réseau de Google) |
+| 3 | Pod → Secret Manager | Workload Identity : le compte Kubernetes `dss-api` a `secretAccessor` sur ce seul secret, sans fichier de clé | TLS |
+| 4 | Pod → Cloud Logging | Agent de journalisation des nœuds | TLS |
+| 5 | Collecteur → `/metrics` | Jeton Bearer (`METRICS_TOKEN`), distinct des clés API ; le collecteur peut lire les Secrets du namespace `dss` (RBAC), où ce jeton est le seul Secret | Non (HTTP dans le VPC) |
+| 6 | Collecteur → Managed Prometheus | Identité gérée par Google | TLS |
+| 7 | `gmp-frontend` → Managed Prometheus | Workload Identity, `monitoring.viewer` (lecture seule) | TLS |
+| 8 | Grafana → `gmp-frontend` | Aucune (même namespace) | Non (HTTP interne) |
+| 9 | Exploitant → Grafana | IAM Google (accès au cluster) puis mot de passe Grafana | TLS jusqu'au cluster (`kubectl port-forward`) |
+| 10, 11 | GitHub → Cloud Build | Application GitHub de Cloud Build, déclencheur sur `main` | TLS |
+| 12 | Cloud Build → Cloud Storage | `dss-deployer` : `storage.objectViewer` sur ce seul bucket | TLS ; intégrité par SHA-256 |
+| 13 | Cloud Build → Artifact Registry | `dss-deployer` : `artifactregistry.writer` sur ce seul dépôt, lecture des résultats du scan | TLS |
+| 14 | Cloud Build → cluster | `dss-deployer` : `container.developer` | TLS |
+| 15 | Nœuds → Artifact Registry | `dss-nodes` : `artifactregistry.reader` | TLS |
+
+## Approche zero trust : ce qui est appliqué, ce qui manque
+
+« Ne jamais faire confiance par défaut, toujours vérifier » se traduit ici par :
+
+- **Une identité par composant, avec le minimum de droits** : `dss-api` lit un seul secret, `gmp-frontend` lit les
+  métriques, `dss-deployer` déploie, `dss-nodes` tire les images. Aucun compte n'a de rôle large (`editor`, `owner`).
+- **Aucun fichier de clé** : Workload Identity pour les pods, compte de service attaché pour Cloud Build.
+- **Chaque requête est vérifiée** : clé API sur `/score`, jeton sur `/metrics`, validation de l'entrée, limites de
+  taille et de concurrence, même pour un client connu.
+- **Pods durcis** : non-root, sans élévation de privilèges, capacités Linux retirées, namespace en niveau `restricted`.
+- **Rien n'entre en production sans contrôle** : le pipeline vérifie le code, les dépendances, le modèle et l'image.
+
+Ce qui manque, par ordre d'importance :
+
+1. **Trafic interne en clair (flux 2, 5, 8)** et **pas de `NetworkPolicy`** : un pod compromis dans le cluster pourrait
+   joindre les autres. Un maillage de services (mTLS) ou des `NetworkPolicy` le restreindraient.
+2. **Pas de Binary Authorization** : le cluster accepterait une image déployée à la main, sans passer par le
+   pipeline.
+3. **Compte Compute par défaut** : il garde le rôle `editor` sur le projet, même s'il n'est plus utilisé.
 
 # TP 2 — De la menace à la défense
 
@@ -905,3 +1062,61 @@ GitHub, ne peut pas être audité.
 
 **Non fait** : Binary Authorization (la « Cloud Build Policy » du cours), qui interdirait au cluster de lancer une
 image non signée par ce pipeline. L'ordre des étapes joue déjà ce rôle tant que personne ne déploie à la main.
+
+### Logs d'exécution
+
+Exécution complète du pipeline sur le commit `091533e` (build Cloud Build `8776f94b`, statut `SUCCESS`) :
+[`ci/logs/build-8776f94b-success.log`](ci/logs/build-8776f94b-success.log).
+
+| Étape | Résultat dans le log |
+|---|---|
+| `secret-scan` | `no leaks found` |
+| `test` | ruff `All checks passed!`, mypy sans erreur, `164 passed, 1 skipped` (le test qui demande le vrai modèle), pip-audit `No known vulnerabilities found` |
+| `fetch-model` | `model.pt`, `vocab.json`, `metrics.json` : `OK` (empreintes SHA-256 conformes) |
+| `build`, `push` | image `dss-lstm:091533e` dans Artifact Registry |
+| `check-vulnerabilities` | 9 HIGH (dont une seule corrigeable, `zlib`), aucune CRITICAL : `Deploy allowed` |
+| `deploy` | `deployment "dss-api" successfully rolled out` |
+
+Les deux exécutions précédentes ont échoué et ont servi à corriger le pipeline lui-même. La première bloquait au
+contrôle de vulnérabilités (pas de `python3` dans l'image gcloud) : le déploiement a été refusé, ce qui est le
+comportement voulu quand un contrôle ne peut pas s'exécuter. La seconde a déployé correctement, mais l'attente de
+fin de déploiement (5 minutes) a expiré pendant l'ajout d'un nœud au cluster ; elle est passée à 10 minutes.
+
+## Analyse critique et recommandations
+
+### Ce qui tient
+
+- **L'attaque est mesurée, pas supposée** : 500 commentaires réels, le même pipeline que l'API, un rappel qui passe de
+  78,8 % à 68,0 %. Elle a aussi été rejouée contre l'API d'une autre équipe (`attack/aurel-bonel-api/`).
+- **La défense est prouvée par la même mesure** : 35 des 40 commentaires toxiques évadés sont de nouveau détectés,
+  sans effet mesuré sur le trafic propre.
+- **L'API en dit moins à un attaquant** : un verdict à trois niveaux, sans score, probabilités ni seuils.
+- **Le seul point d'entrée public est en HTTPS** : certificat géré, TLS 1.2 minimum, HTTP redirigé ; l'ancienne
+  entrée HTTP des attaques entre équipes est fermée.
+- **Rien n'entre en production sans contrôle** : secrets, code, dépendances, intégrité du modèle et image sont
+  vérifiés, et le contrôle de l'image a refusé un déploiement le jour où il ne pouvait pas s'exécuter.
+
+### Ce qui reste fragile
+
+| Point | Pourquoi c'est un problème | Ce qu'on sait |
+|---|---|---|
+| Pas de limite de débit par client | Un client peut interroger l'API sans frein, pour l'extraire ou la saturer ; c'est la dernière remarque encore ouverte de l'audit du professeur | La limite de concurrence (`503`) protège la latence, pas l'abus d'un client |
+| La défense ne couvre qu'une édition par mot | Une perturbation de deux caractères par mot lui échappe | Elle a été mesurée à un seul taux (50 %) et une seule graine |
+| La défense a un coût en charge | Un texte rempli de mots inconnus coûte 128 ms au lieu de 47 ms (mesuré) : un levier pour un attaquant | Bornée à 20 caractères par mot et 5 000 par texte |
+| Biais sur les termes d'identité | 11,1 % de faux positifs contre 6,4 % sur les commentaires propres qui mentionnent un groupe | Mesuré, non corrigé ; 18 termes seulement |
+| Failles HIGH dans l'image | 9 failles HIGH, dont une corrigeable (`zlib`), ne bloquent pas le déploiement | Choix de politique : seules les CRITICAL corrigeables bloquent |
+| Le pipeline fait confiance à la branche `main` | Qui peut pousser sur `main` peut changer le code et les empreintes du modèle en même temps | Aucune protection de branche n'a été mise en place dans le projet (à vérifier dans les réglages GitHub) |
+| Une seule exécution par mesure | Les écarts de quelques points ne sont pas tous significatifs | Vrai pour la charge, l'attaque, la défense et le biais |
+
+### Recommandations, par ordre de priorité
+
+1. **Limite de débit par clé API**, avec `429` et `Retry-After` (dans l'API ou par Cloud Armor devant le load
+   balancer) : ralentit l'extraction du modèle et protège les autres clients.
+2. **Protéger `main`** (revue obligatoire, pas de push direct) : le pipeline n'est sûr que si sa source l'est.
+3. **Entraînement avec des données bruitées** (cours n°5, section 15) : rendre le modèle lui-même robuste aux fautes,
+   au lieu de dépendre seulement de la correction à l'entrée.
+4. **Atténuer le biais** : ajouter à l'entraînement des commentaires propres qui mentionnent des groupes, puis
+   remesurer avec `compliance/bias_check.py`.
+5. **Reconstruire l'image régulièrement** (mise à jour des paquets Debian) pour absorber les correctifs comme celui de
+   `zlib`, et envisager de bloquer aussi les HIGH corrigeables.
+6. **Binary Authorization** : n'autoriser sur le cluster que les images signées par le pipeline.

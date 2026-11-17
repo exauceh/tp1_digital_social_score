@@ -1,0 +1,58 @@
+# HTTPS in front of the API: Google's external Application Load Balancer (L7), created by the
+# Ingress below, terminates TLS with a Google-managed certificate.
+#
+# The project has no domain name: sslip.io resolves "136-81-21-137.sslip.io" to 136.81.21.137, the
+# global static IP reserved for this load balancer (gcloud compute addresses create dss-api-ip
+# --global), which is enough for Google to validate and renew the certificate. If the IP changes,
+# the host name below must change with it.
+#
+# Prerequisites created with gcloud (step_deployment.md, step 22): the address "dss-api-ip" and the
+# SSL policy "dss-tls12" (TLS 1.2 minimum, MODERN profile).
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: dss-api-cert
+spec:
+  domains:
+    - 136-81-21-137.sslip.io
+---
+# Plain HTTP is answered with a redirect to HTTPS, never served.
+apiVersion: networking.gke.io/v1beta1
+kind: FrontendConfig
+metadata:
+  name: dss-api
+spec:
+  sslPolicy: dss-tls12
+  redirectToHttps:
+    enabled: true
+    responseCodeName: MOVED_PERMANENTLY_DEFAULT
+---
+# Load balancer health check on the same /health route as the Kubernetes probes, on the pods' port
+# (container-native load balancing sends traffic straight to the pods).
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: dss-api
+spec:
+  healthCheck:
+    type: HTTP
+    requestPath: /health
+    port: 8080
+    checkIntervalSec: 10
+    timeoutSec: 5
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dss-api
+  annotations:
+    kubernetes.io/ingress.class: gce
+    kubernetes.io/ingress.global-static-ip-name: dss-api-ip
+    networking.gke.io/managed-certificates: dss-api-cert
+    networking.gke.io/v1beta1.FrontendConfig: dss-api
+spec:
+  defaultBackend:
+    service:
+      name: dss-api
+      port:
+        name: http

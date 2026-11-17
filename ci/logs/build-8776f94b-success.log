@@ -1,0 +1,579 @@
+
+To live stream log output for this build, please ensure the grpc module is installed. Run:
+  pip install grpcio
+and set:
+  export CLOUDSDK_PYTHON_SITEPACKAGES=1
+
+----------------------------- REMOTE BUILD OUTPUT ------------------------------
+starting build "8776f94b-2931-46da-9249-1382d4618d84" using release legacy
+FETCHSOURCE
+From https://github.com/exauceh/tp1_digital_social_score
+ * branch            091533e0e417e4bbba495ed24776f4ff6ddc940d -> FETCH_HEAD
+Updating files:  67% (88/131)Updating files:  67% (89/131)Updating files:  68% (90/131)Updating files:  69% (91/131)Updating files:  70% (92/131)Updating files:  71% (94/131)Updating files:  72% (95/131)Updating files:  73% (96/131)Updating files:  74% (97/131)Updating files:  75% (99/131)Updating files:  76% (100/131)Updating files:  77% (101/131)Updating files:  78% (103/131)Updating files:  79% (104/131)Updating files:  80% (105/131)Updating files:  81% (107/131)Updating files:  82% (108/131)Updating files:  83% (109/131)Updating files:  84% (111/131)Updating files:  85% (112/131)Updating files:  86% (113/131)Updating files:  87% (114/131)Updating files:  88% (116/131)Updating files:  89% (117/131)Updating files:  90% (118/131)Updating files:  91% (120/131)Updating files:  92% (121/131)Updating files:  93% (122/131)Updating files:  94% (124/131)Updating files:  95% (125/131)Updating files:  96% (126/131)Updating files:  97% (128/131)Updating files:  98% (129/131)Updating files:  99% (130/131)Updating files: 100% (131/131)Updating files: 100% (131/131), done.
+HEAD is now at 091533e Wait up to 10 minutes for the rollout
+GitCommit:
+091533e0e417e4bbba495ed24776f4ff6ddc940d
+BUILD
+Starting Step #0 - "secret-scan"
+Step #0 - "secret-scan": Pulling image: zricethezav/gitleaks:v8.18.4
+Step #0 - "secret-scan": v8.18.4: Pulling from zricethezav/gitleaks
+Step #0 - "secret-scan": 4abcf2066143: Pulling fs layer
+Step #0 - "secret-scan": c1963c07a115: Pulling fs layer
+Step #0 - "secret-scan": cfbddac15374: Pulling fs layer
+Step #0 - "secret-scan": 6a7c18283447: Pulling fs layer
+Step #0 - "secret-scan": 6a7c18283447: Verifying Checksum
+Step #0 - "secret-scan": 6a7c18283447: Download complete
+Step #0 - "secret-scan": c1963c07a115: Verifying Checksum
+Step #0 - "secret-scan": c1963c07a115: Download complete
+Step #0 - "secret-scan": cfbddac15374: Verifying Checksum
+Step #0 - "secret-scan": cfbddac15374: Download complete
+Step #0 - "secret-scan": 4abcf2066143: Download complete
+Step #0 - "secret-scan": 4abcf2066143: Pull complete
+Step #0 - "secret-scan": c1963c07a115: Pull complete
+Step #0 - "secret-scan": cfbddac15374: Pull complete
+Step #0 - "secret-scan": 6a7c18283447: Pull complete
+Step #0 - "secret-scan": Digest: sha256:75bdb2b2f4db213cde0b8295f13a88d6b333091bbfbf3012a4e083d00d31caba
+Step #0 - "secret-scan": Status: Downloaded newer image for zricethezav/gitleaks:v8.18.4
+Step #0 - "secret-scan": docker.io/zricethezav/gitleaks:v8.18.4
+Step #0 - "secret-scan":
+Step #0 - "secret-scan":     ?
+Step #0 - "secret-scan":     ??
+Step #0 - "secret-scan":     ? ?
+Step #0 - "secret-scan":     ? ?
+Step #0 - "secret-scan":     ?    gitleaks
+Step #0 - "secret-scan":
+Step #0 - "secret-scan": [90m2:23PM[0m [32mINF[0m scan completed in 2m5s
+Step #0 - "secret-scan": [90m2:23PM[0m [32mINF[0m no leaks found
+Finished Step #0 - "secret-scan"
+Starting Step #1 - "test"
+Step #1 - "test": Pulling image: python:3.13-slim
+Step #1 - "test": 3.13-slim: Pulling from library/python
+Step #1 - "test": 37fb86c2a767: Already exists
+Step #1 - "test": 0069ea31add0: Pulling fs layer
+Step #1 - "test": faa890a31e98: Pulling fs layer
+Step #1 - "test": f7a79299dedd: Pulling fs layer
+Step #1 - "test": f7a79299dedd: Download complete
+Step #1 - "test": 0069ea31add0: Verifying Checksum
+Step #1 - "test": 0069ea31add0: Download complete
+Step #1 - "test": 0069ea31add0: Pull complete
+Step #1 - "test": faa890a31e98: Verifying Checksum
+Step #1 - "test": faa890a31e98: Download complete
+Step #1 - "test": faa890a31e98: Pull complete
+Step #1 - "test": f7a79299dedd: Pull complete
+Step #1 - "test": Digest: sha256:e48f59cdba69a3cbd9ed2cf0f348d90d45a8d350d98134cf1070bc106ee9ed90
+Step #1 - "test": Status: Downloaded newer image for python:3.13-slim
+Step #1 - "test": docker.io/library/python:3.13-slim
+Step #1 - "test": WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+Step #1 - "test":
+Step #1 - "test": [notice] A new release of pip is available: 26.2.2 -> 26.3
+Step #1 - "test": [notice] To update, run: pip install --upgrade pip
+Step #1 - "test": Downloading cpython-3.14.10-linux-x86_64-gnu (download) (35.2MiB)
+Step #1 - "test":  Downloaded cpython-3.14.10-linux-x86_64-gnu (download)
+Step #1 - "test": Using CPython 3.14.10
+Step #1 - "test": Creating virtual environment at: .venv
+Step #1 - "test": Resolved 157 packages in 216ms
+Step #1 - "test":    Building tp1-digital-social-score @ file:///workspace
+Step #1 - "test": warning: `build_system.requires = ["uv-build>=0.12.15,<0.13.0"]` does not contain the current uv version 0.13.9
+Step #1 - "test":       Built tp1-digital-social-score @ file:///workspace
+Step #1 - "test": Downloading numpy (15.9MiB)
+Step #1 - "test": Downloading sympy (6.0MiB)
+Step #1 - "test": Downloading torch (199.8MiB)
+Step #1 - "test": Downloading jedi (4.7MiB)
+Step #1 - "test": Downloading mypy (14.7MiB)
+Step #1 - "test": Downloading spacy (33.2MiB)
+Step #1 - "test": Downloading blis (13.6MiB)
+Step #1 - "test": Downloading thinc (4.0MiB)
+Step #1 - "test": Downloading networkx (2.0MiB)
+Step #1 - "test": Downloading pip (1.9MiB)
+Step #1 - "test": Downloading ast-serialize (1.3MiB)
+Step #1 - "test": Downloading pygments (1.2MiB)
+Step #1 - "test": Downloading ruff (10.1MiB)
+Step #1 - "test": Downloading grpcio (7.0MiB)
+Step #1 - "test": Downloading srsly (1.2MiB)
+Step #1 - "test": Downloading cryptography (4.5MiB)
+Step #1 - "test": Downloading pydantic-core (2.2MiB)
+Step #1 - "test": Downloading debugpy (3.8MiB)
+Step #1 - "test": Downloading pandas (11.5MiB)
+Step #1 - "test": Downloading en-core-web-sm (12.2MiB)
+Step #1 - "test":  Downloaded ast-serialize
+Step #1 - "test":  Downloaded srsly
+Step #1 - "test":  Downloaded en-core-web-sm
+Step #1 - "test":  Downloaded pygments
+Step #1 - "test":  Downloaded pydantic-core
+Step #1 - "test":  Downloaded pip
+Step #1 - "test":  Downloaded networkx
+Step #1 - "test":  Downloaded thinc
+Step #1 - "test":  Downloaded debugpy
+Step #1 - "test":  Downloaded jedi
+Step #1 - "test":  Downloaded cryptography
+Step #1 - "test":  Downloaded sympy
+Step #1 - "test":  Downloaded grpcio
+Step #1 - "test":  Downloaded ruff
+Step #1 - "test":  Downloaded pandas
+Step #1 - "test":  Downloaded blis
+Step #1 - "test":  Downloaded numpy
+Step #1 - "test":  Downloaded mypy
+Step #1 - "test":  Downloaded spacy
+Step #1 - "test":  Downloaded torch
+Step #1 - "test": Prepared 124 packages in 8.30s
+Step #1 - "test": warning: Failed to hardlink files; falling back to full copy. This may lead to degraded performance.
+Step #1 - "test":          If the cache and target directories are on different filesystems, hardlinking may not be supported.
+Step #1 - "test":          If this is intentional, set `export UV_LINK_MODE=copy` or use `--link-mode=copy` to suppress this warning.
+Step #1 - "test": Installed 124 packages in 9.30s
+Step #1 - "test":  + annotated-doc==0.0.5
+Step #1 - "test":  + annotated-types==0.8.0
+Step #1 - "test":  + anyio==4.16.0
+Step #1 - "test":  + ast-serialize==0.13.1
+Step #1 - "test":  + asttokens==3.0.2
+Step #1 - "test":  + blis==1.3.4
+Step #1 - "test":  + boolean-py==5.0
+Step #1 - "test":  + cachecontrol==0.15.0
+Step #1 - "test":  + catalogue==2.0.10
+Step #1 - "test":  + certifi==2026.10.23
+Step #1 - "test":  + cffi==2.1.1
+Step #1 - "test":  + charset-normalizer==3.5.2
+Step #1 - "test":  + click==8.5.1
+Step #1 - "test":  + cloudpathlib==0.26.0
+Step #1 - "test":  + comm==0.2.3
+Step #1 - "test":  + confection==1.3.4
+Step #1 - "test":  + cryptography==50.0.2
+Step #1 - "test":  + cyclonedx-python-lib==11.12.0
+Step #1 - "test":  + cymem==2.0.16
+Step #1 - "test":  + debugpy==1.8.22
+Step #1 - "test":  + defusedxml==0.7.1
+Step #1 - "test":  + en-core-web-sm==3.8.0 (from https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl)
+Step #1 - "test":  + executing==2.3.0
+Step #1 - "test":  + fastapi==0.162.2
+Step #1 - "test":  + filelock==4.2.9
+Step #1 - "test":  + fsspec==2026.9.0
+Step #1 - "test":  + google-api-core==2.44.0
+Step #1 - "test":  + google-auth==2.62.2
+Step #1 - "test":  + google-cloud-secret-manager==2.32.0
+Step #1 - "test":  + googleapis-common-protos==1.76.0
+Step #1 - "test":  + grpc-google-iam-v1==0.14.6
+Step #1 - "test":  + grpcio==1.85.1
+Step #1 - "test":  + grpcio-status==1.85.1
+Step #1 - "test":  + h11==0.16.0
+Step #1 - "test":  + httpcore==1.0.9
+Step #1 - "test":  + httpx==0.28.1
+Step #1 - "test":  + idna==3.20
+Step #1 - "test":  + iniconfig==2.3.1
+Step #1 - "test":  + ipykernel==7.4.0
+Step #1 - "test":  + ipython==9.18.1
+Step #1 - "test":  + ipython-pygments-lexers==1.1.1
+Step #1 - "test":  + jedi==0.20.1
+Step #1 - "test":  + jinja2==3.1.6
+Step #1 - "test":  + jupyter-client==8.10.0
+Step #1 - "test":  + jupyter-core==5.9.1
+Step #1 - "test":  + librt==0.16.0
+Step #1 - "test":  + license-expression==30.4.4
+Step #1 - "test":  + markdown-it-py==4.2.0
+Step #1 - "test":  + markupsafe==3.0.4
+Step #1 - "test":  + matplotlib-inline==0.2.2
+Step #1 - "test":  + mdurl==0.1.2
+Step #1 - "test":  + mpmath==1.3.0
+Step #1 - "test":  + msgpack==1.2.4
+Step #1 - "test":  + murmurhash==1.0.16
+Step #1 - "test":  + mypy==2.4.1
+Step #1 - "test":  + mypy-extensions==1.2.0
+Step #1 - "test":  + nest-asyncio2==1.7.4
+Step #1 - "test":  + networkx==3.7
+Step #1 - "test":  + numpy==2.5.4
+Step #1 - "test":  + opentelemetry-api==1.45.2
+Step #1 - "test":  + packageurl-python==0.17.6
+Step #1 - "test":  + packaging==26.3
+Step #1 - "test":  + pandas==3.1.1
+Step #1 - "test":  + pandas-stubs==3.1.0.261029
+Step #1 - "test":  + parso==0.8.7
+Step #1 - "test":  + pathspec==1.1.1
+Step #1 - "test":  + pexpect==4.9.0
+Step #1 - "test":  + pip==26.3
+Step #1 - "test":  + pip-api==0.0.35
+Step #1 - "test":  + pip-audit==2.10.1
+Step #1 - "test":  + pip-requirements-parser==32.0.1
+Step #1 - "test":  + platformdirs==4.14.5
+Step #1 - "test":  + pluggy==1.7.0
+Step #1 - "test":  + preshed==3.0.15
+Step #1 - "test":  + prometheus-client==0.26.0
+Step #1 - "test":  + prompt-toolkit==3.0.53
+Step #1 - "test":  + proto-plus==1.29.0
+Step #1 - "test":  + protobuf==7.36.2
+Step #1 - "test":  + psutil==7.2.2
+Step #1 - "test":  + ptyprocess==0.7.0
+Step #1 - "test":  + pure-eval==0.2.4
+Step #1 - "test":  + py-serializable==2.2.0
+Step #1 - "test":  + pyasn1==0.6.5
+Step #1 - "test":  + pyasn1-modules==0.4.2
+Step #1 - "test":  + pycparser==3.12
+Step #1 - "test":  + pydantic==2.14.3
+Step #1 - "test":  + pydantic-core==2.50.4
+Step #1 - "test":  + pygments==2.21.0
+Step #1 - "test":  + pyparsing==3.3.3
+Step #1 - "test":  + pytest==9.2.0
+Step #1 - "test":  + python-dateutil==4.0.0
+Step #1 - "test":  + pyzmq==27.3.0
+Step #1 - "test":  + requests==2.34.2
+Step #1 - "test":  + rich==15.0.0
+Step #1 - "test":  + ruff==0.17.4
+Step #1 - "test":  + setuptools==84.2.1
+Step #1 - "test":  + shellingham==1.5.4
+Step #1 - "test":  + smart-open==9.0.2
+Step #1 - "test":  + sortedcontainers==2.4.0
+Step #1 - "test":  + spacy==3.8.18
+Step #1 - "test":  + spacy-legacy==3.0.12
+Step #1 - "test":  + spacy-loggers==1.0.5
+Step #1 - "test":  + srsly==2.5.6
+Step #1 - "test":  + stack-data==0.6.3
+Step #1 - "test":  + starlette==1.10.0
+Step #1 - "test":  + sympy==1.14.0
+Step #1 - "test":  + thinc==8.3.14
+Step #1 - "test":  + tomli==2.5.0
+Step #1 - "test":  + tomli-w==1.2.0
+Step #1 - "test":  + torch==2.15.0+cpu
+Step #1 - "test":  + tornado==6.6
+Step #1 - "test":  + tp1-digital-social-score==0.1.0 (from file:///workspace)
+Step #1 - "test":  + tqdm==4.70.1
+Step #1 - "test":  + traitlets==5.16.1
+Step #1 - "test":  + typer==0.28.0
+Step #1 - "test":  + typing-extensions==4.16.0
+Step #1 - "test":  + typing-inspection==0.4.5
+Step #1 - "test":  + tzdata==2026.6
+Step #1 - "test":  + urllib3==2.8.0
+Step #1 - "test":  + uvicorn==0.54.0
+Step #1 - "test":  + wasabi==1.1.3
+Step #1 - "test":  + wcwidth==0.9.4
+Step #1 - "test":  + weasel==1.0.1
+Step #1 - "test":  + wrapt==2.5.2
+Step #1 - "test": Downloading tokenizers (3.2MiB)
+Step #1 - "test": Downloading scipy (33.7MiB)
+Step #1 - "test": Downloading scikit-learn (8.7MiB)
+Step #1 - "test": Downloading hf-xet (4.1MiB)
+Step #1 - "test": Downloading transformers (12.4MiB)
+Step #1 - "test":  Downloaded tokenizers
+Step #1 - "test":  Downloaded hf-xet
+Step #1 - "test":  Downloaded scikit-learn
+Step #1 - "test":  Downloaded transformers
+Step #1 - "test":  Downloaded scipy
+Step #1 - "test": warning: Failed to hardlink files; falling back to full copy. This may lead to degraded performance.
+Step #1 - "test":          If the cache and target directories are on different filesystems, hardlinking may not be supported.
+Step #1 - "test":          If this is intentional, set `export UV_LINK_MODE=copy` or use `--link-mode=copy` to suppress this warning.
+Step #1 - "test": Installed 21 packages in 1.03s
+Step #1 - "test": All checks passed!
+Step #1 - "test": Success: no issues found in 26 source files
+Step #1 - "test": .......................................................................s [ 43%]
+Step #1 - "test": ........................................................................ [ 87%]
+Step #1 - "test": .....................                                                    [100%]
+Step #1 - "test": 164 passed, 1 skipped in 11.82s
+Step #1 - "test": WARNING:pip_audit._cli:--no-deps is supported, but users are encouraged to fully hash their pinned dependencies
+Step #1 - "test": WARNING:pip_audit._cli:Consider using a tool like `pip-compile`: https://pip-tools.readthedocs.io/en/latest/#using-hashes
+Step #1 - "test": No known vulnerabilities found
+Step #1 - "test": Name           Skip Reason
+Step #1 - "test": -------------- ---------------------------------------------------------------
+Step #1 - "test": en-core-web-sm URL requirements cannot be pinned to a specific package version
+Finished Step #1 - "test"
+Starting Step #2 - "fetch-model"
+Step #2 - "fetch-model": Pulling image: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+Step #2 - "fetch-model": slim: Pulling from google.com/cloudsdktool/cloud-sdk
+Step #2 - "fetch-model": Digest: sha256:e8394c66f4f66336af311343ff9a84c84521f8c1113ebc8abfe98bab9a155099
+Step #2 - "fetch-model": Status: Downloaded newer image for gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+Step #2 - "fetch-model": gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+Step #2 - "fetch-model": Copying gs://tp1-digital-score-models/lstm/metrics.json to file://models/lstm/metrics.json
+Step #2 - "fetch-model": Copying gs://tp1-digital-score-models/lstm/model.pt to file://models/lstm/model.pt
+Step #2 - "fetch-model":
+Step #2 - "fetch-model": Copying gs://tp1-digital-score-models/lstm/vocab.json to file://models/lstm/vocab.json
+Step #2 - "fetch-model": ...............
+Step #2 - "fetch-model":
+Step #2 - "fetch-model": Average throughput: 13.2MiB/s
+Step #2 - "fetch-model": models/lstm/metrics.json: OK
+Step #2 - "fetch-model": models/lstm/model.pt: OK
+Step #2 - "fetch-model": models/lstm/vocab.json: OK
+Finished Step #2 - "fetch-model"
+Starting Step #3 - "build"
+Step #3 - "build": Already have image (with digest): gcr.io/cloud-builders/docker
+Step #3 - "build": Sending build context to Docker daemon  30.79MB
+Step #3 - "build": Step 1/14 : FROM python:3.14-slim
+Step #3 - "build": 3.14-slim: Pulling from library/python
+Step #3 - "build": 37fb86c2a767: Already exists
+Step #3 - "build": d6d089a6c0a2: Pulling fs layer
+Step #3 - "build": 0e665593ff40: Pulling fs layer
+Step #3 - "build": ce3c2a9291f8: Pulling fs layer
+Step #3 - "build": ce3c2a9291f8: Verifying Checksum
+Step #3 - "build": ce3c2a9291f8: Download complete
+Step #3 - "build": d6d089a6c0a2: Verifying Checksum
+Step #3 - "build": d6d089a6c0a2: Download complete
+Step #3 - "build": d6d089a6c0a2: Pull complete
+Step #3 - "build": 0e665593ff40: Verifying Checksum
+Step #3 - "build": 0e665593ff40: Download complete
+Step #3 - "build": 0e665593ff40: Pull complete
+Step #3 - "build": ce3c2a9291f8: Pull complete
+Step #3 - "build": Digest: sha256:9aaa474097d094040649f2162a627c0049b408f52138d980916788d80f04802f
+Step #3 - "build": Status: Downloaded newer image for python:3.14-slim
+Step #3 - "build":  ---> d8f0d5177291
+Step #3 - "build": Step 2/14 : COPY --from=ghcr.io/astral-sh/uv:0.12.15 /uv /usr/local/bin/uv
+Step #3 - "build": 0.12.15: Pulling from astral-sh/uv
+Step #3 - "build": a5174b149676: Pulling fs layer
+Step #3 - "build": 5c3c0ad58b95: Pulling fs layer
+Step #3 - "build": 5c3c0ad58b95: Verifying Checksum
+Step #3 - "build": 5c3c0ad58b95: Download complete
+Step #3 - "build": a5174b149676: Verifying Checksum
+Step #3 - "build": a5174b149676: Download complete
+Step #3 - "build": a5174b149676: Pull complete
+Step #3 - "build": 5c3c0ad58b95: Pull complete
+Step #3 - "build": Digest: sha256:62f8c047d0a0e9ece6b53fc63df902585a67a47a7f318ddec4a37db586edc8e3
+Step #3 - "build": Status: Downloaded newer image for ghcr.io/astral-sh/uv:0.12.15
+Step #3 - "build":  ---> 027724d9e8f1
+Step #3 - "build": Step 3/14 : ENV UV_COMPILE_BYTECODE=1     UV_NO_CACHE=1     UV_LINK_MODE=copy     UV_PYTHON_DOWNLOADS=never     PYTHONUNBUFFERED=1
+Step #3 - "build":  ---> Running in 43c8e2195ce6
+Step #3 - "build": Removing intermediate container 43c8e2195ce6
+Step #3 - "build":  ---> 1b810352b403
+Step #3 - "build": Step 4/14 : WORKDIR /app
+Step #3 - "build":  ---> Running in c3ed8fe91896
+Step #3 - "build": Removing intermediate container c3ed8fe91896
+Step #3 - "build":  ---> 24f774f5f4d1
+Step #3 - "build": Step 5/14 : COPY pyproject.toml uv.lock README.md ./
+Step #3 - "build":  ---> 8ea653e0301d
+Step #3 - "build": Step 6/14 : RUN uv sync --frozen --no-default-groups --no-install-project --no-editable
+Step #3 - "build":  ---> Running in 805f76888a0e
+Step #3 - "build": [91mUsing CPython 3.14.10 interpreter at: /usr/local/bin/python3
+Step #3 - "build": [0m[91mCreating virtual environment at: .venv[0m[91m
+Step #3 - "build": [0m[91mDownloading torch (199.8MiB)
+Step #3 - "build": [0m[91mDownloading en-core-web-sm (12.2MiB)
+Step #3 - "build": [0m[91mDownloading[0m[91m pandas (11.5MiB)
+Step #3 - "build": [0m[91mDownloading sympy (6.0MiB)
+Step #3 - "build": [0m[91mDownloading cryptography (4.5MiB)
+Step #3 - "build": [0m[91mDownloading pygments (1.2MiB)
+Step #3 - "build": [0m[91mDownloading numpy (15.9MiB)
+Step #3 - "build": [0m[91mDownloading grpcio (7.0MiB)
+Step #3 - "build": [0m[91mDownloading pydantic-core (2.2MiB)
+Step #3 - "build": [0m[91mDownloading networkx (2.0MiB)
+Step #3 - "build": [0m[91mDownloading thinc (4.0MiB)
+Step #3 - "build": [0m[91mDownloading[0m[91m spacy (33.2MiB)
+Step #3 - "build": [0m[91mDownloading srsly (1.2MiB)
+Step #3 - "build": [0m[91mDownloading blis (13.6MiB)
+Step #3 - "build": [0m[91m [0m[91mDownloaded[0m[91m [0m[91men-core-web-sm[0m[91m
+Step #3 - "build": [0m[91m [0m[91mDownloaded[0m[91m [0m[91msrsly[0m[91m
+Step #3 - "build": [0m[91m [0m[91mDownloaded [0m[91mpygments[0m[91m
+Step #3 - "build": [0m[91m [0m[91mDownloaded[0m[91m [0m[91mnetworkx[0m[91m
+Step #3 - "build": [0m[91m Downloaded pydantic-core
+Step #3 - "build": [0m[91m Downloaded thinc
+Step #3 - "build": [0m[91m Downloaded cryptography
+Step #3 - "build": [0m[91m Downloaded sympy
+Step #3 - "build": [0m[91m [0m[91mDownloaded[0m[91m [0m[91mgrpcio[0m[91m
+Step #3 - "build": [0m[91m Downloaded pandas
+Step #3 - "build": [0m[91m Downloaded blis
+Step #3 - "build": [0m[91m [0m[91mDownloaded[0m[91m [0m[91mnumpy[0m[91m
+Step #3 - "build": [0m[91m [0m[91mDownloaded[0m[91m [0m[91mspacy[0m[91m
+Step #3 - "build": [0m[91m Downloaded torch
+Step #3 - "build": [0m[91mPrepared 73 packages in 6.59s
+Step #3 - "build": [0m[91mInstalled 73 packages in 10.19s
+Step #3 - "build": [0m[91mBytecode compiled 10149 files in 36.77s
+Step #3 - "build": [0m[91m + annotated-doc==0.0.5
+Step #3 - "build":  + annotated-types==0.8.0
+Step #3 - "build":  + anyio==4.16.0
+Step #3 - "build":  + blis==1.3.4
+Step #3 - "build":  + catalogue==2.0.10
+Step #3 - "build":  + certifi==2026.10.23
+Step #3 - "build":  + cffi==2.1.1
+Step #3 - "build":  + charset-normalizer==3.5.2
+Step #3 - "build":  + click==8.5.1
+Step #3 - "build":  + cloudpathlib[0m[91m==0.26.0
+Step #3 - "build":  + confection==1.3.4
+Step #3 - "build":  + cryptography==50.0.2
+Step #3 - "build":  + cymem==2.0.16
+Step #3 - "build":  + en-core-web-sm==3.8.0 (from https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl)
+Step #3 - "build":  + fastapi==0.162.2
+Step #3 - "build":  + filelock==4.2.9
+Step #3 - "build":  + fsspec==2026.9.0
+Step #3 - "build":  + google-api-core==2.44.0
+Step #3 - "build":  + google-auth==2.62.2
+Step #3 - "build":  + google-cloud-secret-manager==2.32.0
+Step #3 - "build":  + googleapis-common-protos==1.76.0
+Step #3 - "build":  + grpc-google-iam-v1==0.14.6
+Step #3 - "build":  + grpcio==1.85.1
+Step #3 - "build":  + grpcio-status==1.85.1
+Step #3 - "build":  + h11==0.16.0
+Step #3 - "build":  + httpcore==1.0.9
+Step #3 - "build":  + httpx==0.28.1
+Step #3 - "build":  + idna==3.20
+Step #3 - "build":  + jinja2==3.1.6
+Step #3 - "build":  + markdown-it-py==4.2.0
+Step #3 - "build":  + markupsafe[0m[91m==3.0.4
+Step #3 - "build":  + mdurl==0.1.2
+Step #3 - "build":  + mpmath==1.3.0
+Step #3 - "build":  + murmurhash==1.0.16
+Step #3 - "build":  + networkx[0m[91m==3.7
+Step #3 - "build":  + numpy==2.5.4
+Step #3 - "build":  + opentelemetry-api==1.45.2
+Step #3 - "build":  + packaging==26.3
+Step #3 - "build":  + pandas==3.1.1
+Step #3 - "build":  + preshed==3.0.15
+Step #3 - "build":  + prometheus-client==0.26.0
+Step #3 - "build":  + proto-plus==1.29.0
+Step #3 - "build":  + protobuf==7.36.2
+Step #3 - "build":  + pyasn1==0.6.5
+Step #3 - "build":  + pyasn1-modules==0.4.2
+Step #3 - "build":  + pycparser==3.12
+Step #3 - "build":  + pydantic==2.14.3
+Step #3 - "build":  + pydantic-core[0m[91m==2.50.4
+Step #3 - "build":  + pygments==2.21.0
+Step #3 - "build":  + python-dateutil==4.0.0
+Step #3 - "build":  + requests==2.34.2
+Step #3 - "build":  + rich==15.0.0
+Step #3 - "build":  + setuptools==84.2.1
+Step #3 - "build":  + shellingham==1.5.4
+Step #3 - "build":  + smart-open==9.0.2
+Step #3 - "build":  + spacy==3.8.18
+Step #3 - "build":  + spacy-legacy==3.0.12
+Step #3 - "build":  + spacy-loggers==1.0.[0m[91m5
+Step #3 - "build":  + srsly==2.5.6[0m[91m
+Step #3 - "build":  + starlette==1.10.0
+Step #3 - "build":  + sympy==1[0m[91m.14.0
+Step #3 - "build":  + thinc==8.3.14
+Step #3 - "build":  + torch==2.15.0+cpu
+Step #3 - "build": [0m[91m + tqdm==4.70.1
+Step #3 - "build":  + typer==0.28.0
+Step #3 - "build":  +[0m[91m typing-extensions==4.16.0
+Step #3 - "build":  + typing-inspection==0.4.5
+Step #3 - "build":  + tzdata==2026[0m[91m.[0m[91m6
+Step #3 - "build":  + urllib3==2.8.0
+Step #3 - "build":  + uvicorn==0.54.0
+Step #3 - "build":  +[0m[91m wasabi==1.1.3
+Step #3 - "build":  + weasel==1.0.[0m[91m1
+Step #3 - "build":  + wrapt==2.5.2
+Step #3 - "build": [0mRemoving intermediate container 805f76888a0e
+Step #3 - "build":  ---> 5e3856983780
+Step #3 - "build": Step 7/14 : COPY src ./src
+Step #3 - "build":  ---> e199901dba13
+Step #3 - "build": Step 8/14 : RUN uv sync --frozen --no-default-groups --no-editable
+Step #3 - "build":  ---> Running in 0a6a325e3740
+Step #3 - "build": [91m   Building tp1-digital-social-score @ file:///app
+Step #3 - "build": [0m[91m      Built tp1-digital-social-score @ file:///app
+Step #3 - "build": [0m[91mPrepared 1 package in 21ms
+Step #3 - "build": [0m[91mInstalled 1 package in 5ms
+Step #3 - "build": [0m[91mBytecode compiled 10164 files in 1.08s
+Step #3 - "build":  + tp1-digital-social-score==0.1.[0m[91m0 (from file[0m[91m:[0m[91m//[0m[91m/app[0m[91m)[0m[91m
+Step #3 - "build": [0mRemoving intermediate container 0a6a325e3740
+Step #3 - "build":  ---> 7bbd0bf3f03c
+Step #3 - "build": Step 9/14 : COPY models/lstm ./model
+Step #3 - "build":  ---> 6e7bef5a7990
+Step #3 - "build": Step 10/14 : RUN useradd --create-home --uid 10001 appuser
+Step #3 - "build":  ---> Running in e580f4245c66
+Step #3 - "build": Removing intermediate container e580f4245c66
+Step #3 - "build":  ---> 5c662088eeca
+Step #3 - "build": Step 11/14 : USER appuser
+Step #3 - "build":  ---> Running in e9ce168c0f1f
+Step #3 - "build": Removing intermediate container e9ce168c0f1f
+Step #3 - "build":  ---> b58ef83962dc
+Step #3 - "build": Step 12/14 : ENV PATH="/app/.venv/bin:$PATH"     MODEL_DIR=/app/model     TORCH_NUM_THREADS=2
+Step #3 - "build":  ---> Running in f6c077f7f895
+Step #3 - "build": Removing intermediate container f6c077f7f895
+Step #3 - "build":  ---> f65d25de1d68
+Step #3 - "build": Step 13/14 : EXPOSE 8080
+Step #3 - "build":  ---> Running in 79c82d51e6bc
+Step #3 - "build": Removing intermediate container 79c82d51e6bc
+Step #3 - "build":  ---> d68dbe4f0015
+Step #3 - "build": Step 14/14 : CMD ["uvicorn", "tp1_digital_social_score.api:app", "--host", "0.0.0.0", "--port", "8080",      "--no-access-log", "--no-server-header", "--limit-concurrency", "200"]
+Step #3 - "build":  ---> Running in a2e071acbc1b
+Step #3 - "build": Removing intermediate container a2e071acbc1b
+Step #3 - "build":  ---> 7c2252c54996
+Step #3 - "build": Successfully built 7c2252c54996
+Step #3 - "build": Successfully tagged europe-west1-docker.pkg.dev/tp1-digital-score/dss-api/dss-lstm:091533e
+Finished Step #3 - "build"
+Starting Step #4 - "push"
+Step #4 - "push": Already have image (with digest): gcr.io/cloud-builders/docker
+Step #4 - "push": The push refers to repository [europe-west1-docker.pkg.dev/tp1-digital-score/dss-api/dss-lstm]
+Step #4 - "push": 9c10b94d43c7: Preparing
+Step #4 - "push": 68da2ae657cd: Preparing
+Step #4 - "push": 4b207ce04c47: Preparing
+Step #4 - "push": 9cdf978f89a6: Preparing
+Step #4 - "push": 7bdfc8fd939c: Preparing
+Step #4 - "push": 06e0570c69fc: Preparing
+Step #4 - "push": ddb9242555f4: Preparing
+Step #4 - "push": d8fd9f242abd: Preparing
+Step #4 - "push": cf0d544b5f33: Preparing
+Step #4 - "push": 8cfd26f2a283: Preparing
+Step #4 - "push": 8fc845bed180: Preparing
+Step #4 - "push": dd57f90311a2: Preparing
+Step #4 - "push": 8fc845bed180: Waiting
+Step #4 - "push": dd57f90311a2: Waiting
+Step #4 - "push": cf0d544b5f33: Layer already exists
+Step #4 - "push": 8cfd26f2a283: Layer already exists
+Step #4 - "push": dd57f90311a2: Layer already exists
+Step #4 - "push": 8fc845bed180: Layer already exists
+Step #4 - "push": 06e0570c69fc: Pushed
+Step #4 - "push": 9cdf978f89a6: Pushed
+Step #4 - "push": 4b207ce04c47: Pushed
+Step #4 - "push": ddb9242555f4: Pushed
+Step #4 - "push": 9c10b94d43c7: Pushed
+Step #4 - "push": 68da2ae657cd: Pushed
+Step #4 - "push": d8fd9f242abd: Pushed
+Step #4 - "push": 7bdfc8fd939c: Pushed
+Step #4 - "push": 091533e: digest: sha256:3a9073653ec94a22056c4380ff6f09e8dd4fbb7d3ff7811881b74ae7423011fd size: 2840
+Finished Step #4 - "push"
+Starting Step #5 - "check-vulnerabilities"
+Step #5 - "check-vulnerabilities": Already have image (with digest): gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+Step #5 - "check-vulnerabilities": INFO vulnerability_gate: Scan not finished yet (status: SCANNING)
+Step #5 - "check-vulnerabilities": Scan not finished (attempt 1/40), waiting 15 s
+Step #5 - "check-vulnerabilities": INFO vulnerability_gate: Scan not finished yet (status: SCANNING)
+Step #5 - "check-vulnerabilities": Scan not finished (attempt 2/40), waiting 15 s
+Step #5 - "check-vulnerabilities": INFO vulnerability_gate: Scan not finished yet (status: SCANNING)
+Step #5 - "check-vulnerabilities": Scan not finished (attempt 3/40), waiting 15 s
+Step #5 - "check-vulnerabilities": INFO vulnerability_gate: Scan finished: 91 findings {'HIGH': 9, 'LOW': 54, 'MEDIUM': 3, 'MINIMAL': 25}
+Step #5 - "check-vulnerabilities": INFO vulnerability_gate: HIGH CVE-2026-95692 openssl 3.5.7-1~deb13u3 -> no fix yet
+Step #5 - "check-vulnerabilities": INFO vulnerability_gate: HIGH CVE-2026-54370 acl 2.3.2-2 -> no fix yet
+Step #5 - "check-vulnerabilities": INFO vulnerability_gate: HIGH CVE-2026-95691 openssl 3.5.7-1~deb13u3 -> no fix yet
+Step #5 - "check-vulnerabilities": INFO vulnerability_gate: HIGH CVE-2026-88823 openssl 3.5.7-1~deb13u3 -> no fix yet
+Step #5 - "check-vulnerabilities": INFO vulnerability_gate: HIGH CVE-2026-9538 perl 5.40.1-6+deb13u1 -> no fix yet
+Step #5 - "check-vulnerabilities": INFO vulnerability_gate: HIGH CVE-2026-54371 attr 1:2.5.2-3 -> no fix yet
+Step #5 - "check-vulnerabilities": INFO vulnerability_gate: HIGH CVE-2026-85091 zlib 1:1.3.dfsg+really1.3.1-1 -> 1:1.3.dfsg+really1.3.1-1+deb13u1
+Step #5 - "check-vulnerabilities": INFO vulnerability_gate: HIGH CVE-2026-54369 acl 2.3.2-2 -> no fix yet
+Step #5 - "check-vulnerabilities": INFO vulnerability_gate: HIGH CVE-2026-107496 openssl 3.5.7-1~deb13u3 -> no fix yet
+Step #5 - "check-vulnerabilities": INFO vulnerability_gate: Deploy allowed: no CRITICAL finding with a fix available
+Finished Step #5 - "check-vulnerabilities"
+Starting Step #6 - "deploy"
+Step #6 - "deploy": Already have image (with digest): gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+Step #6 - "deploy": debconf: unable to initialize frontend: Dialog
+Step #6 - "deploy": debconf: (TERM is not set, so the dialog frontend is not usable.)
+Step #6 - "deploy": debconf: falling back to frontend: Readline
+Step #6 - "deploy": debconf: unable to initialize frontend: Readline
+Step #6 - "deploy": debconf: (This frontend requires a controlling tty.)
+Step #6 - "deploy": debconf: falling back to frontend: Teletype
+Step #6 - "deploy": debconf: unable to initialize frontend: Teletype
+Step #6 - "deploy": debconf: (This frontend requires a controlling tty.)
+Step #6 - "deploy": debconf: falling back to frontend: Noninteractive
+Step #6 - "deploy": Selecting previously unselected package google-cloud-cli-gke-gcloud-auth-plugin.
+Step #6 - "deploy": (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 51311 files and directories currently installed.)
+Step #6 - "deploy": Preparing to unpack .../google-cloud-cli-gke-gcloud-auth-plugin_594.0.0-0_amd64.deb ...
+Step #6 - "deploy": Unpacking google-cloud-cli-gke-gcloud-auth-plugin (594.0.0-0) ...
+Step #6 - "deploy": Selecting previously unselected package kubectl.
+Step #6 - "deploy": Preparing to unpack .../kubectl_1%3a594.0.0-0_amd64.deb ...
+Step #6 - "deploy": Unpacking kubectl (1:594.0.0-0) ...
+Step #6 - "deploy": Setting up google-cloud-cli-gke-gcloud-auth-plugin (594.0.0-0) ...
+Step #6 - "deploy": Setting up kubectl (1:594.0.0-0) ...
+Step #6 - "deploy": Fetching cluster endpoint and auth data.
+Step #6 - "deploy": kubeconfig entry generated for dss-std.
+Step #6 - "deploy": namespace/dss unchanged
+Step #6 - "deploy": serviceaccount/dss-api unchanged
+Step #6 - "deploy": role.rbac.authorization.k8s.io/gmp-collector-read-metrics-token unchanged
+Step #6 - "deploy": rolebinding.rbac.authorization.k8s.io/gmp-collector-read-metrics-token unchanged
+Step #6 - "deploy": service/dss-api unchanged
+Step #6 - "deploy": deployment.apps/dss-api configured
+Step #6 - "deploy": poddisruptionbudget.policy/dss-api configured
+Step #6 - "deploy": horizontalpodautoscaler.autoscaling/dss-api unchanged
+Step #6 - "deploy": podmonitoring.monitoring.googleapis.com/dss-api unchanged
+Step #6 - "deploy": rules.monitoring.googleapis.com/dss-api-slo unchanged
+Step #6 - "deploy": Waiting for deployment "dss-api" rollout to finish: 1 out of 3 new replicas have been updated...
+Step #6 - "deploy": Waiting for deployment "dss-api" rollout to finish: 1 out of 3 new replicas have been updated...
+Step #6 - "deploy": Waiting for deployment "dss-api" rollout to finish: 1 out of 3 new replicas have been updated...
+Step #6 - "deploy": Waiting for deployment "dss-api" rollout to finish: 2 out of 3 new replicas have been updated...
+Step #6 - "deploy": Waiting for deployment "dss-api" rollout to finish: 2 out of 3 new replicas have been updated...
+Step #6 - "deploy": Waiting for deployment "dss-api" rollout to finish: 2 out of 3 new replicas have been updated...
+Step #6 - "deploy": Waiting for deployment "dss-api" rollout to finish: 2 out of 3 new replicas have been updated...
+Step #6 - "deploy": Waiting for deployment "dss-api" rollout to finish: 1 old replicas are pending termination...
+Step #6 - "deploy": Waiting for deployment "dss-api" rollout to finish: 1 old replicas are pending termination...
+Step #6 - "deploy": Waiting for deployment "dss-api" rollout to finish: 1 old replicas are pending termination...
+Step #6 - "deploy": deployment "dss-api" successfully rolled out
+Finished Step #6 - "deploy"
+PUSH
+DONE
+--------------------------------------------------------------------------------
