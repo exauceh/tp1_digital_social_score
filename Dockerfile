@@ -43,4 +43,4 @@ EXPOSE 8080
 # This is only the backstop: it counts every request, probes included, so it stays high. The
 # real cap on /score (30 in flight, probes exempt) is ConcurrencyLimitMiddleware in the app.
 CMD ["uvicorn", "tp1_digital_social_score.api:app", "--host", "0.0.0.0", "--port", "8080", \
-     "--no-access-log", "--limit-concurrency", "200"]
+     "--no-access-log", "--no-server-header", "--limit-concurrency", "200"]

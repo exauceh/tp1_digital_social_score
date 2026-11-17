@@ -1,4 +1,4 @@
-"""Digital Social Score API: receives a text, returns a toxicity score from 0 to 100.
+"""Digital Social Score API: receives a text, returns a coarse toxicity verdict.
 
 Routes:
 
@@ -6,8 +6,10 @@ Routes:
 - ``GET  /metrics``: Prometheus metrics (see ``metrics.py``), aggregated numbers, never a text.
   Open unless ``METRICS_TOKEN`` is set, in which case it needs ``Authorization: Bearer <token>``
   (a separate secret from the client API keys: it does not unlock ``/score``).
-- ``POST /score``: ``{"text": "..."}`` -> ``{"score": ..., "labels": {...}, "request_id": ...}``.
-  Needs a valid API key in the ``X-API-Key`` header, otherwise the answer is ``401``.
+- ``POST /score``: ``{"text": "..."}`` -> ``{"verdict": "clean" | "slightly_toxic" | "toxic",
+  "request_id": ...}``. Needs a valid API key in the ``X-API-Key`` header, otherwise the answer is
+  ``401``. The score, the label probabilities and the decision thresholds stay server-side (see
+  ``verdict.py``): they are what an attacker needs to copy or evade the model.
 
 RGPD: the received text is anonymised (regex + spaCy NER) before it reaches the model, it is
 never stored, and it is never written to the logs. Only a request id, the client id (a pseudonym
@@ -53,7 +55,6 @@ from tp1_digital_social_score.metrics import (
     ApiMetrics,
 )
 from tp1_digital_social_score.scoring import (
-    LABELS,
     load_thresholds,
     load_weights,
     toxicity_score,
@@ -65,7 +66,9 @@ from tp1_digital_social_score.security import (
     load_metrics_token,
     metrics_token_matches,
 )
+from tp1_digital_social_score.security_headers import SecurityHeadersMiddleware
 from tp1_digital_social_score.text_pipeline import load_nlp, prepare_texts
+from tp1_digital_social_score.verdict import Verdict, verdict_of
 
 logger = logging.getLogger(__name__)
 
@@ -113,21 +116,19 @@ class ScoreRequest(BaseModel):
     text: Annotated[Text, Field(description="Texte à évaluer (anglais), 1 à 5 000 caractères")]
 
 
-class Prediction(BaseModel):
-    """Score from 0 (harmless) to 100 (very toxic) and the probability of each label."""
+class ScoreResponse(BaseModel):
+    """What the caller gets: a coarse verdict only, never the score or the label probabilities."""
 
-    score: float = Field(ge=0, le=100)
-    labels: dict[str, float]
-
-
-class ScoreResponse(Prediction):
+    verdict: Verdict
     request_id: str
 
 
-class ThresholdsResponse(BaseModel):
-    """Decision threshold of each label (``null`` when unknown), calibrated at training time."""
+@dataclass(frozen=True)
+class Assessment:
+    """Result for one text. ``score`` is for the logs and metrics only, it is never returned."""
 
-    thresholds: dict[str, float | None]
+    verdict: Verdict
+    score: float
 
 
 class HealthResponse(BaseModel):
@@ -141,10 +142,11 @@ class ScoringService:
     nlp: spacy.language.Language
     predictor: LstmPredictor
     weights: dict[str, float]
+    thresholds: dict[str, float | None]
     lock: threading.Lock
     metrics: ApiMetrics
 
-    def score(self, texts: Sequence[str]) -> list[Prediction]:
+    def score(self, texts: Sequence[str]) -> list[Assessment]:
         """Anonymise, clean and score raw texts."""
         # spaCy pipelines are not guaranteed thread-safe: one request at a time uses the models.
         with self.lock:
@@ -156,12 +158,9 @@ class ScoringService:
         scores = toxicity_score(probabilities, self.weights)
         self.metrics.observe_scores([float(score) for score in scores])
         return [
-            Prediction(
+            Assessment(
+                verdict=verdict_of([float(p) for p in row], float(score), self.thresholds),
                 score=round(float(score), 2),
-                labels={
-                    label: round(float(probability), 4)
-                    for label, probability in zip(LABELS, row, strict=True)
-                },
             )
             for score, row in zip(scores, probabilities, strict=True)
         ]
@@ -242,10 +241,10 @@ def create_app(model_dir: Path | None = None, api_keys: ApiKeyStore | None = Non
             nlp=load_nlp(),
             predictor=LstmPredictor(directory),
             weights=load_weights(directory),
+            thresholds=load_thresholds(directory),
             lock=threading.Lock(),
             metrics=metrics,
         )
-        app.state.thresholds = load_thresholds(directory)
         logger.info("Scoring service ready")
         yield
 
@@ -294,6 +293,10 @@ def create_app(model_dir: Path | None = None, api_keys: ApiKeyStore | None = Non
             template = getattr(route, "path", UNMATCHED_ROUTE)
             metrics.observe_request(request.method, template, status, time.perf_counter() - started)
 
+    # Added last, so it is the outermost layer: even the 413 and 503 answers of the middlewares
+    # below carry the headers.
+    app.add_middleware(SecurityHeadersMiddleware)
+
     async def authorize_metrics(request: Request) -> None:
         """When ``METRICS_TOKEN`` is set, require it as ``Authorization: Bearer <token>``.
 
@@ -332,27 +335,14 @@ def create_app(model_dir: Path | None = None, api_keys: ApiKeyStore | None = Non
             raise HTTPException(status_code=404, detail="Not Found")
         return Response(ui_files[name], media_type=UI_FILES[name], headers=UI_HEADERS)
 
-    @app.get(
-        "/thresholds",
-        response_model=ThresholdsResponse,
-        summary="Seuils de décision des labels",
-        description=(
-            "Seuil de chaque label, calibré à l'entraînement : un label est signalé quand sa "
-            "probabilité le dépasse. Sert à expliquer un résultat ; le score n'en dépend pas."
-        ),
-        responses={401: {"description": "Clé API absente ou invalide"}},
-        dependencies=[Depends(authenticate)],
-    )
-    def thresholds(request: Request) -> ThresholdsResponse:
-        return ThresholdsResponse(thresholds=request.app.state.thresholds)
-
     @app.post(
         "/score",
         response_model=ScoreResponse,
         summary="Évaluer la toxicité d'un texte",
         description=(
-            "Renvoie le score global (0 à 100), la probabilité de chacun des 6 labels et "
-            "l'identifiant de la requête (repris de `X-Request-ID` s'il est sûr)."
+            "Renvoie un verdict (`clean`, `slightly_toxic` ou `toxic`) et l'identifiant de la "
+            "requête (repris de `X-Request-ID` s'il est sûr). Ni score, ni probabilités, ni "
+            "seuils : ils restent côté serveur."
         ),
         responses={
             401: {"description": "Clé API absente ou invalide"},
@@ -365,16 +355,17 @@ def create_app(model_dir: Path | None = None, api_keys: ApiKeyStore | None = Non
     ) -> ScoreResponse:
         started = time.perf_counter()
         request_id = request_id_from(request)
-        prediction = get_service(request).score([body.text])[0]
+        assessment = get_service(request).score([body.text])[0]
         logger.info(
-            "score request_id=%s client=%s chars=%d score=%.2f latency_ms=%.1f",
+            "score request_id=%s client=%s chars=%d verdict=%s score=%.2f latency_ms=%.1f",
             request_id,
             client_id,
             len(body.text),
-            prediction.score,
+            assessment.verdict,
+            assessment.score,
             1000 * (time.perf_counter() - started),
         )
-        return ScoreResponse(request_id=request_id, **prediction.model_dump())
+        return ScoreResponse(request_id=request_id, verdict=assessment.verdict)
 
     return app
 

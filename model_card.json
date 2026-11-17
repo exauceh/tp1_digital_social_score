@@ -1,6 +1,6 @@
 {
   "model_name": "Digital Social Score v2",
-  "description": "Détection de propos toxiques dans un texte anglais : 6 probabilités (toxic, severe_toxic, obscene, threat, insult, identity_hate) agrégées en un score de toxicité de 0 à 100",
+  "description": "Détection de propos toxiques dans un texte anglais : 6 probabilités (toxic, severe_toxic, obscene, threat, insult, identity_hate) agrégées en un score interne de 0 à 100, réduit à un verdict à trois niveaux (clean, slightly_toxic, toxic) avant d'être renvoyé",
   "risk_level": "limité (IA Act, art. 50 : obligation de transparence) ; passe à haut risque si le score pilote seul une décision affectant l'accès d'une personne à un service ou à un droit",
   "intended_use": "Aide à la modération de commentaires : le score oriente la relecture humaine, il ne décide pas seul d'une sanction",
   "out_of_scope_use": [

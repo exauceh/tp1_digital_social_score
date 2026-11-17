@@ -169,79 +169,11 @@ button.chip:hover { border-color: var(--accent-strong); }
 
 .score-line { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
 .score-label { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-.score-value { font-size: 2.2rem; font-weight: 700; font-variant-numeric: tabular-nums; }
-.score-max { color: var(--muted); }
 .level {
-  font-size: 0.85rem;
-  font-weight: 600;
-  padding: 2px 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 4px 16px;
   border-radius: 999px;
   color: var(--on-pastel);
   background: var(--level-color, var(--border));
-}
-.gauge {
-  height: 12px;
-  border-radius: 999px;
-  background: var(--track);
-  overflow: hidden;
-  margin-top: 8px;
-}
-.gauge-fill {
-  height: 100%;
-  width: var(--value, 0%);
-  border-radius: 999px;
-  background: var(--level-color, var(--border));
-  transition: width 0.35s ease;
-}
-
-/* "Voir plus": per-label detail */
-.details { margin-top: 14px; }
-.details summary {
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--muted);
-  width: fit-content;
-  border-radius: 6px;
-}
-.details summary:hover { color: var(--text); }
-
-.labels { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 8px; }
-.label-row {
-  display: grid;
-  grid-template-columns: minmax(110px, 9rem) 1fr 4.5rem;
-  gap: 10px;
-  align-items: center;
-  font-size: 0.875rem;
-}
-.label-name small { display: block; color: var(--muted); font-size: 0.75rem; }
-.label-bar {
-  position: relative;
-  height: 10px;
-  border-radius: 999px;
-  background: var(--track);
-}
-.label-fill {
-  height: 100%;
-  width: var(--value, 0%);
-  border-radius: 999px;
-  background: var(--bar);
-}
-.label-row.over .label-fill { background: var(--bar-over); }
-.label-threshold {
-  position: absolute;
-  top: -3px;
-  bottom: -3px;
-  left: var(--position, 0%);
-  width: 2px;
-  border-radius: 1px;
-  background: var(--threshold);
-}
-.label-value { text-align: right; font-variant-numeric: tabular-nums; }
-.over-mark { color: #d47a92; }
-.label-seuil { display: block; color: var(--muted); font-size: 0.72rem; }
-
-@media (max-width: 480px) {
-  .label-row { grid-template-columns: 1fr 4.5rem; }
-  .label-bar { grid-column: 1 / -1; grid-row: 2; }
 }

@@ -176,13 +176,30 @@ Elle est écrite avec FastAPI ([api.py](src/tp1_digital_social_score/api.py)).
    marqueurs, comme pour les données d'entraînement.
 3. **Nettoyage** : le même code que pour l'entraînement (ponctuation, emojis, casse).
 4. **Modèle** : le LSTM calcule une probabilité pour chacun des 6 labels.
-5. **Score** : `score = 100 × Σ (poids × probabilité)`, avec les poids suivants.
+5. **Score** (interne) : `score = 100 × Σ (poids × probabilité)`, avec les poids suivants.
 
 | Label | `toxic` | `severe_toxic` | `threat` | `identity_hate` | `insult` | `obscene` |
 |---|---:|---:|---:|---:|---:|---:|
 | Poids | 0,40 | 0,20 | 0,15 | 0,10 | 0,10 | 0,05 |
 
 Les poids sont un choix documenté (gravité de chaque label), pas des valeurs apprises.
+
+6. **Verdict** : l'API ne renvoie **ni le score, ni les probabilités, ni les seuils**, seulement l'un de trois
+   niveaux (`clean`, `slightly_toxic`, `toxic`). Un texte est *signalé* si l'une des 6 probabilités dépasse le seuil
+   de son label (calibré à l'entraînement) ; il est alors `toxic` si son score atteint 50 ou s'il est signalé sur un
+   label grave (`severe_toxic`, `threat`, `identity_hate`), sinon `slightly_toxic` ; un texte non signalé est `clean`.
+   Le seuil de 50 et la règle des labels graves viennent de 1 000 commentaires du jeu de test : parmi les
+   commentaires signalés avec un score d'au moins 50, 201 sur 201 étaient réellement toxiques ; la règle des labels
+   graves ajoute 13 commentaires, dont 11 réellement toxiques, pour 99 % de précision sur l'ensemble du niveau
+   `toxic`. Un seul échantillon : c'est un choix argumenté, pas un optimum réglé.
+
+**Pourquoi si peu.** Les probabilités exactes, un score fin et les seuils de décision sont ce dont un attaquant a
+besoin pour copier le modèle par requêtes (*model extraction*) et pour régler une évasion juste sous la frontière
+(*adversarial example*). Le rapport d'audit Red Team du professeur l'a relevé chez d'autres équipes (score, seuil et
+nom du modèle dans chaque réponse). La route `GET /thresholds`, qui existait pour la page de test, est supprimée.
+Le score reste dans les logs et la métrique `toxicity_score` (accessibles seulement à l'exploitation), pour la
+supervision. Limite : un verdict à trois niveaux reste un oracle que l'on peut interroger ; la réduction de
+l'information le rend plus lent à exploiter, pas impossible, d'où l'intérêt d'une limite de débit par clé.
 
 **Exemple.**
 
@@ -192,27 +209,23 @@ POST /score
 ```
 
 ```json
-{
-  "score": 55.7,
-  "labels": {"toxic": 0.9968, "severe_toxic": 0.1099, "obscene": 0.7485,
-             "threat": 0.007, "insult": 0.9506, "identity_hate": 0.0274},
-  "request_id": "demo"
-}
+{"verdict": "toxic", "request_id": "demo"}
 ```
 
 L'en-tête optionnel `X-Request-ID` est repris dans la réponse et les logs s'il est sûr (lettres, chiffres, `-`, `_`,
 64 caractères au maximum), sinon un identifiant est généré.
 
-**Exemples de requêtes testées** (API locale avec le vrai modèle) :
+**Exemples de requêtes testées** (API locale avec le vrai modèle). Le score et les labels sont des valeurs internes,
+visibles dans les logs ; seule la colonne « Verdict renvoyé » sort de l'API :
 
-| Texte envoyé | Score | Labels les plus élevés |
-|---|---:|---|
-| « Thank you for fixing the article, great work! » | 0,01 | aucun (tous inférieurs à 0,001) |
-| « You are a stupid idiot and nobody cares about your edits. » | 55,70 | `toxic` 0,997 ; `insult` 0,951 |
-| « I will find you and hurt you, John Smith, you will regret this. » | 40,77 | `toxic` 0,777 ; `threat` 0,446 |
-| « Those people are all vermin, go back to your country. » | 26,39 | `toxic` 0,580 ; `insult` 0,105 |
-| « Contact me at jane.doe@example.com or 192.168.0.12, this is f*** nonsense » | 28,43 | `toxic` 0,695 |
-| deux emojis seuls | 13,80 | `obscene` 0,209 ; `insult` 0,207 |
+| Texte envoyé | Score (interne) | Labels les plus élevés (interne) | Verdict renvoyé |
+|---|---:|---|---|
+| « Thank you for fixing the article, great work! » | 0,01 | aucun (tous inférieurs à 0,001) | `clean` |
+| « You are a stupid idiot and nobody cares about your edits. » | 55,70 | `toxic` 0,997 ; `insult` 0,951 | `toxic` |
+| « I will find you and hurt you, John Smith, you will regret this. » | 40,77 | `toxic` 0,777 ; `threat` 0,446 | `toxic` |
+| « Those people are all vermin, go back to your country. » | 26,39 | `toxic` 0,580 ; `insult` 0,105 | `clean` |
+| « Contact me at jane.doe@example.com or 192.168.0.12, this is f*** nonsense » | 28,43 | `toxic` 0,695 | `slightly_toxic` |
+| deux emojis seuls | 13,80 | `obscene` 0,209 ; `insult` 0,207 | `clean` |
 
 Les entrées invalides (texte vide, plus de 5 000 caractères, champ `text` absent) renvoient `422`. Dans la
 cinquième ligne, l'e-mail et l'adresse IP sont remplacés avant que le modèle voie le texte.

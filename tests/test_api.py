@@ -129,27 +129,28 @@ def test_ui_never_injects_html(client: TestClient) -> None:
     assert "insertAdjacentHTML" not in script and "document.write" not in script
 
 
-def test_ui_shows_the_label_detail_only_on_demand(client: TestClient) -> None:
+def test_ui_shows_the_verdict_only(client: TestClient) -> None:
+    """The page must not ask for, or draw, anything the API no longer returns."""
     page = client.get("/").text
-    assert '<details id="details"' in page and "<summary>Voir plus</summary>" in page
-    assert '<details id="details" open' not in page  # collapsed by default
+    script = client.get("/ui/app.js").text
+    assert "<details" not in page and 'id="labels"' not in page and 'id="gauge"' not in page
+    for leaked in ("/thresholds", "body.labels", "body.score"):
+        assert leaked not in script
 
 
-def test_thresholds_need_a_key(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delitem(client.headers, API_KEY_HEADER)
-    assert client.get("/thresholds").status_code == 401
-
-
-def test_thresholds_cover_every_label(client: TestClient) -> None:
-    response = client.get("/thresholds")
-    assert response.status_code == 200
-    # The test artifacts record no thresholds: every label is present, with null.
-    assert response.json() == {"thresholds": dict.fromkeys(LABELS)}
+@pytest.mark.parametrize("with_key", [True, False])
+def test_the_decision_thresholds_are_not_exposed(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch, with_key: bool
+) -> None:
+    """Thresholds tell an attacker exactly how far to push a text to slip under the boundary."""
+    if not with_key:
+        monkeypatch.delitem(client.headers, API_KEY_HEADER)
+    assert client.get("/thresholds").status_code == 404
 
 
 def test_ui_routes_are_not_in_the_api_documentation(client: TestClient) -> None:
     schema = client.get("/openapi.json").json()
-    assert set(schema["paths"]) == {"/health", "/score", "/thresholds"}
+    assert set(schema["paths"]) == {"/health", "/score"}
     example = schema["components"]["schemas"]["ScoreRequest"]["examples"][0]
     assert example["text"]
 
@@ -158,10 +159,32 @@ def test_score(client: TestClient) -> None:
     response = client.post("/score", json={"text": "You are an idiot"})
     assert response.status_code == 200
     body = response.json()
-    assert 0 <= body["score"] <= 100
-    assert set(body["labels"]) == set(LABELS)
-    assert all(0 <= value <= 1 for value in body["labels"].values())
+    # Only a coarse verdict: no score, no label probabilities, nothing to copy the model from.
+    assert set(body) == {"verdict", "request_id"}
+    assert body["verdict"] in {"clean", "slightly_toxic", "toxic"}
     assert body["request_id"]
+
+
+@pytest.mark.parametrize("send_key", [True, False])
+def test_every_json_answer_carries_security_headers(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch, send_key: bool
+) -> None:
+    """Also the refusals (401): the headers come from the outermost layer."""
+    if not send_key:
+        monkeypatch.delitem(client.headers, API_KEY_HEADER)
+    response = client.post("/score", json={"text": "hello"})
+    assert response.headers["X-Content-Type-Options"] == "nosniff"
+    assert response.headers["X-Frame-Options"] == "DENY"
+    assert response.headers["Referrer-Policy"] == "no-referrer"
+    assert response.headers["Cache-Control"] == "no-store"
+    assert "max-age" in response.headers["Strict-Transport-Security"]
+    policy = response.headers["Content-Security-Policy"]
+    assert policy == "default-src 'none'; frame-ancestors 'none'"
+
+
+def test_the_test_page_keeps_its_own_content_security_policy(client: TestClient) -> None:
+    policy = client.get("/").headers["Content-Security-Policy"]
+    assert "script-src 'self'" in policy
 
 
 # --- authentication -----------------------------------------------------------------------------
