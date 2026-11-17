@@ -75,3 +75,13 @@ spec:
             severity: warning
           annotations:
             summary: "Plus d'une requete refusee (cle API invalide) par seconde pendant 5 minutes"
+
+        # The pods refuse /score requests because too many are already in flight (load shedding, 503):
+        # the service protects its latency, but some clients are turned away. Scale up or find the client.
+        - alert: RequestsShed
+          expr: sum(rate(api_requests_shed_total[5m])) > 1
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Plus d'une requete par seconde refusee (503, pods satures) pendant 5 minutes"

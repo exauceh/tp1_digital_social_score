@@ -227,3 +227,4 @@ api_keys*.txt
 *.apikey
 secret*.yaml
 credentials.md
+reports/RAPPORT-CONSOLIDE.md

@@ -588,6 +588,56 @@
           "mode": "multi"
         }
       }
+    },
+    {
+      "id": 11,
+      "type": "timeseries",
+      "title": "Requests shed with 503 (pod saturated)",
+      "description": "More than 30 /score requests already in flight on a pod: answered 503 at once instead of queued (concurrency_limit.py). Alert RequestsShed.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "gmp"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 30,
+        "w": 24,
+        "h": 6
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "gmp"
+          },
+          "expr": "sum(rate(api_requests_shed_total{}[$__rate_interval]))",
+          "legendFormat": "503 (load shedding)",
+          "interval": "15s"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "stacking": {
+              "mode": "none"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      }
     }
   ],
   "templating": {

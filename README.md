@@ -1,3 +1,95 @@
+# Digital Social Score
+
+API qui évalue la toxicité d'un commentaire en anglais (insultes, menaces, propos haineux) et renvoie un verdict :
+`clean`, `slightly_toxic` ou `toxic`. Le texte est anonymisé avant d'atteindre le modèle (LSTM), n'est jamais
+stocké, et l'API tourne sur Google Kubernetes Engine derrière un load balancer HTTPS.
+
+**En production :** <https://136-81-21-137.sslip.io> (page de test sur `/`, clé API demandée pour `/score`).
+
+```
+POST /score   {"text": "You are a stupid idiot"}   ->   {"verdict": "toxic", "request_id": "..."}
+```
+
+## Plan
+
+| | Sujet | Section |
+|---|---|---|
+| TP1 | Anonymisation (NER spaCy) et registre RGPD | [Exercice 1](#exercice-1) |
+| TP1 | Nettoyage et comparaison LSTM / BERT / LAYA | [Exercice 2](#exercice-2) |
+| TP1 | Déploiement de l'API sur GKE | [Exercice 3](#exercice-3) |
+| TP1 | Authentification, IAM, chiffrement, RGPD | [Exercice 4](#exercice-4) |
+| TP1 | Tests de charge (k6) et améliorations | [Exercice 5](#exercice-5) |
+| TP1 | Supervision Prometheus / Grafana, attaques, grille de tests | [Exercice 6](#exercice-6) |
+| TP1 | Schéma d'architecture et zero trust | [Exercice 7](#exercice-7) |
+| TP2 | Attaque adversariale, défense, IA Act, DevSecOps, analyse critique | [TP 2](#tp-2--de-la-menace-à-la-défense) |
+
+## Exécution
+
+**Prérequis :** Python 3.14 et [uv](https://docs.astral.sh/uv/). Pour le déploiement : `gcloud`, `kubectl` et un
+projet Google Cloud.
+
+**Installer les dépendances :**
+
+```powershell
+uv sync
+```
+
+**Récupérer le modèle.** Les artefacts (`models/lstm/`, 27 Mo) ne sont pas dans le dépôt. Les copier depuis le bucket
+du projet, ou les produire avec le notebook d'entraînement (`src/tp1_digital_social_score/train.ipynb`, voir
+l'Exercice 2) :
+
+```powershell
+gcloud storage cp "gs://tp1-digital-score-models/lstm/*" models/lstm/
+grep -v '^#' model-artifacts.sha256 | sha256sum --check -   # Git Bash : empreintes attendues
+```
+
+**Lancer l'API en local** (PowerShell) : une clé est générée, son empreinte est donnée à l'API, la clé elle-même
+sert à l'appeler.
+
+```powershell
+$out = uv run python -I -m tp1_digital_social_score.security generate dev
+$env:API_KEYS = $out[1]
+uv run uvicorn tp1_digital_social_score.api:app --port 8080
+```
+
+Dans un second terminal (page de test : <http://localhost:8080/>, documentation : <http://localhost:8080/docs>) :
+
+```powershell
+curl.exe -X POST http://localhost:8080/score -H "X-API-Key: $($out[0])" -H "Content-Type: application/json" -d '{\"text\": \"You are a stupid idiot\"}'
+```
+
+**Contrôles qualité** (les mêmes que le pipeline) :
+
+```powershell
+uv run ruff check src/ tests/ attack/ compliance/ ci/
+uv run mypy src/ tests/ ci/
+uv run pytest tests/ -q
+```
+
+**Déployer :** chaque push sur `main` lance le pipeline Cloud Build ([`cloudbuild.yaml`](cloudbuild.yaml)), qui teste,
+construit, scanne et déploie (TP2, Exercice 5). La mise en place initiale du projet Google Cloud (cluster, IAM,
+secrets, supervision, pipeline, HTTPS) est décrite pas à pas dans [`step_deployment.md`](step_deployment.md).
+
+**Reproduire les mesures :** les données Jigsaw se téléchargent avec `uv run --group train python -I -m
+tp1_digital_social_score.load_data` (jeton Kaggle dans `.env`, créé depuis `.env.example`). Les commandes de chaque
+mesure (attaque, défense, biais, charge) sont données dans leur section.
+
+## Organisation du dépôt
+
+| Dossier ou fichier | Contenu |
+|---|---|
+| `src/tp1_digital_social_score/` | Code de l'API (`api.py`), pipeline de texte, défense, verdict, sécurité, notebook d'entraînement |
+| `tests/` | Tests unitaires et d'intégration (pytest) |
+| `k8s/`, `monitoring/` | Manifests Kubernetes de l'API (dont HTTPS) et de la supervision (Grafana) |
+| `loadtest/` | Scénarios k6 et résultats des tests de charge |
+| `attack/` | Attaque adversariale, défense mesurée, rapport d'attaque d'une autre équipe |
+| `compliance/` | Mesure du biais (IA Act) |
+| `ci/` | Contrôle de vulnérabilités du pipeline et log d'exécution |
+| `docs/` | Schémas d'architecture et captures Grafana |
+| `cloudbuild.yaml`, `Dockerfile` | Pipeline DevSecOps et image de l'API |
+| `model_card.json`, `model-artifacts.sha256` | Fiche du modèle (IA Act) et empreintes des artefacts |
+| `step_deployment.md` | Toutes les commandes de déploiement, dans l'ordre |
+
 # Exercice 1
 
 ## Comparer la version originale et la version anonymisée et justifier chaque choix
@@ -328,7 +420,7 @@ GKE `regular`.
 | **Finalité(s)** | Attribuer un score de 0 à 100 à un texte reçu, pour aider à modérer des contenus (projet pédagogique) |
 | **Base légale** | Intérêt légitime (modération de contenus), à valider avec le test en trois étapes. En production, le fournisseur de l'API agirait comme sous-traitant de ses clients, qui restent responsables de traitement |
 | **Catégories de personnes concernées** | Auteurs des textes soumis ; personnes citées dans ces textes ; clients de l'API (titulaires d'une clé) |
-| **Catégories de données** | Texte soumis (libre : peut contenir noms, e-mails, adresses IP), traité en mémoire et anonymisé avant le modèle, jamais stocké. Clients : identifiant (pseudonyme) et hash de la clé. Logs : identifiant de requête, identifiant de client, longueur, score, latence |
+| **Catégories de données** | Texte soumis (libre : peut contenir noms, e-mails, adresses IP), traité en mémoire et anonymisé avant le modèle, jamais stocké. Clients : identifiant (pseudonyme) et hash de la clé. Logs : identifiant de requête, identifiant de client, longueur, verdict, score, latence |
 | **Données sensibles (art. 9) ?** | Non ciblées, mais un texte libre peut en contenir. Il n'est traité qu'en mémoire, le temps de la requête |
 | **Destinataires** | Internes : équipe du projet. Externes : aucun (le score revient au client qui a appelé l'API) |
 | **Sous-traitants (DPA signé ?)** | Google Cloud (GKE, Artifact Registry, Secret Manager, Cloud Logging, Cloud Monitoring). L'accord de traitement (DPA) est à confirmer dans la console |
@@ -570,10 +662,11 @@ créé à la main, absent du dépôt.
 API (/metrics) → Managed Prometheus → gmp-frontend → Grafana → port-forward
 ```
 
-Le tableau de bord « Digital Social Score - API » (`monitoring/grafana/dashboards/dss-api.json`) a 10 panneaux : débit
+Le tableau de bord « Digital Social Score - API » (`monitoring/grafana/dashboards/dss-api.json`) a 11 panneaux : débit
 par statut, latence P50/P95/P99 avec la ligne de l'objectif de 300 ms, pods disponibles, CPU, mémoire, échecs
 d'authentification, requêtes en cours (la file d'attente), temps d'inférence, part des requêtes sous 300 ms, et score de
-toxicité médian et P95. Les six alertes de l'Exercice 5 restent actives.
+toxicité médian et P95, et requêtes refusées en `503` quand un pod est saturé (ajouté avec la limite de
+concurrence). Les six alertes de l'Exercice 5 restent actives ; une septième, `RequestsShed`, signale ces refus.
 
 Captures prises pendant les simulations d'attaque : `docs/captures/grafana-attaques-1.png` et
 `docs/captures/grafana-attaques-2.png`.
@@ -687,7 +780,7 @@ flowchart LR
     end
     sm[("Secret Manager<br/>empreintes des clés")]
     logs[("Cloud Logging<br/>logs pseudonymisés")]
-    mp[("Managed Prometheus<br/>métriques, 6 alertes")]
+    mp[("Managed Prometheus<br/>métriques, 7 alertes")]
     ar[("Artifact Registry<br/>images")]
   end
 
@@ -749,7 +842,7 @@ flowchart LR
 | Secret Manager | Empreintes SHA-256 des clés API (jamais les clés) | Rotation sans reconstruire l'image ; lecture limitée à ce seul secret |
 | Artifact Registry | Images Docker, scannées automatiquement | Registre privé dans la même région ; le scan bloque le déploiement (TP2, Exercice 5) |
 | Cloud Storage | Artefacts du modèle (27 Mo, absents du dépôt git) | Lu par le pipeline uniquement, vérifié par empreinte SHA-256 |
-| Managed Prometheus, Grafana | Métriques, 6 alertes, tableau de bord | Pas de serveur Prometheus à maintenir ; Grafana accessible seulement par tunnel |
+| Managed Prometheus, Grafana | Métriques, 7 alertes, tableau de bord | Pas de serveur Prometheus à maintenir ; Grafana accessible seulement par tunnel |
 | Cloud Logging | Logs de l'API, 30 jours | Pseudonymisés : identifiant de requête, client, longueur, verdict, score, latence ; jamais le texte ni l'IP |
 | Cloud Build | Pipeline : secrets, tests, dépendances, intégrité du modèle, build, scan, déploiement | Compte dédié à droits minimaux, déclenché par un push sur `main` |
 
