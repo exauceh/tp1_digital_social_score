@@ -135,7 +135,9 @@ steps:
         kubectl kustomize k8s \
           | sed "s|IMAGE_PLACEHOLDER|$$IMAGE|g; s|PROJECT_ID_PLACEHOLDER|${PROJECT_ID}|g" \
           | kubectl apply -f -
-        kubectl rollout status "deployment/dss-api" -n "${_NAMESPACE}" --timeout=300s
+        # 10 min: when the cluster lacks room, the autoscaler adds a node (~1 min) and the new node
+        # pulls the 500 MB image (~1 min) before the model loads; 5 min proved too short.
+        kubectl rollout status "deployment/dss-api" -n "${_NAMESPACE}" --timeout=600s
 
 options:
   logging: CLOUD_LOGGING_ONLY
