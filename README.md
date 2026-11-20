@@ -654,9 +654,13 @@ perte d'un nœud n'est donc pas mesurée.
 
 Les métriques de l'API (`/metrics`) sont collectées par Managed Service for Prometheus. Grafana les affiche grâce à un
 relais, `gmp-frontend`, qui interroge Managed Prometheus avec un compte en lecture seule (`roles/monitoring.viewer`,
-Workload Identity, sans fichier de clé). Les deux pods sont dans le namespace `monitoring` et ne sont accessibles que par
-`kubectl port-forward` : rien n'est exposé sur Internet. Le mot de passe administrateur est dans un Secret Kubernetes
-créé à la main, absent du dépôt.
+Workload Identity, sans fichier de clé). Les deux pods sont dans le namespace `monitoring`. Grafana est publié en HTTPS
+sur <https://136-68-86-97.sslip.io> ([`monitoring/grafana/https.yaml`](monitoring/grafana/https.yaml)), avec le même
+montage que l'API : load balancer applicatif, certificat géré par Google, TLS 1.2 minimum, HTTP redirigé. Les lecteurs
+extérieurs (le professeur) ont un compte **Viewer** : ils voient le tableau de bord et interrogent les métriques, mais
+ne peuvent rien créer, modifier ni administrer (vérifié : `403`). Pas d'inscription ni d'accès anonyme. Le compte
+administrateur n'est jamais partagé ; son mot de passe est dans un Secret Kubernetes créé à la main, absent du dépôt.
+Les comptes sont conservés sur un disque persistant. `gmp-frontend` reste interne.
 
 ```
 API (/metrics) → Managed Prometheus → gmp-frontend → Grafana → port-forward
@@ -792,7 +796,7 @@ flowchart LR
   coll -- "6" --> mp
   front -- "7 · Workload Identity" --> mp
   graf -. "8 · HTTP" .-> front
-  ops -- "9 · IAM, port-forward" --> graf
+  ops -- "9 · HTTPS, compte Grafana" --> graf
   ar -- "15 · pull, dss-nodes" --> api
 ```
 
@@ -842,7 +846,7 @@ flowchart LR
 | Secret Manager | Empreintes SHA-256 des clés API (jamais les clés) | Rotation sans reconstruire l'image ; lecture limitée à ce seul secret |
 | Artifact Registry | Images Docker, scannées automatiquement | Registre privé dans la même région ; le scan bloque le déploiement (TP2, Exercice 5) |
 | Cloud Storage | Artefacts du modèle (27 Mo, absents du dépôt git) | Lu par le pipeline uniquement, vérifié par empreinte SHA-256 |
-| Managed Prometheus, Grafana | Métriques, 7 alertes, tableau de bord | Pas de serveur Prometheus à maintenir ; Grafana accessible seulement par tunnel |
+| Managed Prometheus, Grafana | Métriques, 7 alertes, tableau de bord | Pas de serveur Prometheus à maintenir ; Grafana en HTTPS, compte en lecture seule pour les lecteurs extérieurs |
 | Cloud Logging | Logs de l'API, 30 jours | Pseudonymisés : identifiant de requête, client, longueur, verdict, score, latence ; jamais le texte ni l'IP |
 | Cloud Build | Pipeline : secrets, tests, dépendances, intégrité du modèle, build, scan, déploiement | Compte dédié à droits minimaux, déclenché par un push sur `main` |
 
@@ -858,7 +862,7 @@ flowchart LR
 | 6 | Collecteur → Managed Prometheus | Identité gérée par Google | TLS |
 | 7 | `gmp-frontend` → Managed Prometheus | Workload Identity, `monitoring.viewer` (lecture seule) | TLS |
 | 8 | Grafana → `gmp-frontend` | Aucune (même namespace) | Non (HTTP interne) |
-| 9 | Exploitant → Grafana | IAM Google (accès au cluster) puis mot de passe Grafana | TLS jusqu'au cluster (`kubectl port-forward`) |
+| 9 | Lecteur → Grafana | Compte Grafana : `Viewer` pour les lecteurs extérieurs, `admin` réservé à l'exploitation | TLS 1.2 minimum (load balancer applicatif, certificat géré) |
 | 10, 11 | GitHub → Cloud Build | Application GitHub de Cloud Build, déclencheur sur `main` | TLS |
 | 12 | Cloud Build → Cloud Storage | `dss-deployer` : `storage.objectViewer` sur ce seul bucket | TLS ; intégrité par SHA-256 |
 | 13 | Cloud Build → Artifact Registry | `dss-deployer` : `artifactregistry.writer` sur ce seul dépôt, lecture des résultats du scan | TLS |

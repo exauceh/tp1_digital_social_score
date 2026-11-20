@@ -1,0 +1,56 @@
+# Grafana on HTTPS, for read-only access by people outside the cluster (the professor): same setup
+# as the API (k8s/https.yaml), on its own load balancer because an Ingress only routes to Services
+# of its own namespace.
+#
+# sslip.io resolves "136-68-86-97.sslip.io" to 136.68.86.97, the global static IP reserved for this
+# load balancer (gcloud compute addresses create grafana-ip --global). The SSL policy "dss-tls12"
+# is the one the API already uses (step_deployment.md, step 22).
+#
+# Exposure is limited by Grafana itself: no sign-up, no anonymous access, a dedicated Viewer account
+# for outside readers (step_deployment.md, step 23); the admin account is never shared. Grafana only
+# reads metrics, through gmp-frontend, which only has roles/monitoring.viewer.
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: grafana-cert
+spec:
+  domains:
+    - 136-68-86-97.sslip.io
+---
+apiVersion: networking.gke.io/v1beta1
+kind: FrontendConfig
+metadata:
+  name: grafana
+spec:
+  sslPolicy: dss-tls12
+  redirectToHttps:
+    enabled: true
+    responseCodeName: MOVED_PERMANENTLY_DEFAULT
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: grafana
+spec:
+  healthCheck:
+    type: HTTP
+    requestPath: /api/health
+    port: 3000
+    checkIntervalSec: 10
+    timeoutSec: 5
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana
+  annotations:
+    kubernetes.io/ingress.class: gce
+    kubernetes.io/ingress.global-static-ip-name: grafana-ip
+    networking.gke.io/managed-certificates: grafana-cert
+    networking.gke.io/v1beta1.FrontendConfig: grafana
+spec:
+  defaultBackend:
+    service:
+      name: grafana
+      port:
+        name: http

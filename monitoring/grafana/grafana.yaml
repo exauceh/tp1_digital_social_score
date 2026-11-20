@@ -1,6 +1,6 @@
-# Grafana, reachable only through `kubectl port-forward` (ClusterIP, no Ingress, no public address).
-# The admin password is NOT in the repository: it is read from the Secret "grafana-admin", created by
-# the command of step 17 of step_deployment.md.
+# Grafana, published on HTTPS by the Ingress of https.yaml (https://136-68-86-97.sslip.io) and still
+# reachable through `kubectl port-forward`. The admin password is NOT in the repository: it is read
+# from the Secret "grafana-admin", created by the command of step 17 of step_deployment.md.
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -71,6 +71,12 @@ spec:
               value: "false"
             - name: GF_LOG_MODE
               value: console
+            # Public HTTPS address (https.yaml): absolute links and redirects use it; the session cookie
+            # is only ever sent over HTTPS.
+            - name: GF_SERVER_ROOT_URL
+              value: https://136-68-86-97.sslip.io/
+            - name: GF_SECURITY_COOKIE_SECURE
+              value: "true"
           readinessProbe:
             httpGet: { path: /api/health, port: http }
           livenessProbe:
@@ -96,8 +102,10 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       volumes:
+        # Persistent: the Viewer account created for outside readers (step 23) must survive a restart.
         - name: data
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: grafana-data
         - name: datasource
           configMap:
             name: grafana-provisioning
@@ -110,10 +118,28 @@ spec:
           configMap:
             name: grafana-dashboards
 ---
+# HDD disk (pd-standard, 10 Gi is its minimum size): the project's SSD quota is small, and Grafana's
+# SQLite database needs neither speed nor space. Recreate strategy above: the disk is ReadWriteOnce.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-data
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 10Gi
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: grafana
+  annotations:
+    # Used by the HTTPS Ingress (https.yaml): traffic goes straight to the pod, health-checked on
+    # /api/health (BackendConfig "grafana").
+    cloud.google.com/neg: '{"ingress": true}'
+    cloud.google.com/backend-config: '{"default": "grafana"}'
 spec:
   selector:
     app: grafana

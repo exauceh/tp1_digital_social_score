@@ -7,6 +7,7 @@ resources:
   - namespace.yaml
   - frontend.yaml
   - grafana.yaml
+  - https.yaml
 
 # The dashboard is a JSON file, turned into the ConfigMap "grafana-dashboards" (name without hash,
 # so that grafana.yaml can mount it by name).

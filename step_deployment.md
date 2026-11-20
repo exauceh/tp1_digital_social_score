@@ -338,3 +338,24 @@ gcloud compute ssl-policies delete dss-tls12 --global --quiet
 #        k8s/service.yaml) ; l'Ingress reste la seule entree publique.
 kubectl apply -n dss -f k8s/service.yaml
 curl -s -m 8 http://34.53.169.140/health     # ne doit plus repondre
+
+# 23. Grafana en HTTPS, avec un compte en lecture seule pour les lecteurs exterieurs
+#     Meme montage que l'API (etape 22), sur son propre load balancer (un Ingress ne route que vers
+#     son namespace). Les comptes sont sur un disque persistant (PersistentVolumeClaim grafana-data).
+#     a) IP fixe ; le nom 136-68-86-97.sslip.io (dans monitoring/grafana/https.yaml) doit lui correspondre
+gcloud compute addresses create grafana-ip --global --ip-version=IPV4
+gcloud compute addresses describe grafana-ip --global --format="value(address)"
+#     b) Deployer
+kubectl kustomize monitoring/grafana | ForEach-Object { $_ -replace 'PROJECT_ID_PLACEHOLDER', $PROJECT_ID } | kubectl apply -f -
+kubectl get managedcertificate grafana-cert -n monitoring    # Provisioning puis Active
+#     c) Compte Viewer "professeur" (par le tunnel, avec le compte admin) : le mot de passe est tape ici,
+#        jamais ecrit dans le depot.
+kubectl port-forward svc/grafana 3300:3000 -n monitoring     # dans un autre terminal
+$adminPw  = Read-Host "Mot de passe admin Grafana"
+$viewerPw = Read-Host "Mot de passe a donner au lecteur"
+$auth = @{ Authorization = "Basic " + [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("admin:$adminPw")) }
+$user = Invoke-RestMethod -Method Post -Uri http://127.0.0.1:3300/api/admin/users -Headers $auth -ContentType "application/json" `
+  -Body (@{ name = "Professeur"; login = "professeur"; password = $viewerPw } | ConvertTo-Json)
+Invoke-RestMethod -Method Patch -Uri "http://127.0.0.1:3300/api/orgs/1/users/$($user.id)" -Headers $auth -ContentType "application/json" `
+  -Body '{"role":"Viewer"}'
+Remove-Variable adminPw, viewerPw
